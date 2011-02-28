@@ -1,0 +1,67 @@
+Main
+	- Game game
+	- main()	// performs draws and update at right times	
+
+Game : EventDispatcher
+	- List dynamicObjectList
+	- List staticObjectList
+	- QuadTree dynamicObjectTree
+	- QuadTree staticObjectTree
+	- Camera camera
+	- draw()
+	- update(double time)
+	- getSurroundingDynamicObjects(Object *object)
+	- getSurroundingStaticObjects(Object *object)
+	- setDynamicObject(Objekt *object)
+	- removeDynamicObject(Objekt *object)
+
+Camera
+	- Game *game
+	- Object *focus
+	- draw()
+	- update(double time)
+	- screenToWorldPosition(Vector screenPosition)
+
+Object
+	- double x
+	- double y
+	- draw()
+
+DynamicObject : Object
+	- Game *game
+	- int index
+	- update(double time)
+	- remove() { game.removeDynamicObject(this); }
+
+StaticObject : Object
+	- boolean walkable
+	- boolean lethal
+
+Projectile : DynamicObject
+	- update(double time)
+	- draw()
+
+Player : DynamicObject
+	- update(double time)
+	- draw()
+
+EventDispatcher
+	- Map eventListeners
+	- addEventListener(String type, function Listener)
+	- removeEventListener(String type, function Listener)
+	- dispatchEvent(Event event)
+
+Event
+	- String type
+
+GameEvent : Event
+	- String const KEY_LEFT
+	- String const KEY_RIGHT
+	- String const KEY_UP
+	- String const KEY_DOWN
+	- String const MOUSE_DOWN
+
+DynamicObjectEvent : Event
+	- Object target
+	- String const MISSIL_EXPLODED
+	- String const ENEMY_STRIKE
