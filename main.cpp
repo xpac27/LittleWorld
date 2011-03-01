@@ -1,6 +1,7 @@
+#include "Game.h"
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Game.h"
 
 using namespace sf;
 
@@ -30,8 +31,7 @@ int main()
     Clock clock;
 
     // Create the game object
-    Game game;
-    game.init();
+    Game::instance()->init();
 
     // Start game loop
     while (application.IsOpened())
@@ -82,11 +82,11 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //Update
-        game.update(clock.GetElapsedTime());
+        Game::instance()->update(clock.GetElapsedTime());
         clock.Reset();
 
         // Draw...
-        game.draw();
+        Game::instance()->draw();
 
         // Finally, display the rendered frame on screen
         application.Display();

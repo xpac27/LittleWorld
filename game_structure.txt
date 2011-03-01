@@ -1,5 +1,4 @@
 Main
-	- Game game
 	- main()	// performs draws and update at right times	
 
 Game : EventDispatcher
@@ -16,7 +15,6 @@ Game : EventDispatcher
 	- removeDynamicObject(Objekt *object)
 
 Camera
-	- Game *game
 	- Object *focus
 	- draw()
 	- update(float time)
@@ -28,10 +26,9 @@ Object
 	- draw()
 
 DynamicObject : Object
-	- Game *game
 	- int index
 	- update(float time)
-	- remove() { game.removeDynamicObject(this); }
+	- remove() { Game::instance()->removeDynamicObject(this); }
 
 StaticObject : Object
 	- boolean walkable

@@ -1,8 +1,9 @@
 #ifndef DEF_PLAYER
 #define DEF_PLAYER
 
-#include <iostream>
 #include "../DynamicObject.h"
+
+#include <iostream>
 
 class Player : public DynamicObject
 {

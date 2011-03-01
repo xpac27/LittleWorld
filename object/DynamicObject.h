@@ -1,8 +1,9 @@
 #ifndef DEF_DYNAMICOBJECT
 #define DEF_DYNAMICOBJECT
 
-#include <iostream>
 #include "../Object.h"
+
+#include <iostream>
 
 class DynamicObject : public Object
 {

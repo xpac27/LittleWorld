@@ -1,9 +1,10 @@
-#include <SFML/Graphics.hpp>
 #include "Player.h"
 
-using namespace std;
+#include <SFML/Graphics.hpp>
 
-Player::Player() {}
+Player::Player()
+{
+}
 
 void Player::init()
 {

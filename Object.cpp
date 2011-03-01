@@ -1,7 +1,14 @@
 #include "Object.h"
 
-Object::Object() {}
+Object::Object()
+{
+}
 
-void Object::init() {}
-void Object::draw() {}
+void Object::init()
+{
+}
+
+void Object::draw()
+{
+}
 
