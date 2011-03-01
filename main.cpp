@@ -1,13 +1,15 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Dummy.h"
+#include "Game.h"
+
+using namespace sf;
 
 int main()
 {
     // Create main window
-    sf::RenderWindow App(sf::VideoMode(800, 600), "Game");
-    App.PreserveOpenGLStates(true);
-    App.UseVerticalSync(true);
+    RenderWindow application(VideoMode(800, 600), "Game");
+    application.PreserveOpenGLStates(true);
+    application.UseVerticalSync(true);
 
     // Setup rendering
     glEnable(GL_DEPTH_TEST);
@@ -25,32 +27,33 @@ int main()
     glLoadIdentity();
 
     // Create a clock for measuring the time elapsed
-    sf::Clock Clock;
+    Clock clock;
 
-    int const dummyNumber(10000);
-    Dummy dummyList[dummyNumber];
+    // Create the game object
+    Game game;
+    game.init();
 
     // Start game loop
-    while (App.IsOpened())
+    while (application.IsOpened())
     {
         // Process events
-        sf::Event Event;
-        while (App.GetEvent(Event))
+        Event Event;
+        while (application.GetEvent(Event))
         {
             // Close window : exit
-            if (Event.Type == sf::Event::Closed)
+            if (Event.Type == Event::Closed)
             {
-                App.Close();
+                application.Close();
             }
 
             // Escape key : exit
-            if ((Event.Type == sf::Event::KeyPressed) && (Event.Key.Code == sf::Key::Escape))
+            if ((Event.Type == Event::KeyPressed) && (Event.Key.Code == Key::Escape))
             {
-                App.Close();
+                application.Close();
             }
 
             // Adjust the viewport when the window is resized
-            if (Event.Type == sf::Event::Resized)
+            if (Event.Type == Event::Resized)
             {
                 glViewport(0, 0, Event.Size.Width, Event.Size.Height);
 
@@ -79,53 +82,14 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //Update
-        for (int i(0); i < dummyNumber; i ++)
-        {
-            dummyList[i].update(Clock.GetElapsedTime());
-        }
-        Clock.Reset();
+        game.update(clock.GetElapsedTime());
+        clock.Reset();
 
         // Draw...
-        for (int i(0); i < dummyNumber; i ++)
-        {
-            dummyList[i].draw();
-        }
-
-        //glPushMatrix();
-        //glTranslatef(0.f, 0.f, 0.0f);
-        //glColor4f(1.f, 1.f, 1.f, 0.5f);
-        //glBegin(GL_QUADS);
-            //glVertex2f(0.f,   0.f);
-            //glVertex2f(0.f,   600.f);
-            //glVertex2f(800.f, 600.f);
-            //glVertex2f(800.f, 0.f);
-        //glEnd();
-        //glPopMatrix();
-
-        //glPushMatrix();
-        //glTranslatef(400.f, 300.f, 0.0f);
-        //glColor4f(1.f, 1.f, 0.f, 0.5f);
-        //glBegin(GL_QUADS);
-            //glVertex2f(-15.f, -15.f);
-            //glVertex2f(-15.f,  15.f);
-            //glVertex2f( 15.f,  15.f);
-            //glVertex2f( 15.f, -15.f);
-        //glEnd();
-        //glPopMatrix();
-
-        //glPushMatrix();
-        //glTranslatef(10.f, 10.f, 0.0f);
-        //glColor4f(1.f, 0.f, 0.f, 0.5f);
-        //glBegin(GL_QUADS);
-            //glVertex2f(-10.f, -10.f);
-            //glVertex2f(-10.f,  10.f);
-            //glVertex2f( 10.f,  10.f);
-            //glVertex2f( 10.f, -10.f);
-        //glEnd();
-        //glPopMatrix();
+        game.draw();
 
         // Finally, display the rendered frame on screen
-        App.Display();
+        application.Display();
     }
 
     return EXIT_SUCCESS;

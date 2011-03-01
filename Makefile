@@ -1,10 +1,11 @@
-TARGETS=game
+ALL_FILES := $(shell find . -type f -name "*" | grep -E "\.(cpp|h)" | xargs)
+CPP_FILES := $(shell find . -type f -name "*" | grep -E "\.(cpp)" | xargs)
 
-all: $(TARGETS)
+all: game
 
-game: *
+game: $(ALL_FILES)
 	@echo '======== Game'
-	g++ -Wall -o game main.cpp dummy.cpp -framework sfml-graphics -framework sfml-window -framework sfml-system -framework OpenGL -framework GLUT
+	g++ -Wall -o game $(CPP_FILES) -framework sfml-graphics -framework sfml-window -framework sfml-system -framework OpenGL -framework GLUT
 	@echo '======== done'
 	@echo
 

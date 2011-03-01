@@ -9,28 +9,28 @@ Game : EventDispatcher
 	- QuadTree staticObjectTree
 	- Camera camera
 	- draw()
-	- update(double time)
+	- update(float time)
 	- getSurroundingDynamicObjects(Object *object)
 	- getSurroundingStaticObjects(Object *object)
-	- setDynamicObject(Objekt *object)
+	- addDynamicObject(Objekt *object)
 	- removeDynamicObject(Objekt *object)
 
 Camera
 	- Game *game
 	- Object *focus
 	- draw()
-	- update(double time)
+	- update(float time)
 	- screenToWorldPosition(Vector screenPosition)
 
 Object
-	- double x
-	- double y
+	- float x
+	- float y
 	- draw()
 
 DynamicObject : Object
 	- Game *game
 	- int index
-	- update(double time)
+	- update(float time)
 	- remove() { game.removeDynamicObject(this); }
 
 StaticObject : Object
@@ -38,11 +38,11 @@ StaticObject : Object
 	- boolean lethal
 
 Projectile : DynamicObject
-	- update(double time)
+	- update(float time)
 	- draw()
 
 Player : DynamicObject
-	- update(double time)
+	- update(float time)
 	- draw()
 
 EventDispatcher
