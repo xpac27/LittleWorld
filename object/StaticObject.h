@@ -3,11 +3,13 @@
 
 #include "../Object.h"
 
+class World;
+
 class StaticObject : public Object
 {
     protected:
 
-        StaticObject();
+        StaticObject(World *w);
 };
 
 #endif

@@ -1,8 +1,6 @@
 #include "Player.h"
 
-#include <SFML/Graphics.hpp>
-
-Player::Player()
+Player::Player(World *w) : DynamicObject(w)
 {
 }
 
@@ -12,6 +10,13 @@ void Player::init()
     this->y     = 300;
     this->size  = 10;
     this->speed = 50;
+
+    this->world->ON_TEST.connect(boost::bind(&Player::prout, this));
+}
+
+void Player::prout()
+{
+    std::cout << "prout" << std::endl;
 }
 
 void Player::draw()
@@ -39,4 +44,5 @@ void Player::update(float time)
     this->x += speed * time * sf::Randomizer::Random(-1.f, 1.f);
     this->y += speed * time * sf::Randomizer::Random(-1.f, 1.f);
 }
+
 

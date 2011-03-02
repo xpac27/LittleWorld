@@ -5,11 +5,13 @@
 
 #include <iostream>
 
+class World;
+
 class DynamicObject : public Object
 {
     public:
 
-        DynamicObject();
+        DynamicObject(World *w);
         virtual void update(float time);
         virtual void remove();
 

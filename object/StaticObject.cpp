@@ -1,6 +1,6 @@
 #include "StaticObject.h"
 
-StaticObject::StaticObject()
+StaticObject::StaticObject(World *w) : Object(w)
 {
 }
 
