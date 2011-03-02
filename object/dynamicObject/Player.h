@@ -4,9 +4,8 @@
 #include "../DynamicObject.h"
 #include "../../World.h"
 
-#include <boost/bind.hpp>
 #include <SFML/Graphics.hpp>
-#include <iostream>
+#include <boost/bind.hpp>
 
 class Player : public DynamicObject
 {
@@ -18,7 +17,7 @@ class Player : public DynamicObject
         virtual void draw();
         virtual void update(float time);
 
-        void prout();
+        void onTest();
 };
 
 #endif

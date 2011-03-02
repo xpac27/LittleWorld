@@ -1,22 +1,25 @@
 #include "Player.h"
 
+using namespace boost;
+using namespace sf;
+
 Player::Player(World *w) : DynamicObject(w)
 {
 }
 
 void Player::init()
 {
-    this->x     = 400;
-    this->y     = 300;
-    this->size  = 10;
-    this->speed = 50;
+    x     = 400;
+    y     = 300;
+    size  = 10;
+    speed = 50;
 
-    this->world->ON_TEST.connect(boost::bind(&Player::prout, this));
+    world->ON_TEST.connect(bind(&Player::onTest, this));
 }
 
-void Player::prout()
+void Player::onTest()
 {
-    std::cout << "prout" << std::endl;
+    // TODO create a log static function in a Util class that uses iostream
 }
 
 void Player::draw()
@@ -25,14 +28,14 @@ void Player::draw()
 
     glPushMatrix();
 
-        glTranslatef(this->x, this->y, 0.0f);
+        glTranslatef(x, y, 0.0f);
 
         glBegin(GL_QUADS);
 
-            glVertex2f(-this->size, -this->size);
-            glVertex2f(-this->size,  this->size);
-            glVertex2f( this->size,  this->size);
-            glVertex2f( this->size, -this->size);
+            glVertex2f(-size, -size);
+            glVertex2f(-size,  size);
+            glVertex2f( size,  size);
+            glVertex2f( size, -size);
 
         glEnd();
 
@@ -41,8 +44,8 @@ void Player::draw()
 
 void Player::update(float time)
 {
-    this->x += speed * time * sf::Randomizer::Random(-1.f, 1.f);
-    this->y += speed * time * sf::Randomizer::Random(-1.f, 1.f);
+    x += speed * time * Randomizer::Random(-1.f, 1.f);
+    y += speed * time * Randomizer::Random(-1.f, 1.f);
 }
 
 

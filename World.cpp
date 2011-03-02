@@ -1,13 +1,15 @@
 #include "World.h"
 
+using namespace std;
+
 World::World()
 {
 }
 
 void World::draw()
 {
-    std::list<DynamicObject*>::iterator i;
-    for (i = this->dynamicObjectList.begin(); i != this->dynamicObjectList.end(); ++ i)
+    list<DynamicObject*>::iterator i;
+    for (i = dynamicObjectList.begin(); i != dynamicObjectList.end(); ++ i)
     {
         (*i)->draw();
     }
@@ -15,8 +17,8 @@ void World::draw()
 
 void World::update(float time)
 {
-    std::list<DynamicObject*>::iterator i;
-    for (i = this->dynamicObjectList.begin(); i != this->dynamicObjectList.end(); ++ i)
+    list<DynamicObject*>::iterator i;
+    for (i = dynamicObjectList.begin(); i != dynamicObjectList.end(); ++ i)
     {
         (*i)->update(time);
     }
@@ -25,6 +27,6 @@ void World::update(float time)
 void World::addDynamicObject(DynamicObject *o)
 {
     o->init();
-    this->dynamicObjectList.push_back(o);
+    dynamicObjectList.push_back(o);
 }
 

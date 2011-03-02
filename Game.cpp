@@ -8,11 +8,11 @@ Game::Game()
 
 void Game::draw()
 {
-    this->world.draw();
+    world.draw();
 }
 
 void Game::update(float time)
 {
-    this->world.update(time);
+    world.update(time);
 }
 
