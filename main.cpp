@@ -69,26 +69,49 @@ int main()
     // Start game loop
     while (application.IsOpened())
     {
+        // Give the game mouse screen related's position
+        game.setMousePosition(input.GetMouseX(), input.GetMouseY());
+
         // Process events
         Event event;
         while (application.GetEvent(event))
         {
             // Close window : exit
-            if (event.Type == Event::Closed || ((event.Type == Event::KeyPressed) && (event.Key.Code == Key::Escape)))
+            if (event.Type == Event::KeyPressed && event.Key.Code == Key::Escape)
             {
                 application.Close();
             }
 
-            // Adjust the viewport when the window is resized
-            if (event.Type == Event::Resized)
+            switch (event.Type)
             {
-                onWindowResized(event.Size.Width, event.Size.Height);
-            }
+                case Event::Closed:
+                    application.Close();
+                    break;
 
-            // Pass some events to the game
-            if (event.Type == Event::MouseButtonPressed)
-            {
-                game.onEvent(&event);
+                case Event::Resized:
+                    game.onEvent(&event);
+                    onWindowResized(event.Size.Width, event.Size.Height);
+                    break;
+
+                case Event::MouseButtonPressed:
+                    game.onEvent(&event);
+                    break;
+
+                case Event::LostFocus:
+                case Event::GainedFocus:
+                case Event::TextEntered:
+                case Event::KeyPressed:
+                case Event::KeyReleased:
+                case Event::MouseWheelMoved:
+                case Event::MouseButtonReleased:
+                case Event::MouseMoved:
+                case Event::MouseEntered:
+                case Event::MouseLeft:
+                case Event::JoyButtonPressed:
+                case Event::JoyButtonReleased:
+                case Event::JoyMoved:
+                case Event::Count:
+                    break;
             }
         }
 
@@ -99,6 +122,22 @@ int main()
         game.update(clock.GetElapsedTime());
         clock.Reset();
 
+    glColor4f(1.f, 1.f, 1.f, 0.5f);
+
+    glPushMatrix();
+
+        glTranslatef(0.f, 0.f, 0.0f);
+
+        glBegin(GL_QUADS);
+
+            glVertex2f(0, 0);
+            glVertex2f(0,  600);
+            glVertex2f( 800,  600);
+            glVertex2f( 800, 0);
+
+        glEnd();
+
+    glPopMatrix();
         // Draw...
         game.draw();
 

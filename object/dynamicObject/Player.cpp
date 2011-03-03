@@ -19,8 +19,7 @@ void Player::init()
 
 void Player::onMouseLeftDown()
 {
-    // TODO create a log static function in a Util class that uses iostream
-    std::cout << "player - mouse left pressed" << std::endl;
+    std::cout << "player - mouse left pressed (" << world->mouseX << "x" << world->mouseY << ")" << std::endl;
 }
 
 void Player::draw()

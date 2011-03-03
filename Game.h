@@ -5,6 +5,7 @@
 #include "object/dynamicObject/Player.h"
 
 #include <SFML/System.hpp>
+#include <iostream>
 
 class Game
 {
@@ -15,6 +16,7 @@ class Game
         void draw();
         void update(float time);
         void onEvent(sf::Event *event);
+        void setMousePosition(unsigned int x, unsigned int y);
 
 
     private:
@@ -22,6 +24,10 @@ class Game
         const sf::Input &input;
 
         World world;
+
+        float windowScale;
+        float windowPaddingLeft;
+        float windowPaddingTop;
 };
 
 #endif

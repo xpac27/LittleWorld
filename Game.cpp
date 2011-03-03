@@ -4,6 +4,10 @@ using namespace sf;
 
 Game::Game(const Input &i) : input(i)
 {
+    windowScale       = 1.f;
+    windowPaddingLeft = 0.f;
+    windowPaddingTop  = 0.f;
+
     world.addDynamicObject(new Player(&world));
 }
 
@@ -19,12 +23,34 @@ void Game::update(float time)
 
 void Game::onEvent(Event *event)
 {
-    if ((*event).Type == Event::MouseButtonPressed)
+    // MOUSE
+    if (event->Type == Event::MouseButtonPressed)
     {
-        if ((*event).MouseButton.Button == Mouse::Left)
+        if (event->MouseButton.Button == Mouse::Left)
         {
             world.ON_MOUSE_LEFT_DOWN();
         }
     }
+    // RESIZE
+    else if (event->Type == Event::Resized)
+    {
+        if ((float)event->Size.Width / (float)event->Size.Height > 800.f / 600.f)
+        {
+            windowScale = 600.f / event->Size.Height;
+        }
+        else
+        {
+            windowScale = 800.f / event->Size.Width;
+        }
+        windowPaddingLeft = ((float)event->Size.Width - (800.f / windowScale)) / -2.f;
+        windowPaddingTop  = ((float)event->Size.Height - (600.f / windowScale)) / -2.f;
+    }
+}
+
+void Game::setMousePosition(unsigned int x, unsigned int y)
+{
+    // Tranforme screen position to world position
+    world.mouseX = (x + windowPaddingLeft) * windowScale;
+    world.mouseY = (y + windowPaddingTop) * windowScale;
 }
 

@@ -17,6 +17,10 @@ class World
         void draw();
         void update(float time);
         void addDynamicObject(DynamicObject *o);
+        void setMousePosition(unsigned int x, unsigned int y);
+
+        unsigned int mouseX;
+        unsigned int mouseY;
 
 
     private:
