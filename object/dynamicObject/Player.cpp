@@ -14,12 +14,13 @@ void Player::init()
     size  = 10;
     speed = 50;
 
-    world->ON_TEST.connect(bind(&Player::onTest, this));
+    world->ON_MOUSE_LEFT_DOWN.connect(bind(&Player::onMouseLeftDown, this));
 }
 
-void Player::onTest()
+void Player::onMouseLeftDown()
 {
     // TODO create a log static function in a Util class that uses iostream
+    std::cout << "player - mouse left pressed" << std::endl;
 }
 
 void Player::draw()

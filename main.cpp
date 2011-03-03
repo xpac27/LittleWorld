@@ -11,6 +11,30 @@
 
 using namespace sf;
 
+void onWindowResized(float width, float height)
+{
+    glViewport(0, 0, width, height);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    float space;
+
+    if (width / height > 800.f / 600.f)
+    {
+        space = abs(((600.f / (height / width)) - 800.f) / 2.f);
+        glOrtho(-1.f * space, 800.f + space, 600.f, 0.f, 0.f, 100.f);
+    }
+    else
+    {
+        space = abs(((800.f / (width / height)) - 600.f) / 2.f);
+        glOrtho(0.f, 800.f, 600.f + space, -1.f * space, 0.f, 100.f);
+    }
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
 int main()
 {
     // Create main window
@@ -33,54 +57,38 @@ int main()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    // Gather a pointer to the input system
+    const Input& input = application.GetInput();
+
     // Create a clock for measuring the time elapsed
     Clock clock;
 
     // Create the game object
-    Game game;
+    Game game(input);
 
     // Start game loop
     while (application.IsOpened())
     {
         // Process events
-        Event Event;
-        while (application.GetEvent(Event))
+        Event event;
+        while (application.GetEvent(event))
         {
             // Close window : exit
-            if (Event.Type == Event::Closed)
-            {
-                application.Close();
-            }
-
-            // Escape key : exit
-            if ((Event.Type == Event::KeyPressed) && (Event.Key.Code == Key::Escape))
+            if (event.Type == Event::Closed || ((event.Type == Event::KeyPressed) && (event.Key.Code == Key::Escape)))
             {
                 application.Close();
             }
 
             // Adjust the viewport when the window is resized
-            if (Event.Type == Event::Resized)
+            if (event.Type == Event::Resized)
             {
-                glViewport(0, 0, Event.Size.Width, Event.Size.Height);
+                onWindowResized(event.Size.Width, event.Size.Height);
+            }
 
-                glMatrixMode(GL_PROJECTION);
-                glLoadIdentity();
-
-                float space;
-
-                if ((float)Event.Size.Width / (float)Event.Size.Height > 800.f / 600.f)
-                {
-                    space = abs(((600.f / ((float)Event.Size.Height / (float)Event.Size.Width)) - 800.f) / 2.f);
-                    glOrtho(-1.f * space, 800.f + space, 600.f, 0.f, 0.f, 100.f);
-                }
-                else
-                {
-                    space = abs(((800.f / ((float)Event.Size.Width / (float)Event.Size.Height)) - 600.f) / 2.f);
-                    glOrtho(0.f, 800.f, 600.f + space, -1.f * space, 0.f, 100.f);
-                }
-
-                glMatrixMode(GL_MODELVIEW);
-                glLoadIdentity();
+            // Pass some events to the game
+            if (event.Type == Event::MouseButtonPressed)
+            {
+                game.onEvent(&event);
             }
         }
 

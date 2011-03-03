@@ -6,6 +6,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <boost/bind.hpp>
+#include <iostream>
 
 class Player : public DynamicObject
 {
@@ -17,7 +18,10 @@ class Player : public DynamicObject
         virtual void draw();
         virtual void update(float time);
 
-        void onTest();
+
+    private:
+
+        void onMouseLeftDown();
 };
 
 #endif

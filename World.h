@@ -12,7 +12,7 @@ class World
 
         World();
 
-        boost::signal<void ()> ON_TEST;
+        boost::signal<void ()> ON_MOUSE_LEFT_DOWN;
 
         void draw();
         void update(float time);
