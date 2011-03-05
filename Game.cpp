@@ -7,8 +7,22 @@ Game::Game(const Input &i) : input(i)
     windowScale       = 1.f;
     windowPaddingLeft = 0.f;
     windowPaddingTop  = 0.f;
+}
 
-    world.addDynamicObject(new Player(&world));
+void Game::init()
+{
+    Player *p = new Player(&world);
+
+    world.addDynamicObject(p);
+    world.setFocus(p);
+
+    for (unsigned int x(0); x < 25; x ++)
+    {
+        for (unsigned int y(0); y < 20; y ++)
+        {
+            world.addStaticObject(new Tile(&world, x * 32.f, y * 32.f));
+        }
+    }
 }
 
 void Game::draw()
@@ -49,8 +63,6 @@ void Game::onEvent(Event *event)
 
 void Game::setMousePosition(unsigned int x, unsigned int y)
 {
-    // Tranforme screen position to world position
-    world.mouseX = (x + windowPaddingLeft) * windowScale;
-    world.mouseY = (y + windowPaddingTop) * windowScale;
+    world.setMouseScreenPosition((x + windowPaddingLeft) * windowScale, (y + windowPaddingTop) * windowScale);
 }
 

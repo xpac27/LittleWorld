@@ -9,10 +9,11 @@ Player::Player(World *w) : DynamicObject(w)
 
 void Player::init()
 {
-    x     = 400;
-    y     = 300;
-    size  = 10;
-    speed = 80;
+    x     = 400.f;
+    y     = 300.f;
+    z     = 2.f;
+    size  = 10.f;
+    speed = 80.f;
     destination[0] = x;
     destination[1] = y;
 
@@ -29,22 +30,16 @@ void Player::onMouseLeftDown()
 
 void Player::draw()
 {
-    glColor4f(1.f, 1.f, 0.f, 0.8f);
+    glColor4f(1.f, 1.f, 0.f, 1.f);
 
-    glPushMatrix();
+    glBegin(GL_QUADS);
 
-        glTranslatef(x, y, 0.0f);
+        glVertex2f(-size, -size);
+        glVertex2f(-size,  size);
+        glVertex2f( size,  size);
+        glVertex2f( size, -size);
 
-        glBegin(GL_QUADS);
-
-            glVertex2f(-size, -size);
-            glVertex2f(-size,  size);
-            glVertex2f( size,  size);
-            glVertex2f( size, -size);
-
-        glEnd();
-
-    glPopMatrix();
+    glEnd();
 }
 
 void Player::update(float time)
@@ -55,5 +50,4 @@ void Player::update(float time)
     x += ((x < destination[0]) ? speed : -speed) * time;
     y += ((y < destination[1]) ? speed : -speed) * time;
 }
-
 

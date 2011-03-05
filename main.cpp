@@ -53,7 +53,7 @@ int main()
     glViewport(0, 0, 800, 600);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, 800, 600, 0, 0, 100);
+    glOrtho(0.f, 800.f, 600.f, 0.f, 0.f, 100.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -65,6 +65,7 @@ int main()
 
     // Create the game object
     Game game(input);
+    game.init();
 
     // Start game loop
     while (application.IsOpened())
@@ -122,22 +123,6 @@ int main()
         game.update(clock.GetElapsedTime());
         clock.Reset();
 
-    glColor4f(1.f, 1.f, 1.f, 0.5f);
-
-    glPushMatrix();
-
-        glTranslatef(0.f, 0.f, 0.0f);
-
-        glBegin(GL_QUADS);
-
-            glVertex2f(0, 0);
-            glVertex2f(0,  600);
-            glVertex2f( 800,  600);
-            glVertex2f( 800, 0);
-
-        glEnd();
-
-    glPopMatrix();
         // Draw...
         game.draw();
 

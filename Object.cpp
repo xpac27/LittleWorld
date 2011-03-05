@@ -12,3 +12,18 @@ void Object::draw()
 {
 }
 
+float Object::getX()
+{
+    return x;
+}
+
+float Object::getY()
+{
+    return y;
+}
+
+float Object::getZ()
+{
+    return z;
+}
+

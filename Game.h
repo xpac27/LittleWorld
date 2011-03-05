@@ -3,6 +3,7 @@
 
 #include "World.h"
 #include "object/dynamicObject/Player.h"
+#include "object/staticObject/Tile.h"
 
 #include <SFML/System.hpp>
 #include <iostream>
@@ -13,6 +14,7 @@ class Game
 
         Game(const sf::Input &i);
 
+        void init();
         void draw();
         void update(float time);
         void onEvent(sf::Event *event);

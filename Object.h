@@ -14,6 +14,10 @@ class Object
         virtual void init();
         virtual void draw();
 
+        float getX();
+        float getY();
+        float getZ();
+
 
     protected:
 
@@ -21,6 +25,7 @@ class Object
 
         float x;
         float y;
+        float z;
         float size;
 };
 
