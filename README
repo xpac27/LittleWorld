@@ -1,0 +1,29 @@
+This programme is supposed to be able to compile and run on MacOSX, Linux and PC (I only tested MacOSX for now).
+
+This project is under development so do not expect impressive features ;)
+
+
+REQUIRED:
+
+- g++ compiler (just install xcode if you are on mac)
+- GLUT and OpenGL c++ library (just install xcode if you are on mac)
+- SFML c++ library (http://www.sfml-dev.org/tutorials/1.6/)
+- Boost c++ library (http://www.boost.org/doc/libs/1_46_0/more/getting_started/index.html)
+
+
+INSTALLING:
+
+- Git clone the LittleWorld project
+- Go in the LittleWorld folder and type "make" then Enter and wait for the build to be done
+- Type ./littleWorld to start the game
+
+
+VERSION HISTORY:
+
+- v0.1: basic rendering and game structure
+
+
+NOTES:
+
+- If the game do not compile because of some errors in the code reset the history to a stable revision (git reset --hard v0.1) then try again.
+- If some build or link errors occure feel free to adjust the Makefile and to push your corrections, I designed it for my setup for now so it might certenly not work for every one.
