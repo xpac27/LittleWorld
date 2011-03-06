@@ -1,6 +1,6 @@
 #include "DynamicObject.h"
 
-DynamicObject::DynamicObject(World *w) : Object(w)
+DynamicObject::DynamicObject(World *w, float h) : Object(w, h)
 {
 }
 

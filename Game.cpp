@@ -16,11 +16,17 @@ void Game::init()
     world.addDynamicObject(p);
     world.setFocus(p);
 
+    float height(0.f);
+    int r(0);
+
     for (unsigned int x(0); x < 25; x ++)
     {
         for (unsigned int y(0); y < 20; y ++)
         {
-            world.addStaticObject(new Tile(&world, x * 32.f, y * 32.f));
+            r = Randomizer::Random(0, 10);
+            height = ((r > 7) ? r - 6.f : 0.f) * 12.f;
+
+            world.addStaticObject(new Tile(&world, x * 64.f, y * 64.f, height));
         }
     }
 }
@@ -63,6 +69,6 @@ void Game::onEvent(Event *event)
 
 void Game::setMousePosition(unsigned int x, unsigned int y)
 {
-    world.setMouseScreenPosition((x + windowPaddingLeft) * windowScale, (y + windowPaddingTop) * windowScale);
+    world.updateMousePosition((x + windowPaddingLeft) * windowScale, (y + windowPaddingTop) * windowScale);
 }
 

@@ -9,7 +9,7 @@ class StaticObject : public Object
 {
     protected:
 
-        StaticObject(World *w);
+        StaticObject(World *w, float h);
 };
 
 #endif

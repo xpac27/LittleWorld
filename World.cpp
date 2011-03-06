@@ -29,7 +29,7 @@ void World::update(float time)
         (*i)->update(time);
     }
 
-    camera.update();
+    camera.update(time);
 }
 
 void World::addDynamicObject(DynamicObject *o)
@@ -49,9 +49,22 @@ void World::setFocus(Object *o)
     camera.setFocus(o);
 }
 
-void World::setMouseScreenPosition(float x, float y)
+void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
 {
-    mouseX = x + camera.getX();
-    mouseY = y + camera.getY();
+    // Origin is on the screen so correct position
+    mouseScreenX -= 400.f;
+    mouseScreenY -= 300.f;
+
+    // Apply transformation
+    mouseX = (mouseScreenX + (mouseScreenY * 2.f)) / 2.f;
+    mouseY = ((mouseScreenY * 2.f) - mouseScreenX) / 2.f;
+
+    // Add camera offset
+    mouseX += camera.getX();
+    mouseY += camera.getY();
+
+    // Corect cursor
+    mouseX += 16.f;
+    mouseY += 8.f;
 }
 

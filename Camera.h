@@ -12,7 +12,7 @@ class Camera
 
         Camera();
 
-        void update();
+        void update(float time);
         void draw(Object* object);
         void setFocus(Object *o);
 
@@ -28,6 +28,7 @@ class Camera
         float y;
         float speed;
         float tolerance;
+        float inertia;
 };
 
 #endif

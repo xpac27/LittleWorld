@@ -5,7 +5,7 @@
 #include "object/dynamicObject/Player.h"
 #include "object/staticObject/Tile.h"
 
-#include <SFML/System.hpp>
+#include <SFML/System/Randomizer.hpp>
 #include <iostream>
 
 class Game

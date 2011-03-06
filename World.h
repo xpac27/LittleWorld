@@ -22,7 +22,7 @@ class World
         void addStaticObject(StaticObject *o);
         void setMousePosition(unsigned int x, unsigned int y);
         void setFocus(Object *o);
-        void setMouseScreenPosition(float x, float y);
+        void updateMousePosition(float mouseScreenX, float mouseScreenY);
 
         int mouseX;
         int mouseY;
