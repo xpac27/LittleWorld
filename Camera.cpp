@@ -4,11 +4,11 @@ using namespace std;
 
 Camera::Camera()
 {
-    x         = 0.f;
-    y         = 0.f;
     speed     = 50.f;
     tolerance = 50.f;
     inertia   = 0.3f;
+
+    position.set(0.f, 0.f, 0.f);
 }
 
 void Camera::draw(Object* object)
@@ -16,8 +16,8 @@ void Camera::draw(Object* object)
     glPushMatrix();
     glTranslatef
     (
-        y - x + 288.f + 400.f - 300.f,              // Origin is centered on the screen
-        ((x + y - 400.f - 300.f) / -2.f) - 64.f,    // So minus alf screen width and height
+        position.y - position.x + 288.f + 400.f - 300.f,              // Origin is centered on the screen
+        ((position.x + position.y - 400.f - 300.f) / -2.f) - 64.f,    // So minus alf screen width and height
         0.f
     );
 
@@ -42,22 +42,22 @@ void Camera::draw(Object* object)
 
 void Camera::update(float time)
 {
-    if (x - focus->getX() > tolerance)
+    if (position.x - focus->getX() > tolerance)
     {
-        x -= (x - (focus->getX() + tolerance)) / (inertia / time);
+        position.x -= (position.x - (focus->getX() + tolerance)) / (inertia / time);
     }
-    else if (focus->getX() - x > tolerance)
+    else if (focus->getX() - position.x > tolerance)
     {
-        x += ((focus->getX() - tolerance) - x) / (inertia / time);
+        position.x += ((focus->getX() - tolerance) - position.x) / (inertia / time);
     }
 
-    if (y - focus->getY() > tolerance)
+    if (position.y - focus->getY() > tolerance)
     {
-        y -= (y - (focus->getY() + tolerance)) / (inertia / time);
+        position.y -= (position.y - (focus->getY() + tolerance)) / (inertia / time);
     }
-    else if (focus->getY() - y > tolerance)
+    else if (focus->getY() - position.y > tolerance)
     {
-        y += ((focus->getY() - tolerance) - y) / (inertia / time);
+        position.y += ((focus->getY() - tolerance) - position.y) / (inertia / time);
     }
 }
 
@@ -68,11 +68,11 @@ void Camera::setFocus(Object *o)
 
 float Camera::getX()
 {
-    return x;
+    return position.x;
 }
 
 float Camera::getY()
 {
-    return y;
+    return position.y;
 }
 

@@ -5,26 +5,19 @@ using namespace sf;
 
 Player::Player(World *w) : DynamicObject(w, 32.f)
 {
-}
+    speed = 100.f;
 
-void Player::init()
-{
-    x      = 0.f;
-    y      = 0.f;
-    size   = 64.f;
-    speed  = 100.f;
-    destination[0] = x;
-    destination[1] = y;
+    position.set(0.f, 0.f);
+    destination.set(0.f, 0.f);
+    setSize(64.f);
 
     world->ON_MOUSE_LEFT_DOWN.connect(bind(&Player::onMouseLeftDown, this));
-
-    Object::init();
 }
 
 void Player::onMouseLeftDown()
 {
-    destination[0] = world->mouseX;
-    destination[1] = world->mouseY;
+    destination.set(world->mouseX, world->mouseY);
+    direction.set(&position, &destination);
 }
 
 void Player::draw()
@@ -36,13 +29,9 @@ void Player::draw()
 
 void Player::update(float time)
 {
-    if ((x > destination[0] + 1) || (x < destination[0] - 1))
+    if (position.getDistanceTo(&destination) > 2.f)
     {
-        x += ((x < destination[0]) ? speed : -speed) * time;
-    }
-    if ((y > destination[1] + 1) || (y < destination[1] - 1))
-    {
-        y += ((y < destination[1]) ? speed : -speed) * time;
+        move(time);
     }
 }
 

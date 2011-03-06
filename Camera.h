@@ -2,6 +2,7 @@
 #define DEF_CAMERA
 
 #include "Object.h"
+#include "util/Position.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -24,8 +25,8 @@ class Camera
 
         Object* focus;
 
-        float x;
-        float y;
+        Position position;
+
         float speed;
         float tolerance;
         float inertia;

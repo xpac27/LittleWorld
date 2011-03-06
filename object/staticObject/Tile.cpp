@@ -1,10 +1,9 @@
 #include "Tile.h"
 
-Tile::Tile(World *w, float positionX, float positionY, float h) : StaticObject(w, h)
+Tile::Tile(World *w, float x, float y, float h) : StaticObject(w, h)
 {
-    x    = positionX;
-    y    = positionY;
-    size = 128.f;
+    position.set(x, y);
+    setSize(128.f);
 }
 
 void Tile::draw()

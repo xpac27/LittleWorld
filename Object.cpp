@@ -2,16 +2,21 @@
 
 Object::Object(World *w, float h) : world(w), height(h)
 {
-    x    = 0.f;
-    y    = 0.f;
-    size = 32.f;
+    index = height > 0.f ? 2.f : 1.f;
+
+    position.set(0.f, 0.f, 0.f);
+    setSize(32.f);
 }
 
 void Object::init()
 {
+}
+
+void Object::setSize(float s)
+{
+    size        = s;
     alfSize     = size / 2.f;
     quarterSize = size / 4.f;
-    index       = height > 0.f ? 2.f : 1.f;
 }
 
 void Object::draw()
@@ -147,12 +152,12 @@ void Object::draw()
 
 float Object::getX()
 {
-    return x;
+    return position.x;
 }
 
 float Object::getY()
 {
-    return y;
+    return position.y;
 }
 
 float Object::getIndex()

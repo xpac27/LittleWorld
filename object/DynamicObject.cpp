@@ -12,3 +12,9 @@ void DynamicObject::remove()
 {
 }
 
+void DynamicObject::move(float time)
+{
+    position.x += direction.getX() * speed * time;
+    position.y += direction.getY() * speed * time;
+}
+

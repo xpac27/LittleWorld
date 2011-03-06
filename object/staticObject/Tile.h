@@ -10,7 +10,7 @@ class Tile : public StaticObject
 {
     public:
 
-        Tile(World *w, float positionX, float positionY, float h);
+        Tile(World *w, float x, float y, float h);
 
         virtual void draw();
 };

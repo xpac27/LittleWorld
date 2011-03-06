@@ -2,6 +2,7 @@
 #define DEF_PLAYER
 
 #include "../DynamicObject.h"
+#include "../../util/Position.h"
 #include "../../World.h"
 
 #include <SFML/Graphics.hpp>
@@ -14,14 +15,13 @@ class Player : public DynamicObject
 
         Player(World *w);
 
-        virtual void init();
         virtual void draw();
         virtual void update(float time);
 
 
     private:
 
-        float destination[2];
+        Position destination;
 
         void onMouseLeftDown();
 };
