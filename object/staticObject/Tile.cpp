@@ -8,7 +8,14 @@ Tile::Tile(World *w, float x, float y, float h) : StaticObject(w, h)
 
 void Tile::draw()
 {
-    glColor4f(0.9f, 0.9f, 0.9f, 1.f);
+    if (getHeight() == 0)
+    {
+        glColor4f(0.9f, 0.9f, 0.9f, 1.f);
+    }
+    else
+    {
+        glColor4f(0.8f, 0.8f, 0.8f, 1.f);
+    }
 
     Object::draw();
 }

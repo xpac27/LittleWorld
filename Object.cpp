@@ -3,6 +3,7 @@
 Object::Object(World *w, float h) : world(w), height(h)
 {
     index = height > 0.f ? 2.f : 1.f;
+    touched = false;
 
     position.set(0.f, 0.f, 0.f);
     setSize(32.f);
@@ -25,6 +26,12 @@ void Object::draw()
     {
         glPushMatrix();
         glTranslatef(0.f, -height, 0.f);
+    }
+
+    if (touched)
+    {
+        touched = false;
+        glColor4f(0.2f, 0.8f, 0.2f, 1.f);
     }
 
     // FACE TOP
