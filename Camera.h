@@ -20,6 +20,8 @@ class Camera
         float getX();
         float getY();
 
+        Position getScreenPosition(Position p);
+
 
     private:
 

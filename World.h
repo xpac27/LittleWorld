@@ -4,9 +4,14 @@
 #include "Camera.h"
 #include "object/DynamicObject.h"
 #include "object/StaticObject.h"
+#include "util/Position.h"
 
 #include <boost/signal.hpp>
 #include <list>
+#include <vector>
+#include <map>
+#include <iostream>
+
 
 class World
 {
@@ -24,6 +29,8 @@ class World
         void setFocus(Object *o);
         void updateMousePosition(float mouseScreenX, float mouseScreenY);
 
+        std::vector<StaticObject*> getTraversingStaticObjects(Position *from, Position *to);
+
         int mouseX;
         int mouseY;
 
@@ -32,6 +39,8 @@ class World
 
         std::list<DynamicObject*> dynamicObjectList;
         std::list<StaticObject*>  staticObjectList;
+
+        std::map<int, std::map<int, std::vector<StaticObject*> > >staticObjectMap;
 
         Camera  camera;
 };
