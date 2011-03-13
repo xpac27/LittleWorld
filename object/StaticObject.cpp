@@ -14,3 +14,8 @@ int StaticObject::getGridY()
     return position.getGridY();
 }
 
+bool StaticObject::isWalkable()
+{
+    return walkable;
+}
+

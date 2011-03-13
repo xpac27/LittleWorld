@@ -24,7 +24,7 @@ void Game::init()
         for (unsigned int y(0); y < 20; y ++)
         {
             r = Randomizer::Random(0, 10);
-            height = ((r > 7) ? r - 6.f : 0.f) * 12.f;
+            height = ((r > 9) ? r - 8.f : 0.f) * 12.f;
 
             world.addStaticObject(new Tile(&world, x * 64.f, y * 64.f, height));
         }

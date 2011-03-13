@@ -12,10 +12,14 @@ class StaticObject : public Object
         int getGridX();
         int getGridY();
 
+        bool isWalkable();
+
 
     protected:
 
         StaticObject(World *w, float h);
+
+        bool walkable;
 };
 
 #endif

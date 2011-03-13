@@ -4,6 +4,8 @@ Tile::Tile(World *w, float x, float y, float h) : StaticObject(w, h)
 {
     position.set(x, y);
     setSize(128.f);
+
+    walkable = (h == 0) ? true : false;
 }
 
 void Tile::draw()

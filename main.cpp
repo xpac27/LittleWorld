@@ -39,7 +39,7 @@ int main()
 {
     // Create main window
     WindowSettings Settings;
-    Settings.AntialiasingLevel = 4;
+    //Settings.AntialiasingLevel = 4;
     RenderWindow application(VideoMode(800, 600), "Game", (Style::Close | Style::Resize), Settings);
     application.PreserveOpenGLStates(true);
     application.UseVerticalSync(true);

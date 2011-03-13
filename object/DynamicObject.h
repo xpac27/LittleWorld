@@ -19,13 +19,25 @@ class DynamicObject : public Object
         virtual void remove();
 
         void move(float time);
+        void setDestination(float x, float y);
+        void setDestination(Position p);
+        void setPath(std::vector<Position> p);
+        void resetDestination();
 
 
     protected:
 
         float speed;
 
+
+    private:
+
+        std::vector<Position> path;
+
+        Position destination;
         Direction direction;
+
+        bool canMove;
 };
 
 #endif

@@ -61,16 +61,14 @@ void Camera::update(float time)
     }
 }
 
-Position Camera::getScreenPosition(Position p)
+void Camera::toScreenPosition(Position *p)
 {
-    float nx = p.x;
-    float ny = p.y;
-    p.x = nx - ny;
-    p.y = (nx + ny) / 2.f;
-    p.x += position.y - position.x + 288.f + 400.f - 300.f;
-    p.y += ((position.x + position.y - 400.f - 300.f) / -2.f) - 64.f;
-
-    return p;
+    float nx = p->x;
+    float ny = p->y;
+    p->x = nx - ny;
+    p->y = (nx + ny) / 2.f;
+    p->x += position.y - position.x + 288.f + 400.f - 300.f;
+    p->y += ((position.x + position.y - 400.f - 300.f) / -2.f) - 64.f;
 }
 
 void Camera::setFocus(Object *o)
