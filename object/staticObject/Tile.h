@@ -4,6 +4,7 @@
 #include "../StaticObject.h"
 #include "../../World.h"
 
+#include <iostream>
 #include <SFML/Graphics.hpp>
 
 class Tile : public StaticObject

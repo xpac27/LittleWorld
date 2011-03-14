@@ -19,6 +19,52 @@ void World::draw()
     {
         camera.draw(*Di);
     }
+
+    float s  = dynamicObjectList.back()->getSize();
+    float x1 = dynamicObjectList.back()->getX();
+    float y1 = dynamicObjectList.back()->getY();
+    float x2 = mouseX;
+    float y2 = mouseY;
+
+    s /= 4.f;
+
+    int const dx = (x1 < x2) ? 1 : -1;
+    int const dy = (y1 < y2) ? 1 : -1;
+
+    Position p1, p2, p3, p4, p5, p6;
+
+    p5.set(x1, y1);
+    p6.set(x2, y2);
+
+    p1.set(x1 + (s * dx), y1 - (s * dy));
+    p2.set(x2 + (s * dx), y2 - (s * dy));
+    p3.set(x1 - (s * dx), y1 + (s * dy));
+    p4.set(x2 - (s * dx), y2 + (s * dy));
+
+    camera.toScreenPosition(&p1);
+    camera.toScreenPosition(&p2);
+    camera.toScreenPosition(&p3);
+    camera.toScreenPosition(&p4);
+    camera.toScreenPosition(&p5);
+    camera.toScreenPosition(&p6);
+
+    glColor4f(1.0f, 0.0f, 0.0f, 1.f);
+
+    glBegin(GL_LINES);
+        glVertex2f(p1.x, p1.y);
+        glVertex2f(p2.x, p2.y);
+    glEnd();
+    glBegin(GL_LINES);
+        glVertex2f(p3.x, p3.y);
+        glVertex2f(p4.x, p4.y);
+    glEnd();
+
+    glColor4f(0.0f, 1.0f, 0.0f, 1.f);
+
+    glBegin(GL_LINES);
+        glVertex2f(p5.x, p5.y);
+        glVertex2f(p6.x, p6.y);
+    glEnd();
 }
 
 void World::update(float time)
@@ -30,17 +76,6 @@ void World::update(float time)
     }
 
     camera.update(time);
-
-    if (mouseX > 0 && mouseX < 10000 && mouseY > 0 && mouseY < 1000)
-    {
-        vector<StaticObject*> objects = getTraversingStaticObjects(new Position(256.f, 256.f), new Position((float)mouseX, (float)mouseY));
-
-        for (unsigned int i = 0; i < objects.size(); i++)
-        {
-            objects[i]->touched = true;
-        }
-    }
-    //getTraversingStaticObjects(new Position(2.2f * 64.f, 3.1f * 64.f), new Position(5.7f * 64.f, 4.1f * 64.f));
 }
 
 void World::addDynamicObject(DynamicObject *o)
@@ -53,9 +88,8 @@ void World::addStaticObject(StaticObject *o)
 {
     o->init();
     staticObjectList.push_back(o);
-    staticObjectMap[o->getGridX()][o->getGridY()].push_back(o);
 
-    cout << o->getGridX() << " x " << o->getGridY() << endl;
+    pathfinder.addStaticObject(o);
 }
 
 void World::setFocus(Object *o)
@@ -82,99 +116,8 @@ void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
     mouseY += 8.f;
 }
 
-vector<StaticObject*> World::getTraversingStaticObjects(Position *from, Position *to)
-//void World::getTraversingStaticObjects(Position *from, Position *to)
+std::vector<Position*> World::getPath(float x1, float y1, float x2, float y2, float s)
 {
-    vector<StaticObject*> objects;
-
-    //Calculate m and b for the line equation:
-    float m = ((to->y / 64.f) - (from->y / 64.f)) / ((to->x / 64.f) - (from->x / 64.f));
-    float b = ((from->y + 32.f) / 64.f) - (m * ((from->x + 32.f) / 64.f));
-
-    // Define vars (c=current, n=next, d=direction, e=end)
-    float cx = (float)from->getGridX();
-    float cy = (float)from->getGridY();
-    float ex = (float)to->getGridX();
-    float ey = (float)to->getGridY();
-    float dx = (cx < ex) ? 1.f : -1.f;
-    float dy = (cy < ey) ? 1.f : -1.f;
-    float nx, ny;
-
-    unsigned int i = 0;
-    unsigned int n = 0;
-
-    cout << "=============" << endl;
-    cout << cx << "x" << cy << " to " << ex << "x" << ey << endl;
-    //cout << "m: " << m << " - b: " << b << endl;
-    //cout << "dx: " << dx << " - dy: " << dy << endl;
-    //cout << "ex: " << ex << " - ey: " << ey << endl;
-    cout << "-------------" << endl;
-
-    for (i = 0; i < staticObjectMap[cx][cy].size(); i ++)
-    {
-        objects.push_back(staticObjectMap[cx][cy][i]);
-    }
-
-    // While we do not reach the end position
-    while ((cx != ex || cy != ey) && n < 10)
-    {
-        // Move 1 tile on x and on y
-        nx = cx + dx;
-        ny = cy + dy;
-
-        // Compare next y value on the x abscissa (x=(y-b)/m) to the curent
-        // if it's the value of the adjacent tile use it
-        //cout << "ny: " << ny << endl;
-        //cout << abs(((ny - b) / m) - cx)  << " then " << ny << endl;
-        //cout << "cy >> " << abs(((ny - b) / m) - cx) << endl;
-        //cy = (abs(((ny - b) / m) - cx) <= 1.f) ? ny : cy;
-
-        // Do the same for the next x value (y=m*x+b)
-        //cout << "nx: " << nx << endl;
-        //cout << abs(((m * nx) + b) - cy)  << " then " << nx << endl;
-        //cout << "cx >> " << abs(((m * nx) + b) - cy) << endl;
-        //cx = (abs(((m * nx) + b) - cy) <= 1.f) ? nx : cx;
-
-        //if(abs(((ny - b) / m) - cx) <= max)
-        //if(abs(((ny - b) / m) - cx) <= abs(((m * nx) + b) - cy))
-        cout << abs(((ny - b) / m) - cx) << " < " << abs(((m * nx) + b) - cy) << endl;
-        //if(abs(((ny - b) / m) - cx) < abs(((m * nx) + b) - cy))
-        if(abs(((ny - b) / m) - cx) <= 2.f)
-        {
-            if (ny > ey && cx < ex) {
-              cx = nx;
-              cout << "- 1" << endl;
-            } else {
-              cy = ny;
-              cout << "- 2" << endl;
-            }
-        }
-        else
-        {
-            if (nx > ex && cy < ey) {
-              cy = ny;
-              cout << "- 3" << endl;
-            } else {
-              cx = nx;
-              cout << "- 4" << endl;
-            }
-        }
-
-        //cout << cx << " x " << cy << endl;
-
-        // Add all the objects in this tile to the list
-        for (i = 0; i < staticObjectMap[cx][cy].size(); i ++)
-        {
-            objects.push_back(staticObjectMap[cx][cy][i]);
-        }
-
-        cout << " " << endl;
-
-        n ++;
-    }
-
-    cout << " " << endl;
-
-    return objects;
+    return pathfinder.getPath(x1, y1, x2, y2, s);
 }
 

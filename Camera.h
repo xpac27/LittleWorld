@@ -16,9 +16,11 @@ class Camera
         void update(float time);
         void draw(Object* object);
         void setFocus(Object *o);
+        void toScreenPosition(Position *p);
 
         float getX();
         float getY();
+
 
 
     private:

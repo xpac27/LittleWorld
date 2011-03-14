@@ -21,8 +21,6 @@ class Player : public DynamicObject
 
     private:
 
-        Position destination;
-
         void onMouseLeftDown();
 };
 

@@ -22,6 +22,10 @@ class Position
         float x;
         float y;
         float z;
+
+        unsigned int f;
+        unsigned int g;
+        unsigned int h;
 };
 
 #endif
