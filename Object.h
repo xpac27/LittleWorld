@@ -1,6 +1,8 @@
 #ifndef DEF_OBJECT
 #define DEF_OBJECT
 
+#include "util/Position.h"
+
 #include <SFML/Graphics.hpp>
 #include <boost/bind.hpp>
 
@@ -21,21 +23,25 @@ class Object
         float getSize();
         float getIndex();
 
+        void setSize(float s);
+
+        bool touched;
+
 
     protected:
 
         World *world;
 
-        float x;
-        float y;
-        float size;
-        float alfSize;
-        float quarterSize;
+        Position position;
+
 
     private:
 
         float index;
         float height;
+        float size;
+        float alfSize;
+        float quarterSize;
 };
 
 #endif

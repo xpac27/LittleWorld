@@ -2,16 +2,22 @@
 
 Object::Object(World *w, float h) : world(w), height(h)
 {
-    x    = 0.f;
-    y    = 0.f;
-    size = 32.f;
+    index = height > 0.f ? 2.f : 1.f;
+    touched = false;
+
+    position.set(0.f, 0.f, 0.f);
+    setSize(32.f);
 }
 
 void Object::init()
 {
+}
+
+void Object::setSize(float s)
+{
+    size        = s;
     alfSize     = size / 2.f;
     quarterSize = size / 4.f;
-    index       = height > 0.f ? 2.f : 1.f;
 }
 
 void Object::draw()
@@ -20,6 +26,12 @@ void Object::draw()
     {
         glPushMatrix();
         glTranslatef(0.f, -height, 0.f);
+    }
+
+    if (touched)
+    {
+        touched = false;
+        glColor4f(0.2f, 0.8f, 0.2f, 1.f);
     }
 
     // FACE TOP
@@ -147,12 +159,12 @@ void Object::draw()
 
 float Object::getX()
 {
-    return x;
+    return position.x;
 }
 
 float Object::getY()
 {
-    return y;
+    return position.y;
 }
 
 float Object::getIndex()

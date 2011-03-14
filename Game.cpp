@@ -17,14 +17,14 @@ void Game::init()
     world.setFocus(p);
 
     float height(0.f);
-    int r(0);
+    //int r(0);
 
-    for (unsigned int x(0); x < 25; x ++)
+    for (unsigned int x(0); x < 10; x ++)
     {
-        for (unsigned int y(0); y < 20; y ++)
+        for (unsigned int y(0); y < 10; y ++)
         {
-            r = Randomizer::Random(0, 10);
-            height = ((r > 7) ? r - 6.f : 0.f) * 12.f;
+            //r = Randomizer::Random(0, 10);
+            //height = ((r > 7) ? r - 6.f : 0.f) * 12.f;
 
             world.addStaticObject(new Tile(&world, x * 64.f, y * 64.f, height));
         }
