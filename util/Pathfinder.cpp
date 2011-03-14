@@ -8,63 +8,65 @@ Pathfinder::Pathfinder()
 
 void Pathfinder::addStaticObject(StaticObject *o)
 {
-    staticObjectMap[o->getGridX()][o->getGridY()].push_back(o);
+    int x = o->getGridX();
+    int y = o->getGridY();
+
+    if (grid.count(x) == 0 || grid[x].count(y) == 0)
+    {
+        grid[o->getGridX()][o->getGridY()] = new Point(x, y);
+    }
+    grid[o->getGridX()][o->getGridY()]->walkable = grid[o->getGridX()][o->getGridY()]->walkable && o->isWalkable();
 }
 
-vector<Position> Pathfinder::getPath(float x1, float y1, float x2, float y2, float s)
+vector<Position*> Pathfinder::getPath(float x1, float y1, float x2, float y2, float s)
 {
-    int const dx = (x1 < x2) ? 1 : -1;
-    int const dy = (y1 < y2) ? 1 : -1;
+    vector<Position*> path;
 
-    s /= 4.f;
-
-    vector<vector<StaticObject*> > objects;
-
-    if (dx == dy)
+    if (isGridOk((int)floor((x2 + 32.f) / 64.f), (int)floor((y2 + 32.f) / 64.f)))
     {
-        objects.push_back(getTraversingStaticObjects(x1 + s, y1 - s, x2 + s, y2 - s));
-        objects.push_back(getTraversingStaticObjects(x1 - s, y1 + s, x2 - s, y2 + s));
-    }
-    else
-    {
-        objects.push_back(getTraversingStaticObjects(x1 - s, y1 - s, x2 - s, y2 - s));
-        objects.push_back(getTraversingStaticObjects(x1 + s, y1 + s, x2 + s, y2 + s));
-    }
+        cout << "...safe" << endl;
+        // TODO CHECK x2 and y2 to see if it's not near to a nonwalkable point
 
-    bool pathIsWalkable = true;
-    vector<StaticObject*>::iterator i;
+        int const dx = (x1 < x2) ? 1 : -1;
+        int const dy = (y1 < y2) ? 1 : -1;
 
-    for (unsigned int n = 0; n < objects.size() && pathIsWalkable; n++)
-    {
-        for (i = objects[n].begin(); i != objects[n].end() && pathIsWalkable; ++ i)
+        bool pathIsWalkable = true;
+
+        s /= 4.f;
+
+        list<Point*> points1;
+        list<Point*> points2;
+        list<Point*>::iterator i;
+
+        points1 = getTraversingPoints(x1 + (s * dx), y1 - (s * dy), x2 + (s * dx), y2 - (s * dy));
+        points2 = getTraversingPoints(x1 - (s * dx), y1 + (s * dy), x2 - (s * dx), y2 + (s * dy));
+
+        points1.merge(points2);
+
+        for (i = points1.begin(); i != points1.end() && pathIsWalkable; ++ i)
         {
-            if ((*i)->isWalkable() == false)
-            {
-                pathIsWalkable = false;
-            }
+            pathIsWalkable = (*i)->walkable;
         }
-    }
 
-    vector<Position> path;
-
-    if (pathIsWalkable)
-    {
-        Position p1(x2, y2);
-        path.push_back(p1);
+        if (pathIsWalkable)
+        {
+            path.push_back(new Position(x2, y2));
+        }
+        else
+        {
+            path = aStar(x1, y1, x2, y2);
+        }
     }
 
     return path;
 }
 
-vector<StaticObject*> Pathfinder::getTraversingStaticObjects(float x1, float y1, float x2, float y2)
+list<Point*> Pathfinder::getTraversingPoints(float x1, float y1, float x2, float y2)
 {
-    vector<StaticObject*> objects;
-
-    //Calculate m and b for the line equation:
-    float m = ((y2 / 64.f) - (y1 / 64.f)) / ((x2 / 64.f) - (x1 / 64.f));
-    float b = ((y1 + 32.f) / 64.f) - (m * ((x1 + 32.f) / 64.f));
+    list<Point*> points;
 
     // Define vars (c=current, n=next, d=direction, e=end)
+    // TODO replace c and e by Points (with getXf and getYf methods)
     float cx = (float)floor((x1 + 32.f) / 64.f);
     float cy = (float)floor((y1 + 32.f) / 64.f);
     float const ex = (float)floor((x2 + 32.f) / 64.f);
@@ -73,13 +75,13 @@ vector<StaticObject*> Pathfinder::getTraversingStaticObjects(float x1, float y1,
     float const dy = (cy < ey) ? 1.f : -1.f;
     float nx, ny;
 
-    unsigned int i = 0;
+    //Calculate m and b for the line equation
+    float m = (ey - cy) / (ex - cx);
+    float b = ey - (m * ex);
+
     unsigned int n = 0;
 
-    for (i = 0; i < staticObjectMap[cx][cy].size(); i ++)
-    {
-        objects.push_back(staticObjectMap[cx][cy][i]);
-    }
+    points.push_back(grid[(int)cx][(int)cy]);
 
     // While we do not reach the end position
     while ((cx != ex || cy != ey) && n < 60)
@@ -99,13 +101,127 @@ vector<StaticObject*> Pathfinder::getTraversingStaticObjects(float x1, float y1,
         }
         n ++;
 
-        // Add all the objects in this tile to the list
-        for (i = 0; i < staticObjectMap[cx][cy].size(); i ++)
-        {
-            objects.push_back(staticObjectMap[cx][cy][i]);
-        }
+        // Add this point to the list
+        points.push_back(grid[(int)cx][(int)cy]);
     }
-    return objects;
+    return points;
 }
 
+vector<Position*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
+{
+    Point *start = grid[(int)floor((x1 + 32.f) / 64.f)][(int)floor((y1 + 32.f) / 64.f)];
+    Point *end   = grid[(int)floor((x2 + 32.f) / 64.f)][(int)floor((y2 + 32.f) / 64.f)];
+
+    cout << "================" << endl;
+    cout << start->x << "x" << start->y << " - " << end->x << "x" << end->y << endl;
+
+    vector<Position*> path;
+
+    Point *current;
+    Point *child;
+
+    list<Point*> openList;
+    list<Point*> closedList;
+    list<Point*>::iterator i;
+
+    unsigned int n = 0;
+
+    openList.push_back(start);
+    start->opened = true;
+
+    while (n == 0 || (current != end && n < 10))
+    {
+        // Look for the smallest F value in the openList and make it the current point
+        for (i = openList.begin(); i != openList.end(); ++ i)
+        {
+            if (i == openList.begin() || (*i)->f < current->f)
+            {
+                current = (*i);
+            }
+        }
+
+        // Add the current point to the closedList
+        openList.remove(current);
+        closedList.push_back(current);
+        current->opened = false;
+        current->closed = true;
+
+        cout << "curent: " << current->x << "x" << current->y << endl;
+
+        // Get all current's adjacent walkable points
+        for (int x = -1; x < 2; x ++)
+        {
+            for (int y = -1; y < 2; y ++)
+            {
+                if ((x != 0 || y != 0) && isGridOk(current->x + x, current->x + y))
+                {
+                    if (!isGridOk(current->x + x, current->y + y) || (x != 0 && y != 0 && !isGridOk(current->x + x, current->y) && !isGridOk(current->x, current->y + y)))
+                    {
+                        continue;
+                    }
+                    child = grid[current->x + x][current->y + y];
+
+                    // If it's already in the openList
+                    if (child->opened)
+                    {
+                        // If it has a wroste g score than the one that pass through the current point
+                        if (child->g > getGScore(current, child))
+                        {
+                            // Change parent
+                            child->parent = current;
+                            cout << "new parent of: " << child->x << "x" << child->y << endl;
+                            child->g = getGScore(current, child);
+                        }
+                    }
+                    else
+                    {
+                        // Add it to the openList with current point as parent
+                        openList.push_back(child);
+                        child->opened = true;
+                        child->parent = current;
+                        cout << "parent of: " << child->x << "x" << child->y << endl;
+                        child->g = getGScore(current, child);
+                        child->h = (abs(end->x - child->x) + abs(end->y - child->y)) * 10;
+                        child->f = child->g + child->h;
+                    }
+                }
+            }
+        }
+
+        n ++;
+    }
+
+    // Reset
+    for (i = openList.begin(); i != openList.end(); ++ i)
+    {
+        (*i)->opened = false;
+    }
+    for (i = closedList.begin(); i != closedList.end(); ++ i)
+    {
+        (*i)->closed = false;
+    }
+
+    cout << "--------" << endl;
+
+    // Resolve the path
+    current = end;
+    while (current != start)
+    {
+        cout << "path: " << current->x << "x" << current->y << endl;
+        path.push_back(current->getPosition());
+        current = current->parent;
+    }
+
+    return path;
+}
+
+int Pathfinder::getGScore(Point *p1, Point *p2)
+{
+    return p1->g + ((p1->x == p2->x || p1->y == p2->y) ? 10 : 14);
+}
+
+bool Pathfinder::isGridOk(int x, int y)
+{
+    return (grid.count(x) != 0 && grid[x].count(y) != 0 && grid[x][y]->walkable && !grid[x][y]->closed);
+}
 

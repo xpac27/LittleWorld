@@ -3,8 +3,11 @@
 
 #include "../object/StaticObject.h"
 #include "Position.h"
+#include "Point.h"
 
+#include <iostream>
 #include <vector>
+#include <list>
 #include <map>
 
 class Pathfinder
@@ -15,15 +18,20 @@ class Pathfinder
 
         void addStaticObject(StaticObject *o);
 
-        std::vector<Position> getPath(float x1, float y1, float x2, float y2, float s);
+        std::vector<Position*> getPath(float x1, float y1, float x2, float y2, float s);
 
 
 
-    protected:
+    private:
 
-        std::vector<StaticObject*> getTraversingStaticObjects(float x1, float y1, float x2, float y2);
+        std::vector<Position*> aStar(float x1, float y1, float x2, float y2);
+        std::list<Point*> getTraversingPoints(float x1, float y1, float x2, float y2);
 
-        std::map<int, std::map<int, std::vector<StaticObject*> > >staticObjectMap;
+        int getGScore(Point *p1, Point *p2);
+
+        bool isGridOk(int x, int y);
+
+        std::map<int, std::map<int, Point*> > grid;
 };
 
 #endif

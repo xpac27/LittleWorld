@@ -41,9 +41,10 @@ void DynamicObject::resetDestination()
     destination = position;
 }
 
-void DynamicObject::setDestination(Position p)
+void DynamicObject::setDestination(Position *p)
 {
-    setDestination(p.x, p.y);
+    cout << "GOTO: " << p->x << "x" << p->y << endl;
+    setDestination(p->x, p->y);
 }
 void DynamicObject::setDestination(float x, float y)
 {
@@ -52,7 +53,7 @@ void DynamicObject::setDestination(float x, float y)
     canMove = true;
 }
 
-void DynamicObject::setPath(vector<Position> p)
+void DynamicObject::setPath(vector<Position*> p)
 {
     resetDestination();
     path = p;

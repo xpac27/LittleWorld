@@ -43,6 +43,9 @@ $(BIN): $(OBJECTS)
 ./util/Position.o: util/Position.cpp
 	$(CPP) -c util/Position.cpp -o util/Position.o $(FLAGS)
 
+./util/Point.o: util/Point.cpp
+	$(CPP) -c util/Point.cpp -o util/Point.o $(FLAGS)
+
 ./World.o: World.cpp
 	$(CPP) -c World.cpp -o World.o $(FLAGS)
 

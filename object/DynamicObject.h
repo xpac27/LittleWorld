@@ -20,8 +20,8 @@ class DynamicObject : public Object
 
         void move(float time);
         void setDestination(float x, float y);
-        void setDestination(Position p);
-        void setPath(std::vector<Position> p);
+        void setDestination(Position *p);
+        void setPath(std::vector<Position*> p);
         void resetDestination();
 
 
@@ -32,7 +32,7 @@ class DynamicObject : public Object
 
     private:
 
-        std::vector<Position> path;
+        std::vector<Position*> path;
 
         Position destination;
         Direction direction;

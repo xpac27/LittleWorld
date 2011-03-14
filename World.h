@@ -28,7 +28,7 @@ class World
         void setFocus(Object *o);
         void updateMousePosition(float mouseScreenX, float mouseScreenY);
 
-        std::vector<Position> getPath(float x1, float y1, float x2, float y2, float s);
+        std::vector<Position*> getPath(float x1, float y1, float x2, float y2, float s);
 
         float mouseX;
         float mouseY;

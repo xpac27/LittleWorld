@@ -1,11 +1,9 @@
 #include "Tile.h"
 
-Tile::Tile(World *w, float x, float y, float h) : StaticObject(w, h)
+Tile::Tile(World *w, float x, float y, float h) : StaticObject(w, h, (h != 0))
 {
     position.set(x, y);
     setSize(128.f);
-
-    walkable = (h == 0) ? true : false;
 }
 
 void Tile::draw()
