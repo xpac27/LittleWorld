@@ -43,7 +43,6 @@ void DynamicObject::resetDestination()
 
 void DynamicObject::setDestination(Position *p)
 {
-    cout << "GOTO: " << p->x << "x" << p->y << endl;
     setDestination(p->x, p->y);
 }
 void DynamicObject::setDestination(float x, float y)

@@ -21,15 +21,18 @@ class Pathfinder
         std::vector<Position*> getPath(float x1, float y1, float x2, float y2, float s);
 
 
-
     private:
 
         std::vector<Position*> aStar(float x1, float y1, float x2, float y2);
         std::list<Point*> getTraversingPoints(float x1, float y1, float x2, float y2);
 
-        int getGScore(Point *p1, Point *p2);
+        Point* getPoint(int x, int y);
+        Point* getPointFromCoord(float x, float y);
 
-        bool isGridOk(int x, int y);
+        bool pointExists(int x, int y);
+        bool pointIsWalkable(int x, int y);
+
+        int coordToGrid(float v);
 
         std::map<int, std::map<int, Point*> > grid;
 };
