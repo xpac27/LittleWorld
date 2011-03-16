@@ -11,22 +11,23 @@ void Pathfinder::addStaticObject(StaticObject *o)
     int x = o->getGridX();
     int y = o->getGridY();
 
-    if (grid.count(x) == 0 || grid[x].count(y) == 0)
+    if (!pointExists(x, y))
     {
-        grid[o->getGridX()][o->getGridY()] = new Point(x, y);
+        grid[x][y] = new Point(x, y, o->isWalkable());
     }
-    grid[o->getGridX()][o->getGridY()]->walkable = grid[o->getGridX()][o->getGridY()]->walkable && o->isWalkable();
+    else if (o->isWalkable())
+    {
+        grid[x][y]->walkable = false;
+    }
 }
 
 vector<Position*> Pathfinder::getPath(float x1, float y1, float x2, float y2, float s)
 {
     vector<Position*> path;
 
-    if (isGridOk((int)floor((x2 + 32.f) / 64.f), (int)floor((y2 + 32.f) / 64.f)))
+    if (pointIsWalkable(coordToGrid(x2), coordToGrid(y2)))
     {
-        cout << "...safe" << endl;
-        // TODO CHECK x2 and y2 to see if it's not near to a nonwalkable point
-
+        // Calculate line direction
         int const dx = (x1 < x2) ? 1 : -1;
         int const dy = (y1 < y2) ? 1 : -1;
 
@@ -34,15 +35,15 @@ vector<Position*> Pathfinder::getPath(float x1, float y1, float x2, float y2, fl
 
         s /= 4.f;
 
+        // Get traversing points
         list<Point*> points1;
         list<Point*> points2;
         list<Point*>::iterator i;
-
         points1 = getTraversingPoints(x1 + (s * dx), y1 - (s * dy), x2 + (s * dx), y2 - (s * dy));
         points2 = getTraversingPoints(x1 - (s * dx), y1 + (s * dy), x2 - (s * dx), y2 + (s * dy));
-
         points1.merge(points2);
 
+        // Check if the direct path is safe
         for (i = points1.begin(); i != points1.end() && pathIsWalkable; ++ i)
         {
             pathIsWalkable = (*i)->walkable;
@@ -57,6 +58,10 @@ vector<Position*> Pathfinder::getPath(float x1, float y1, float x2, float y2, fl
             path = aStar(x1, y1, x2, y2);
         }
     }
+    else
+    {
+        cout << "not walkable" << endl;
+    }
 
     return path;
 }
@@ -65,125 +70,152 @@ list<Point*> Pathfinder::getTraversingPoints(float x1, float y1, float x2, float
 {
     list<Point*> points;
 
-    // Define vars (c=current, n=next, d=direction, e=end)
-    // TODO replace c and e by Points (with getXf and getYf methods)
-    float cx = (float)floor((x1 + 32.f) / 64.f);
-    float cy = (float)floor((y1 + 32.f) / 64.f);
-    float const ex = (float)floor((x2 + 32.f) / 64.f);
-    float const ey = (float)floor((y2 + 32.f) / 64.f);
-    float const dx = (cx < ex) ? 1.f : -1.f;
-    float const dy = (cy < ey) ? 1.f : -1.f;
-    float nx, ny;
+    // Calculate m and b for the line equation:
+    float const m = ((x1 == x2) ? 0.f : ((y2 - y1) / (x2 - x1)));
+    float const b = ((y1 + 32.f) / 64.f) - (m * ((x1 + 32.f) / 64.f));
 
-    //Calculate m and b for the line equation
-    float m = (ey - cy) / (ex - cx);
-    float b = ey - (m * ex);
+    // Calculate line direction
+    float const dx = (x1 < x2) ? 1.f : -1.f;
+    float const dy = (y1 < y2) ? 1.f : -1.f;
+
+    // Gather points
+    Point *current = getPointFromCoord(x1, y1);
+    Point *end = getPointFromCoord(x2, y2);
+
+    points.push_back(current);
 
     unsigned int n = 0;
 
-    points.push_back(grid[(int)cx][(int)cy]);
-
     // While we do not reach the end position
-    while ((cx != ex || cy != ey) && n < 60)
+    while (current != end && n < 10)
     {
-        // Move 1 tile on x and on y
-        nx = cx + dx;
-        ny = cy + dy;
-
-        // Find x for the next y value and compare it to the current tile x value
-        if (floor((dy == 1) ? ((ny - b) / m) : ((cy - b) / m)) == cx)
+        // Get x next's value and check if it changes
+        if (m == 0.f || floor(((((dy == 1) ? current->getYf() + dy : current->getYf()) - b) / m)) == current->getX())
         {
-            cy = ny;
+            if (!pointExists(current->getX(), current->getY() + (int)dy))
+            {
+                return points;
+            }
+            current = getPoint(current->getX(), current->getY() + (int)dy);
         }
         else
         {
-            cx = nx;
+            if (!pointExists(current->getXf() + (int)dx, current->getY()))
+            {
+                return points;
+            }
+            current = getPoint(current->getXf() + (int)dx, current->getY());
         }
         n ++;
 
         // Add this point to the list
-        points.push_back(grid[(int)cx][(int)cy]);
+        points.push_back(current);
     }
     return points;
 }
 
 vector<Position*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
 {
-    Point *start = grid[(int)floor((x1 + 32.f) / 64.f)][(int)floor((y1 + 32.f) / 64.f)];
-    Point *end   = grid[(int)floor((x2 + 32.f) / 64.f)][(int)floor((y2 + 32.f) / 64.f)];
-
-    cout << "================" << endl;
-    cout << start->x << "x" << start->y << " - " << end->x << "x" << end->y << endl;
-
     vector<Position*> path;
 
+    // Define points to work with
+    Point *start = getPointFromCoord(x1, y1);
+    Point *end = getPointFromCoord(x2, y2);
     Point *current;
     Point *child;
 
+    // Define the open and the close list
     list<Point*> openList;
     list<Point*> closedList;
     list<Point*>::iterator i;
 
     unsigned int n = 0;
 
+    // Add the start point to the openList
     openList.push_back(start);
     start->opened = true;
 
-    while (n == 0 || (current != end && n < 10))
+    while (n == 0 || (current != end && n < 30))
     {
         // Look for the smallest F value in the openList and make it the current point
         for (i = openList.begin(); i != openList.end(); ++ i)
         {
-            if (i == openList.begin() || (*i)->f < current->f)
+            if (i == openList.begin() || (*i)->getFScore() <= current->getFScore())
             {
                 current = (*i);
             }
         }
 
-        // Add the current point to the closedList
-        openList.remove(current);
-        closedList.push_back(current);
-        current->opened = false;
-        current->closed = true;
+        // Stop if we reached the end
+        if (current == end)
+        {
+            break;
+        }
 
-        cout << "curent: " << current->x << "x" << current->y << endl;
+        // Remove the current point from the openList
+        openList.remove(current);
+        current->opened = false;
+
+        // Add the current point to the closedList
+        closedList.push_back(current);
+        current->closed = true;
 
         // Get all current's adjacent walkable points
         for (int x = -1; x < 2; x ++)
         {
             for (int y = -1; y < 2; y ++)
             {
-                if ((x != 0 || y != 0) && isGridOk(current->x + x, current->x + y))
+                // If it's current point then pass
+                if (x == 0 && y == 0)
                 {
-                    if (!isGridOk(current->x + x, current->y + y) || (x != 0 && y != 0 && !isGridOk(current->x + x, current->y) && !isGridOk(current->x, current->y + y)))
+                    continue;
+                }
+
+                // Get this point
+                child = getPoint(current->getX() + x, current->getY() + y);
+
+                // If it's closed or not walkable then pass
+                if (child->closed || !child->walkable)
+                {
+                    continue;
+                }
+
+                // If we are at a corner
+                if (x != 0 && y != 0)
+                {
+                    // if the next horizontal point is not walkable or in the closed list then pass
+                    if (!pointIsWalkable(current->getX(), current->getY() + y) || getPoint(current->getX(), current->getY() + y)->closed)
                     {
                         continue;
                     }
-                    child = grid[current->x + x][current->y + y];
+                    // if the next vertical point is not walkable or in the closed list then pass
+                    if (!pointIsWalkable(current->getX() + x, current->getY()) || getPoint(current->getX() + x, current->getY())->closed)
+                    {
+                        continue;
+                    }
+                }
 
-                    // If it's already in the openList
-                    if (child->opened)
+                // If it's already in the openList
+                if (child->opened)
+                {
+                    // If it has a wroste g score than the one that pass through the current point
+                    // then its path is improved when it's parent is the current point
+                    if (child->getGScore() > child->getGScore(current))
                     {
-                        // If it has a wroste g score than the one that pass through the current point
-                        if (child->g > getGScore(current, child))
-                        {
-                            // Change parent
-                            child->parent = current;
-                            cout << "new parent of: " << child->x << "x" << child->y << endl;
-                            child->g = getGScore(current, child);
-                        }
+                        // Change its parent and g score
+                        child->setParent(current);
+                        child->computeScores(end);
                     }
-                    else
-                    {
-                        // Add it to the openList with current point as parent
-                        openList.push_back(child);
-                        child->opened = true;
-                        child->parent = current;
-                        cout << "parent of: " << child->x << "x" << child->y << endl;
-                        child->g = getGScore(current, child);
-                        child->h = (abs(end->x - child->x) + abs(end->y - child->y)) * 10;
-                        child->f = child->g + child->h;
-                    }
+                }
+                else
+                {
+                    // Add it to the openList with current point as parent
+                    openList.push_back(child);
+                    child->opened = true;
+
+                    // Compute it's g, h and f score
+                    child->setParent(current);
+                    child->computeScores(end);
                 }
             }
         }
@@ -201,27 +233,47 @@ vector<Position*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
         (*i)->closed = false;
     }
 
-    cout << "--------" << endl;
-
-    // Resolve the path
-    current = end;
-    while (current != start)
+    // Resolve the path starting from the end point
+    while (current->hasParent() && current != start)
     {
-        cout << "path: " << current->x << "x" << current->y << endl;
         path.push_back(current->getPosition());
-        current = current->parent;
+        current = current->getParent();
+        n ++;
     }
 
     return path;
 }
 
-int Pathfinder::getGScore(Point *p1, Point *p2)
+Point* Pathfinder::getPoint(int x, int y)
 {
-    return p1->g + ((p1->x == p2->x || p1->y == p2->y) ? 10 : 14);
+    if (pointExists(x, y))
+    {
+        return grid[x][y];
+    }
+    else
+    {
+        cout << "ERROR: failed to gather point " << x << "x" << y << " on grid" << endl;
+        return new Point(0, 0, false);
+    }
 }
 
-bool Pathfinder::isGridOk(int x, int y)
+Point* Pathfinder::getPointFromCoord(float x, float y)
 {
-    return (grid.count(x) != 0 && grid[x].count(y) != 0 && grid[x][y]->walkable && !grid[x][y]->closed);
+    return getPoint(coordToGrid(x), coordToGrid(y));
+}
+
+bool Pathfinder::pointExists(int x, int y)
+{
+    return (grid.count(x) != 0 && grid[x].count(y) != 0);
+}
+
+bool Pathfinder::pointIsWalkable(int x, int y)
+{
+    return (pointExists(x, y) && grid[x][y]->walkable);
+}
+
+int Pathfinder::coordToGrid(float v)
+{
+    return (int)floor((v + 32.f) / 64.f);
 }
 
