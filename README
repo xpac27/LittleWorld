@@ -14,7 +14,7 @@ REQUIRED:
 INSTALLING:
 
 - Git clone the LittleWorld project
-- Create a symbolic link : sudo ln -s /opt/local/var/macports/software/boost/1.45.0_2 boost.framework
+- Create a symbolic link : sudo ln -s /opt/local/var/macports/software/boost/1.45.0_2 /Library/Frameworks/boost.framework
 - Go in the LittleWorld folder and type "make" then Enter and wait for the build to be done
 - Type ./littleWorld to start the game
 
