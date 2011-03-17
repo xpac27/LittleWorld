@@ -5,8 +5,8 @@ BIN      = littleWorld
 TAREGETS = $(shell find . -type f -name "*" | grep -E "\.(cpp)" | sed "s/\.cpp/\.o/g" | xargs) $(BIN)
 OBJECTS  = $(shell find . -type f -name "*" | grep -E "\.(o)" | xargs)
 
-LIBRARIES = -L/opt/local/var/macports/software/boost/1.45.0_1/opt/local/lib/ -lboost_signals
-INCLUDES  = -I/opt/local/var/macports/software/boost/1.45.0_1/opt/local/include/
+LIBRARIES = -L/Library/Frameworks/boost.framework/opt/local/lib/ -lboost_signals
+INCLUDES  = -I/Library/Frameworks/boost.framework/opt/local/include/
 FRAMWORKS = -framework sfml-graphics -framework sfml-window -framework sfml-system -framework OpenGL -framework GLUT
 
 FLAGS = $(INCLUDES)

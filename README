@@ -1,4 +1,4 @@
-This programme is supposed to be able to compile and run on MacOSX, Linux and PC (I only tested MacOSX for now).
+This program is supposed to be able to compile and run on MacOSX, Linux and PC (I only tested MacOSX for now).
 
 This project is under development so do not expect impressive features ;)
 
@@ -14,6 +14,7 @@ REQUIRED:
 INSTALLING:
 
 - Git clone the LittleWorld project
+- Create a symbolic link : sudo ln -s /opt/local/var/macports/software/boost/1.45.0_2 boost.framework
 - Go in the LittleWorld folder and type "make" then Enter and wait for the build to be done
 - Type ./littleWorld to start the game
 

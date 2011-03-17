@@ -19,4 +19,3 @@ bool StaticObject::isWalkable()
 {
     return !solid;
 }
-

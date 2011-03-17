@@ -25,6 +25,8 @@ class Object
 
         void setSize(float s);
 
+        bool touched;
+
 
     protected:
 

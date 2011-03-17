@@ -19,9 +19,9 @@ void Game::init()
     float height(0.f);
     int r(0);
 
-    for (unsigned int x(0); x < 25; x ++)
+    for (unsigned int x(0); x < 10; x ++)
     {
-        for (unsigned int y(0); y < 20; y ++)
+        for (unsigned int y(0); y < 10; y ++)
         {
             r = Randomizer::Random(0, 10);
             height = ((r > 9) ? r - 8.f : 0.f) * 12.f;
