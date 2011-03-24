@@ -34,7 +34,7 @@ void World::update(float time)
 
 void World::addDynamicObject(DynamicObject *o)
 {
-    o->init();
+    o->init(&pathfinder);
     dynamicObjectList.push_back(o);
 }
 
@@ -42,7 +42,6 @@ void World::addStaticObject(StaticObject *o)
 {
     o->init();
     staticObjectList.push_back(o);
-
     pathfinder.addStaticObject(o);
 }
 
@@ -68,10 +67,5 @@ void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
     // Corect cursor
     mouseX += 16.f;
     mouseY += 8.f;
-}
-
-std::vector<Position*> World::getPath(float x1, float y1, float x2, float y2, float s)
-{
-    return pathfinder.getPath(x1, y1, x2, y2, s);
 }
 

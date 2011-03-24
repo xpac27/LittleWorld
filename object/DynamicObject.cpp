@@ -7,6 +7,11 @@ DynamicObject::DynamicObject(World *w, float h) : Object(w, h)
     canMove = false;
 }
 
+void DynamicObject::init(Pathfinder *p)
+{
+    pathfinder = p;
+}
+
 void DynamicObject::update(float time)
 {
 }
@@ -52,10 +57,10 @@ void DynamicObject::setDestination(float x, float y)
     canMove = true;
 }
 
-void DynamicObject::setPath(vector<Position*> p)
+void DynamicObject::setPath(Position *p)
 {
     resetDestination();
-    path = p;
+    path = pathfinder->getPath(position.x, position.y, p->x, p->y, getSize());
     canMove = true;
 }
 

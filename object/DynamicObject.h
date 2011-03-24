@@ -4,6 +4,7 @@
 #include "../Object.h"
 #include "../util/Position.h"
 #include "../util/Direction.h"
+#include "../util/Pathfinder.h"
 
 #include <iostream>
 
@@ -18,10 +19,11 @@ class DynamicObject : public Object
         virtual void update(float time);
         virtual void remove();
 
+        void init(Pathfinder *p);
         void move(float time);
         void setDestination(float x, float y);
         void setDestination(Position *p);
-        void setPath(std::vector<Position*> p);
+        void setPath(Position *p);
         void resetDestination();
 
 
@@ -33,6 +35,8 @@ class DynamicObject : public Object
     private:
 
         std::vector<Position*> path;
+
+        Pathfinder *pathfinder;
 
         Position destination;
         Direction direction;

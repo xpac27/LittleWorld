@@ -17,13 +17,13 @@ class Object
         virtual void init();
         virtual void draw();
 
+        void setSize(float s);
+
         float getX();
         float getY();
         float getHeight();
         float getSize();
         float getIndex();
-
-        void setSize(float s);
 
         bool touched;
 

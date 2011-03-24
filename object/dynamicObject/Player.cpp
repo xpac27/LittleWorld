@@ -16,9 +16,9 @@ Player::Player(World *w) : DynamicObject(w, 32.f)
 
 void Player::onMouseLeftDown()
 {
-    //setDestination(world->mouseX, world->mouseY);
-    // TODO pass a pathfinder pointer to dynamicObjects
-    setPath(world->getPath(position.x, position.y, world->mouseX, world->mouseY, getSize()));
+    // TODO find a way to not create a new position each time
+    Position p(world->mouseX, world->mouseY);
+    setPath(&p);
 }
 
 void Player::draw()
