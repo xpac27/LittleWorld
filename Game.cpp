@@ -16,15 +16,22 @@ void Game::init()
     world.addDynamicObject(p);
     world.setFocus(p);
 
+    for (unsigned int i = 0; i < 20; i ++)
+    {
+        Enemy *e = new Enemy(&world);
+        e->setPosition(Randomizer::Random(0, 1024), Randomizer::Random(0, 1024));
+        world.addDynamicObject(e);
+    }
+
     float height(0.f);
     int r(0);
 
-    for (unsigned int x(0); x < 10; x ++)
+    for (unsigned int x(0); x < 16; x ++)
     {
-        for (unsigned int y(0); y < 10; y ++)
+        for (unsigned int y(0); y < 16; y ++)
         {
             r = Randomizer::Random(0, 10);
-            height = ((r > 9) ? r - 8.f : 0.f) * 12.f;
+            height = ((r > 7) ? r - 7.f : 0.f) * 12.f;
 
             world.addStaticObject(new Tile(&world, x * 64.f, y * 64.f, height));
         }

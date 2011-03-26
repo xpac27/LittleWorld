@@ -22,6 +22,9 @@ $(BIN): $(OBJECTS)
 ./object/dynamicObject/Player.o: object/dynamicObject/Player.cpp
 	$(CPP) -c object/dynamicObject/Player.cpp -o object/dynamicObject/Player.o $(FLAGS)
 
+./object/dynamicObject/Enemy.o: object/dynamicObject/Enemy.cpp
+	$(CPP) -c object/dynamicObject/Enemy.cpp -o object/dynamicObject/Enemy.o $(FLAGS)
+
 ./object/DynamicObject.o: object/DynamicObject.cpp
 	$(CPP) -c object/DynamicObject.cpp -o object/DynamicObject.o $(FLAGS)
 
@@ -33,6 +36,12 @@ $(BIN): $(OBJECTS)
 
 ./Object.o: Object.cpp
 	$(CPP) -c Object.cpp -o Object.o $(FLAGS)
+
+./util/Conf.o: util/Conf.cpp
+	$(CPP) -c util/Conf.cpp -o util/Conf.o $(FLAGS)
+
+./util/Console.o: util/Console.cpp
+	$(CPP) -c util/Console.cpp -o util/Console.o $(FLAGS)
 
 ./util/Direction.o: util/Direction.cpp
 	$(CPP) -c util/Direction.cpp -o util/Direction.o $(FLAGS)

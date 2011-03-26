@@ -29,6 +29,8 @@ class DynamicObject : public Object
 
     protected:
 
+        bool isCanMove();
+
         float speed;
 
 

@@ -5,6 +5,7 @@
 ************************************/
 
 #include "Game.h"
+#include "util/Conf.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>

@@ -2,6 +2,7 @@
 #define DEF_UTIL_PATHFINDER
 
 #include "../object/StaticObject.h"
+#include "Console.h"
 #include "Position.h"
 #include "Point.h"
 

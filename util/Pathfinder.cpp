@@ -60,7 +60,7 @@ vector<Position*> Pathfinder::getPath(float x1, float y1, float x2, float y2, fl
     }
     else
     {
-        cout << "not walkable" << endl;
+        Console::log("not walkable");
     }
 
     return path;
@@ -252,7 +252,7 @@ Point* Pathfinder::getPoint(int x, int y)
     }
     else
     {
-        cout << "ERROR: failed to gather point " << x << "x" << y << " on grid" << endl;
+        //Console::log("ERROR: failed to gather point " << x << "x" << y << " on grid");
         return new Point(0, 0, false);
     }
 }

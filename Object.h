@@ -18,6 +18,7 @@ class Object
         virtual void draw();
 
         void setSize(float s);
+        void setPosition(float x, float y);
 
         float getX();
         float getY();

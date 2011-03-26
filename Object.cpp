@@ -20,6 +20,11 @@ void Object::setSize(float s)
     quarterSize = size / 4.f;
 }
 
+void Object::setPosition(float x, float y)
+{
+    position.set(x, y);
+}
+
 void Object::draw()
 {
     if (height != 0)

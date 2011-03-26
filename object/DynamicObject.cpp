@@ -64,3 +64,8 @@ void DynamicObject::setPath(Position *p)
     canMove = true;
 }
 
+bool DynamicObject::isCanMove()
+{
+    return canMove;
+}
+
