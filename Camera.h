@@ -3,6 +3,7 @@
 
 #include "Object.h"
 #include "util/Position.h"
+#include "util/Conf.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>

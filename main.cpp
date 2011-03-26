@@ -21,15 +21,15 @@ void onWindowResized(float width, float height)
 
     float space;
 
-    if (width / height > 800.f / 600.f)
+    if (width / height > Conf::SCREEN_WIDTH / Conf::SCREEN_HEIGHT)
     {
-        space = abs(((600.f / (height / width)) - 800.f) / 2.f);
-        glOrtho(-1.f * space, 800.f + space, 600.f, 0.f, 0.f, 100.f);
+        space = abs(((Conf::SCREEN_HEIGHT / (height / width)) - Conf::SCREEN_WIDTH) / 2.f);
+        glOrtho(-1.f * space, Conf::SCREEN_WIDTH + space, Conf::SCREEN_HEIGHT, 0.f, 0.f, 100.f);
     }
     else
     {
-        space = abs(((800.f / (width / height)) - 600.f) / 2.f);
-        glOrtho(0.f, 800.f, 600.f + space, -1.f * space, 0.f, 100.f);
+        space = abs(((Conf::SCREEN_WIDTH / (width / height)) - Conf::SCREEN_HEIGHT) / 2.f);
+        glOrtho(0.f, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT + space, -1.f * space, 0.f, 100.f);
     }
 
     glMatrixMode(GL_MODELVIEW);
@@ -40,8 +40,8 @@ int main()
 {
     // Create main window
     WindowSettings Settings;
-    //Settings.AntialiasingLevel = 4;
-    RenderWindow application(VideoMode(800, 600), "Game", (Style::Close | Style::Resize), Settings);
+    Settings.AntialiasingLevel = 4;
+    RenderWindow application(VideoMode(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT), "Game", (Style::Close | Style::Resize), Settings);
     application.PreserveOpenGLStates(true);
     application.UseVerticalSync(true);
 
@@ -53,10 +53,10 @@ int main()
     glClearColor(0.f, 0.f, 0.f, 0.f);
 
     // Setup an ortho projection
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.f, 800.f, 600.f, 0.f, 0.f, 100.f);
+    glOrtho(0.f, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, 0.f, 0.f, 100.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 

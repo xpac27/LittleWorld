@@ -5,6 +5,7 @@
 #include "object/dynamicObject/Player.h"
 #include "object/dynamicObject/Enemy.h"
 #include "object/staticObject/Tile.h"
+#include "util/Conf.h"
 
 #include <SFML/System/Randomizer.hpp>
 #include <iostream>

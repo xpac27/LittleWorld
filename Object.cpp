@@ -142,14 +142,14 @@ void Object::draw()
     // OUTLINE FACE TOP
     glBegin(GL_LINES);
 
-        glVertex2f(0.f, -quarterSize);
-        glVertex2f(alfSize, 0.f);
-
         glVertex2f(alfSize, 0.f);
         glVertex2f(0.f, quarterSize);
 
         glVertex2f(0.f, quarterSize);
         glVertex2f(-alfSize, 0.f);
+
+        glVertex2f(0.f, -quarterSize);
+        glVertex2f(alfSize, 0.f);
 
         glVertex2f(-alfSize, 0.f);
         glVertex2f(0.f, -quarterSize);

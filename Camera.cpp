@@ -16,8 +16,8 @@ void Camera::draw(Object* object)
     glPushMatrix();
     glTranslatef
     (
-        position.y - position.x + 288.f + 400.f - 300.f,              // Origin is centered on the screen
-        ((position.x + position.y - 400.f - 300.f) / -2.f) - 64.f,    // So minus alf screen width and height
+        position.y - position.x + 288.f + (Conf::SCREEN_WIDTH / 2.f) - (Conf::SCREEN_HEIGHT / 2.f), // Origin is centered on the screen
+        ((position.x + position.y - (Conf::SCREEN_WIDTH / 2.f) - (Conf::SCREEN_HEIGHT / 2.f)) / -2.f) - 64.f, // So minus alf screen width and height
         0.f
     );
 
@@ -67,8 +67,8 @@ void Camera::toScreenPosition(Position *p)
     float ny = p->y;
     p->x = nx - ny;
     p->y = (nx + ny) / 2.f;
-    p->x += position.y - position.x + 288.f + 400.f - 300.f;
-    p->y += ((position.x + position.y - 400.f - 300.f) / -2.f) - 64.f;
+    p->x += position.y - position.x + 288.f + (Conf::SCREEN_WIDTH / 2.f) - (Conf::SCREEN_HEIGHT / 2.f);
+    p->y += ((position.x + position.y - (Conf::SCREEN_WIDTH / 2.f) - (Conf::SCREEN_HEIGHT / 2.f)) / -2.f) - 64.f;
 }
 
 void Camera::setFocus(Object *o)

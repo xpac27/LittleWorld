@@ -53,8 +53,8 @@ void World::setFocus(Object *o)
 void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
 {
     // Origin is on the screen so correct position
-    mouseScreenX -= 400.f;
-    mouseScreenY -= 300.f;
+    mouseScreenX -= Conf::SCREEN_WIDTH / 2.f;
+    mouseScreenY -= Conf::SCREEN_HEIGHT / 2.f;
 
     // Apply transformation
     mouseX = (mouseScreenX + (mouseScreenY * 2.f)) / 2.f;
