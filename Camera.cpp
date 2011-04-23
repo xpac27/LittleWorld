@@ -40,6 +40,40 @@ void Camera::draw(Object* object)
     glPopMatrix();
 }
 
+void Camera::drawShadow(Object* object)
+{
+    glPushMatrix();
+    glTranslatef
+    (
+        position.y - position.x + 288.f + (Conf::SCREEN_WIDTH / 2.f) - (Conf::SCREEN_HEIGHT / 2.f), // Origin is centered on the screen
+        ((position.x + position.y - (Conf::SCREEN_WIDTH / 2.f) - (Conf::SCREEN_HEIGHT / 2.f)) / -2.f) - 64.f, // So minus alf screen width and height
+        0.f
+    );
+
+    glPushMatrix();
+    glTranslatef
+    (
+        // World to screen's X coordinate
+        object->getX() - object->getY(),
+
+        // World to screen's Y coordinate
+        (object->getX() + object->getY()) / 2.f,
+
+        // Z index is calc using screen's Y coord lowered to tiles screen height + object's index
+        -100.f / (((object->getX() + object->getY()) / 2.f) / 64.f + object->getIndex())
+    );
+
+    object->drawShadow
+    (
+        (focus->getX() - object->getX()) - (focus->getY() - object->getY()),
+
+        ((focus->getX() - object->getX()) + (focus->getY() - object->getY())) / 2.f
+    );
+
+    glPopMatrix();
+    glPopMatrix();
+}
+
 void Camera::update(float time)
 {
     if (position.x - focus->getX() > tolerance)

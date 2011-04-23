@@ -5,6 +5,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <boost/bind.hpp>
+#include <vector>
+#include <iostream>
 
 class World;
 
@@ -19,6 +21,7 @@ class Object
 
         void setSize(float s);
         void setPosition(float x, float y);
+        void drawShadow(float lightX, float lightY);
 
         float getX();
         float getY();

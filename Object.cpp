@@ -1,5 +1,7 @@
 #include "Object.h"
 
+using namespace std;
+
 Object::Object(World *w, float h) : world(w), height(h)
 {
     index = height > 0.f ? 2.f : 1.f;
@@ -159,6 +161,64 @@ void Object::draw()
     if (height != 0)
     {
         glPopMatrix();
+    }
+}
+
+void Object::drawShadow(float lightX, float lightY)
+{
+    if (height != 0)
+    {
+        float p0x, p0y, p1x, p1y, h;
+
+        h = height / 64.f;
+
+        p0x = alfSize;
+        p0y = 0.f;
+        p1x = 0.f;
+        p1y = quarterSize;
+
+        glBegin(GL_QUADS);
+            glVertex2f(p0x, p0y);
+            glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+            glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+            glVertex2f(p1x, p1y);
+        glEnd();
+
+        p0x = 0.f;
+        p0y = quarterSize;
+        p1x = -alfSize;
+        p1y = 0.f;
+
+        glBegin(GL_QUADS);
+            glVertex2f(p0x, p0y);
+            glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+            glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+            glVertex2f(p1x, p1y);
+        glEnd();
+
+        p0x = 0.f;
+        p0y = -quarterSize;
+        p1x = alfSize;
+        p1y = 0.f;
+
+        glBegin(GL_QUADS);
+            glVertex2f(p0x, p0y);
+            glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+            glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+            glVertex2f(p1x, p1y);
+        glEnd();
+
+        p0x = -alfSize;
+        p0y = 0.f;
+        p1x = 0.f;
+        p1y = -quarterSize;
+
+        glBegin(GL_QUADS);
+            glVertex2f(p0x, p0y);
+            glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+            glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+            glVertex2f(p1x, p1y);
+        glEnd();
     }
 }
 

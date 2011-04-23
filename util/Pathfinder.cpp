@@ -135,7 +135,7 @@ vector<Position*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
     openList.push_back(start);
     start->opened = true;
 
-    while (n == 0 || (current != end && n < 30))
+    while (n == 0 || (current != end && n < 50))
     {
         // Look for the smallest F value in the openList and make it the current point
         for (i = openList.begin(); i != openList.end(); ++ i)

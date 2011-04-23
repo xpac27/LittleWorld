@@ -46,8 +46,12 @@ int main()
     application.UseVerticalSync(true);
 
     // Setup rendering
+    glShadeModel(GL_SMOOTH);
+    glClearDepth(1.0f);
+    glClearStencil(0);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.f, 0.f, 0.f, 0.f);
@@ -120,7 +124,10 @@ int main()
         }
 
         // Clear depth buffer
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        // Reset matix
+        glLoadIdentity();
 
         //Update
         game.update(clock.GetElapsedTime());

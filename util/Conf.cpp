@@ -1,6 +1,6 @@
 #include "Conf.h"
 
-bool Conf::DEBUG = false;
+bool Conf::DEBUG = true;
 
 int Conf::WORLD_WIDTH   = 1024;
 int Conf::WORLD_HEIGHT  = 1024;
