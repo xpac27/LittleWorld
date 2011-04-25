@@ -22,6 +22,8 @@ class Object
         void setSize(float s);
         void setPosition(float x, float y);
         void drawShadow(float lightX, float lightY);
+        void drawShadowExclusions(float lightX, float lightY);
+        void drawShadowSides(float lightX, float lightY);
 
         float getX();
         float getY();
@@ -46,6 +48,9 @@ class Object
         float size;
         float alfSize;
         float quarterSize;
+
+        bool doesEdgeCastShadow(float px1, float py1, float px2, float py2, float lx1, float ly2);
+        float dotProduct(float x1, float y1, float x2, float y2);
 };
 
 #endif

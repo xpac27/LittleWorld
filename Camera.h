@@ -16,6 +16,8 @@ class Camera
 
         void update(float time);
         void draw(Object* object);
+        void drawShadowExclusions(Object* object);
+        void drawShadowSides(Object* object);
         void drawShadow(Object* object);
         void setFocus(Object *o);
         void toScreenPosition(Position *p);

@@ -35,8 +35,8 @@ void World::draw()
     glColorMask(0, 0, 0, 0);
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
-    glStencilFunc(GL_ALWAYS, 1, 1);
 
+    glStencilFunc(GL_ALWAYS, 1, 1);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
     for (Si = staticObjectList.begin(); Si != staticObjectList.end(); ++ Si)
@@ -48,21 +48,33 @@ void World::draw()
         camera.drawShadow(*Di);
     }
 
+    glStencilFunc(GL_ALWAYS, 1, 1);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+    for (Si = staticObjectList.begin(); Si != staticObjectList.end(); ++ Si)
+    {
+        camera.drawShadowSides(*Si);
+    }
+    for (Di = dynamicObjectList.begin(); Di != dynamicObjectList.end(); ++ Di)
+    {
+        camera.drawShadowSides(*Di);
+    }
+
     glStencilFunc(GL_EQUAL, 1, 1);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
 
     for (Si = staticObjectList.begin(); Si != staticObjectList.end(); ++ Si)
     {
         if ((*Si)->getHeight() != 0)
         {
-            camera.draw(*Si);
+            camera.drawShadowExclusions(*Si);
         }
     }
     for (Di = dynamicObjectList.begin(); Di != dynamicObjectList.end(); ++ Di)
     {
         if ((*Di)->getHeight() != 0)
         {
-            camera.draw(*Di);
+            camera.drawShadowExclusions(*Di);
         }
     }
 

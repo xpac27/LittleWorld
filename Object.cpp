@@ -31,6 +31,7 @@ void Object::draw()
 {
     if (height != 0)
     {
+        glColor4f(0.5f, 0.5f, 0.5f, 1.f);
         glPushMatrix();
         glTranslatef(0.f, -height, 0.f);
     }
@@ -58,7 +59,9 @@ void Object::draw()
 
     if (height != 0)
     {
-        glColor4f(0.2f, 0.2f, 0.2f, 1.f);
+        glColor4f(0.6f, 0.6f, 0.6f, 1.f);
+
+        //glColor4f(0.2f, 0.2f, 0.2f, 1.f);
 
         // FACE LEFT
         glBegin(GL_QUADS);
@@ -71,7 +74,7 @@ void Object::draw()
 
         glEnd();
 
-        glColor4f(0.6f, 0.6f, 0.6f, 1.f);
+        //glColor4f(0.6f, 0.6f, 0.6f, 1.f);
 
         // FACE RIGHT
         glBegin(GL_QUADS);
@@ -164,6 +167,65 @@ void Object::draw()
     }
 }
 
+void Object::drawShadowExclusions(float lightX, float lightY)
+{
+    if (height != 0)
+    {
+        glPushMatrix();
+        glTranslatef(0.f, -height, 0.f);
+    }
+
+    glBegin(GL_QUADS);
+
+        glVertex2f(0.f, -quarterSize);
+        glVertex2f(alfSize, 0.f);
+        glVertex2f(0.f, quarterSize);
+        glVertex2f(-alfSize, 0.f);
+
+    glEnd();
+
+    if (height != 0)
+    {
+        glPopMatrix();
+
+        float p0x, p0y, p1x, p1y, h;
+
+        h = height / 64.f;
+
+        p0x = alfSize;
+        p0y = 0.f;
+        p1x = 0.f;
+        p1y = quarterSize;
+
+        if (!doesEdgeCastShadow(p0x, p0y, p1x, p1y, lightX, lightY))
+        {
+            glBegin(GL_QUADS);
+                glVertex2f(p1x, p1y);
+                glVertex2f(p1x, -height);
+                glVertex2f(p0x, -height + p0y);
+                glVertex2f(p0x, p0y);
+                glVertex2f(p1x, p1y);
+            glEnd();
+        }
+
+        p0x = 0.f;
+        p0y = quarterSize;
+        p1x = -alfSize;
+        p1y = 0.f;
+
+        if (!doesEdgeCastShadow(p0x, p0y, p1x, p1y, lightX, lightY))
+        {
+            glBegin(GL_QUADS);
+                glVertex2f(p1x, p1y);
+                glVertex2f(p1x, -height);
+                glVertex2f(p0x, -height + p0y);
+                glVertex2f(p0x, p0y);
+                glVertex2f(p1x, p1y);
+            glEnd();
+        }
+    }
+}
+
 void Object::drawShadow(float lightX, float lightY)
 {
     if (height != 0)
@@ -177,49 +239,152 @@ void Object::drawShadow(float lightX, float lightY)
         p1x = 0.f;
         p1y = quarterSize;
 
-        glBegin(GL_QUADS);
-            glVertex2f(p0x, p0y);
-            glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
-            glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
-            glVertex2f(p1x, p1y);
-        glEnd();
+        if (doesEdgeCastShadow(p0x, p0y, p1x, p1y, lightX, lightY))
+        {
+            glBegin(GL_QUADS);
+                glVertex2f(p0x, p0y);
+                glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+                glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+                glVertex2f(p1x, p1y);
+            glEnd();
+            //glBegin(GL_QUADS);
+                //glVertex2f(p0x, -height + p0y);
+                //glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+                //glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+                //glVertex2f(p1x, -height + p1y);
+            //glEnd();
+        }
 
         p0x = 0.f;
         p0y = quarterSize;
         p1x = -alfSize;
         p1y = 0.f;
 
-        glBegin(GL_QUADS);
-            glVertex2f(p0x, p0y);
-            glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
-            glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
-            glVertex2f(p1x, p1y);
-        glEnd();
+        if (doesEdgeCastShadow(p0x, p0y, p1x, p1y, lightX, lightY))
+        {
+            glBegin(GL_QUADS);
+                glVertex2f(p0x, p0y);
+                glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+                glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+                glVertex2f(p1x, p1y);
+            glEnd();
+            //glBegin(GL_QUADS);
+                //glVertex2f(p0x, -height + p0y);
+                //glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+                //glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+                //glVertex2f(p1x, -height + p1y);
+            //glEnd();
+        }
 
         p0x = 0.f;
         p0y = -quarterSize;
         p1x = alfSize;
         p1y = 0.f;
 
-        glBegin(GL_QUADS);
-            glVertex2f(p0x, p0y);
-            glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
-            glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
-            glVertex2f(p1x, p1y);
-        glEnd();
+        if (doesEdgeCastShadow(p0x, p0y, p1x, p1y, lightX, lightY))
+        {
+            glBegin(GL_QUADS);
+                glVertex2f(p0x, p0y);
+                glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+                glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+                glVertex2f(p1x, p1y);
+            glEnd();
+            //glBegin(GL_QUADS);
+                //glVertex2f(p0x, -height + p0y);
+                //glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+                //glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+                //glVertex2f(p1x, -height + p1y);
+            //glEnd();
+        }
 
         p0x = -alfSize;
         p0y = 0.f;
         p1x = 0.f;
         p1y = -quarterSize;
 
-        glBegin(GL_QUADS);
-            glVertex2f(p0x, p0y);
-            glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
-            glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
-            glVertex2f(p1x, p1y);
-        glEnd();
+        if (doesEdgeCastShadow(p0x, p0y, p1x, p1y, lightX, lightY))
+        {
+            glBegin(GL_QUADS);
+                glVertex2f(p0x, p0y);
+                glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+                glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+                glVertex2f(p1x, p1y);
+            glEnd();
+            //glBegin(GL_QUADS);
+                //glVertex2f(p0x, -height + p0y);
+                //glVertex2f(p0x + ((p0x - lightX) * h), p0y + ((p0y - lightY) * h));
+                //glVertex2f(p1x + ((p1x - lightX) * h), p1y + ((p1y - lightY) * h));
+                //glVertex2f(p1x, -height + p1y);
+            //glEnd();
+        }
     }
+}
+
+void Object::drawShadowSides(float lightX, float lightY)
+{
+    if (height != 0)
+    {
+        float p0x, p0y, p1x, p1y, h;
+
+        h = height / 64.f;
+
+        p0x = alfSize;
+        p0y = 0.f;
+        p1x = 0.f;
+        p1y = quarterSize;
+
+        if (doesEdgeCastShadow(p0x, p0y, p1x, p1y, lightX, lightY))
+        {
+            glBegin(GL_QUADS);
+                glVertex2f(p0x, p0y);
+                glVertex2f(p0x, -height);
+                glVertex2f(p1x, -height + p1y);
+                glVertex2f(p1x, p1y);
+                glVertex2f(p0x, p0y);
+            glEnd();
+        }
+
+        p0x = 0.f;
+        p0y = quarterSize;
+        p1x = -alfSize;
+        p1y = 0.f;
+
+        if (doesEdgeCastShadow(p0x, p0y, p1x, p1y, lightX, lightY))
+        {
+            glBegin(GL_QUADS);
+                glVertex2f(p1x, p1y);
+                glVertex2f(p1x, -height);
+                glVertex2f(p0x, -height + p0y);
+                glVertex2f(p0x, p0y);
+                glVertex2f(p1x, p1y);
+            glEnd();
+        }
+    }
+}
+
+bool Object::doesEdgeCastShadow(float px1, float py1, float px2, float py2, float lx, float ly)
+{
+    // normal of 2nd point minus 1st point
+    float nx = -1 * (py2 - py1);
+    float ny = px2 - px1;
+
+    // light minus 1st point
+    lx = px1 - lx;
+    ly = py1 - ly;
+
+    if (dotProduct(nx, ny, lx, ly) < 0.f)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+float Object::dotProduct(float x1, float y1, float x2, float y2)
+{
+    return x1 * x2 + y1 * y2;
 }
 
 float Object::getX()
