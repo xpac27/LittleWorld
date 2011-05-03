@@ -14,6 +14,11 @@ void Object::init()
 {
 }
 
+Object Object::operator<(Object &o)
+{
+    return height < 2.f ? o : *this;
+}
+
 void Object::setSize(float s)
 {
     size        = s;

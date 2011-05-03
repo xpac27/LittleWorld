@@ -6,6 +6,7 @@
 #include "util/Conf.h"
 
 #include <SFML/Graphics.hpp>
+#include <list>
 #include <iostream>
 
 class Camera
@@ -15,7 +16,7 @@ class Camera
         Camera();
 
         void update(float time);
-        void draw(Object* o);
+        void draw(std::list<Object*> objects);
         void setFocus(Object *o);
         void toScreenPosition(Position *p);
 

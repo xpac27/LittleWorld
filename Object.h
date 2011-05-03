@@ -30,6 +30,8 @@ class Object
         float getSize();
         float getIndex();
 
+        Object operator<(Object &o);
+
 
     protected:
 

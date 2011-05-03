@@ -2,6 +2,7 @@
 #define DEF_WORLD
 
 #include "Camera.h"
+#include "Object.h"
 #include "object/DynamicObject.h"
 #include "object/StaticObject.h"
 #include "util/Position.h"

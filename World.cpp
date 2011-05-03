@@ -8,53 +8,18 @@ World::World()
 
 void World::draw()
 {
-    list<StaticObject*>::iterator Si;
-    list<DynamicObject*>::iterator Di;
-
-    for (Si = staticObjectList.begin(); Si != staticObjectList.end(); ++ Si)
+    list<Object*> objectList;
+    for (list<StaticObject*>::iterator Si = staticObjectList.begin(); Si != staticObjectList.end(); ++ Si)
     {
-        camera.draw(*Si);
+        objectList.push_back(*Si);
     }
-
-    for (Di = dynamicObjectList.begin(); Di != dynamicObjectList.end(); ++ Di)
+    for (list<DynamicObject*>::iterator Di = dynamicObjectList.begin(); Di != dynamicObjectList.end(); ++ Di)
     {
-        camera.draw(*Di);
+        objectList.push_back(*Di);
     }
+    objectList.sort();
 
-    //glColorMask(0, 0, 0, 0);
-    //glDisable(GL_DEPTH_TEST);
-    //glEnable(GL_STENCIL_TEST);
-
-    //glStencilFunc(GL_ALWAYS, 1, 1);
-    //glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-    //for (Si = staticObjectList.begin(); Si != staticObjectList.end(); ++ Si)
-    //{
-        //camera.drawShadow(*Si);
-    //}
-    //for (Di = dynamicObjectList.begin(); Di != dynamicObjectList.end(); ++ Di)
-    //{
-        //camera.drawShadow(*Di);
-    //}
-
-    //glStencilFunc(GL_EQUAL, 1, 1);
-    //glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
-
-    //glColorMask(1, 1, 1, 1);
-    //glEnable(GL_DEPTH_TEST);
-    //glStencilFunc(GL_EQUAL, 1, 1);
-    //glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-
-    //glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
-
-    //glBegin(GL_QUADS);
-        //glVertex2f(0.f, 0.f);
-        //glVertex2f(Conf::SCREEN_WIDTH, 0.f);
-        //glVertex2f(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
-        //glVertex2f(0.f, Conf::SCREEN_HEIGHT);
-    //glEnd();
-
-    //glDisable(GL_STENCIL_TEST);
+    camera.draw(objectList);
 }
 
 void World::update(float time)
