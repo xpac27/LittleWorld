@@ -31,7 +31,8 @@ void Game::init()
         for (unsigned int y(0); y < Conf::WORLD_HEIGHT / 64; y ++)
         {
             r = Randomizer::Random(0, 20);
-            height = ((r > 17) ? r - 17.f : 0.f) * 12.f;
+            //height = ((r > 17) ? r - 17.f : 0.f) * 12.f;
+            height = ((r > 17) ? 5.f : 0.f) * 12.f;
 
             world.addStaticObject(new Tile(&world, x * 64.f, y * 64.f, height));
         }

@@ -18,20 +18,17 @@ class Object
 
         virtual void init();
         virtual void draw();
+        virtual void drawOutline();
 
         void setSize(float s);
         void setPosition(float x, float y);
         void drawShadow(float lightX, float lightY);
-        void drawShadowExclusions(float lightX, float lightY);
-        void drawShadowSides(float lightX, float lightY);
 
         float getX();
         float getY();
         float getHeight();
         float getSize();
         float getIndex();
-
-        bool touched;
 
 
     protected:

@@ -15,10 +15,7 @@ class Camera
         Camera();
 
         void update(float time);
-        void draw(Object* object);
-        void drawShadowExclusions(Object* object);
-        void drawShadowSides(Object* object);
-        void drawShadow(Object* object);
+        void draw(Object* o);
         void setFocus(Object *o);
         void toScreenPosition(Position *p);
 
@@ -26,8 +23,10 @@ class Camera
         float getY();
 
 
-
     private:
+
+        void translateCamera();
+        void translateObject(Object* o);
 
         Object* focus;
 

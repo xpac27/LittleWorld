@@ -14,7 +14,7 @@ void Tile::draw()
     }
     else
     {
-        glColor4f(0.8f, 0.8f, 0.8f, 1.f);
+        glColor4f(0.4f, 0.4f, 0.4f, 1.f);
     }
 
     Object::draw();
