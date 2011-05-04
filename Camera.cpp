@@ -38,22 +38,9 @@ void Camera::draw(list<Object*> objects)
         (*i)->drawShadow
         (
             (focus->getX() - (*i)->getX()) - (focus->getY() - (*i)->getY()),
-            ((focus->getX() - (*i)->getX()) + (focus->getY() - (*i)->getY())) / 2.f
+            ((focus->getX() - (*i)->getX()) + (focus->getY() - (*i)->getY())) / 2.f,
+            objects
         );
-
-        // TODO:
-        // - loop through all objects as o
-        // - if o has an height
-        // - if base segment is within the shadow volume
-        //    - fill it with shadow
-        // - else
-        //    - erase shadow
-        //    - if base segment is intersecting shadow segements
-        //        - draw the shadow on it
-
-        // ERASE SHADOW:
-        //glStencilFunc(GL_EQUAL, 1, 1);
-        //glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
 
         glPopMatrix();
     }
