@@ -2,6 +2,8 @@
 #define DEF_OBJECT
 
 #include "util/Position.h"
+#include "util/Segment.h"
+#include "util/Quad.h"
 
 #include <SFML/Graphics.hpp>
 #include <boost/bind.hpp>
@@ -30,6 +32,8 @@ class Object
         float getSize();
         float getIndex();
 
+        Quad getEdgeShadow(Segment *edge, float lx, float ly);
+
         Object operator<(Object &o);
 
 
@@ -45,12 +49,17 @@ class Object
         float index;
         float height;
         float size;
-        float alfSize;
-        float quarterSize;
 
-        void drawEdgeShadow(float edge[4], float lx, float ly);
-        bool doesEdgeCastShadow(float px1, float py1, float px2, float py2, float lx1, float ly2);
-        float dotProduct(float x1, float y1, float x2, float y2);
+        Quad faceLeft;
+        Quad faceRight;
+        Quad faceTop;
+
+        Segment edgeBL;
+        Segment edgeBR;
+        Segment edgeTL;
+        Segment edgeTR;
+
+        bool doesEdgeCastShadow(Segment *edge, float lx, float ly);
 };
 
 #endif

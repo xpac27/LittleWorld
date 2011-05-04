@@ -52,6 +52,12 @@ $(BIN): $(OBJECTS)
 ./util/Position.o: util/Position.cpp
 	$(CPP) -c util/Position.cpp -o util/Position.o $(FLAGS)
 
+./util/Segment.o: util/Segment.cpp
+	$(CPP) -c util/Segment.cpp -o util/Segment.o $(FLAGS)
+
+./util/Quad.o: util/Quad.cpp
+	$(CPP) -c util/Quad.cpp -o util/Quad.o $(FLAGS)
+
 ./util/Point.o: util/Point.cpp
 	$(CPP) -c util/Point.cpp -o util/Point.o $(FLAGS)
 

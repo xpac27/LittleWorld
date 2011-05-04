@@ -21,9 +21,19 @@ Object Object::operator<(Object &o)
 
 void Object::setSize(float s)
 {
-    size        = s;
-    alfSize     = size / 2.f;
-    quarterSize = size / 4.f;
+    size = s;
+
+    float alfSize = size / 2.f;
+    float quarterSize = size / 4.f;
+
+    faceLeft.set(-alfSize, 0.f, -alfSize, -height, 0.f, -height + quarterSize, 0.f, quarterSize);
+    faceRight.set(alfSize, 0.f, alfSize, -height, 0.f, -height + quarterSize, 0.f, quarterSize);
+    faceTop.set(0.f, -quarterSize, alfSize, 0.f, 0.f, quarterSize, -alfSize, 0.f);
+
+    edgeBL.set(0.f, quarterSize, -alfSize, 0.f);
+    edgeBR.set(alfSize, 0.f, 0.f, quarterSize);
+    edgeTL.set(-alfSize, 0.f, 0.f, -quarterSize);
+    edgeTR.set(0.f, -quarterSize, alfSize, 0.f);
 }
 
 void Object::setPosition(float x, float y)
@@ -33,44 +43,19 @@ void Object::setPosition(float x, float y)
 
 void Object::draw()
 {
-    if (height != 0)
+    if (height == 0)
+    {
+        faceTop.draw();
+    }
+    else
     {
         glPushMatrix();
         glTranslatef(0.f, -height, 0.f);
-    }
-
-    // FACE TOP
-    glBegin(GL_QUADS);
-        glVertex2f(0.f, -quarterSize);
-        glVertex2f(alfSize, 0.f);
-        glVertex2f(0.f, quarterSize);
-        glVertex2f(-alfSize, 0.f);
-    glEnd();
-
-    if (height != 0)
-    {
+        faceTop.draw();
         glPopMatrix();
-    }
-
-    if (height != 0)
-    {
         glColor4f(0.6f, 0.6f, 0.6f, 1.f);
-
-        // FACE LEFT
-        glBegin(GL_QUADS);
-            glVertex2f(-alfSize, 0.f);
-            glVertex2f(-alfSize, -height);
-            glVertex2f(0.f, -height + quarterSize);
-            glVertex2f(0.f, quarterSize);
-        glEnd();
-
-        // FACE RIGHT
-        glBegin(GL_QUADS);
-            glVertex2f(alfSize, 0.f);
-            glVertex2f(alfSize, -height);
-            glVertex2f(0.f, -height + quarterSize);
-            glVertex2f(0.f, quarterSize);
-        glEnd();
+        faceLeft.draw();
+        faceRight.draw();
     }
 }
 
@@ -78,80 +63,75 @@ void Object::drawOutline()
 {
     glColor4f(1.f, 1.f, 1.f, 0.6f);
 
-    if (height != 0)
+    if (height == 0)
     {
-        // OUTLINE FACE LEFT
-        glBegin(GL_LINES);
-            glVertex2f(-alfSize, 0.f);
-            glVertex2f(-alfSize, -height);
-            glVertex2f(0.f, -height + quarterSize);
-            glVertex2f(0.f, quarterSize);
-        glEnd();
-
-        // OUTLINE FACE RIGHT
-        glBegin(GL_LINES);
-            glVertex2f(alfSize, 0.f);
-            glVertex2f(alfSize, -height);
-            glVertex2f(0.f, -height + quarterSize);
-            glVertex2f(0.f, quarterSize);
-        glEnd();
-
-        // OUTLINE FACE BOTTOM
-        glBegin(GL_LINES);
-            glVertex2f(0.f, quarterSize);
-            glVertex2f(alfSize, 0.f);
-            glVertex2f(0.f, quarterSize);
-            glVertex2f(-alfSize, 0.f);
-        glEnd();
+        faceTop.outline();
     }
-
-    if (height != 0)
+    else
     {
+        faceLeft.outline();
+        faceRight.outline();
         glPushMatrix();
         glTranslatef(0.f, -height, 0.f);
-    }
-
-    // OUTLINE FACE TOP
-    glBegin(GL_LINES);
-        glVertex2f(alfSize, 0.f);
-        glVertex2f(0.f, quarterSize);
-        glVertex2f(0.f, quarterSize);
-        glVertex2f(-alfSize, 0.f);
-        glVertex2f(-alfSize, 0.f);
-        glVertex2f(0.f, -quarterSize);
-        glVertex2f(0.f, -quarterSize);
-        glVertex2f(alfSize, 0.f);
-    glEnd();
-
-    if (height != 0)
-    {
+        faceTop.outline();
         glPopMatrix();
     }
+}
+
+Quad Object::getEdgeShadow(Segment *edge, float lx, float ly)
+{
+    float h = height / 64.f;
+
+    return Quad
+    (
+        edge->p1.x, edge->p1.y,
+        edge->p1.x + (edge->p1.x - lx) * h, edge->p1.y + (edge->p1.y - ly) * h,
+        edge->p2.x + (edge->p2.x - lx) * h, edge->p2.y + (edge->p2.y - ly) * h,
+        edge->p2.x, edge->p2.y
+    );
 }
 
 void Object::drawShadow(float lx, float ly, list<Object*> objects)
 {
     if (height != 0)
     {
-        float edgeBR[4] = {alfSize, 0.f, 0.f, quarterSize};
-        float edgeBL[4] = {0.f, quarterSize, -alfSize, 0.f};
-        float edgeTR[4] = {0.f, -quarterSize, alfSize, 0.f};
-        float edgeTL[4] = {-alfSize, 0.f, 0.f, -quarterSize};
+        Quad shadowBR = getEdgeShadow(&edgeBR, lx, ly);
+        Quad shadowBL = getEdgeShadow(&edgeBL, lx, ly);
+        Quad shadowTR = getEdgeShadow(&edgeTR, lx, ly);
+        Quad shadowTL = getEdgeShadow(&edgeTL, lx, ly);
 
-        drawEdgeShadow(edgeBR, lx, ly);
-        drawEdgeShadow(edgeBL, lx, ly);
-        drawEdgeShadow(edgeTR, lx, ly);
-        drawEdgeShadow(edgeTL, lx, ly);
+        if (doesEdgeCastShadow(&edgeBR, lx, ly))
+        {
+            shadowBR.draw();
+        }
+        if (doesEdgeCastShadow(&edgeBL, lx, ly))
+        {
+            shadowBL.draw();
+        }
+        if (doesEdgeCastShadow(&edgeTR, lx, ly))
+        {
+            shadowTR.draw();
+        }
+        if (doesEdgeCastShadow(&edgeTL, lx, ly))
+        {
+            shadowTL.draw();
+        }
 
-        // TODO:
         // - loop through all objects as o
-        // - if o has an height
-        // - if base segment is within the shadow volume
-        //    - fill it with shadow
-        // - else
-        //    - erase shadow
-        //    - if base segment is intersecting shadow segements
-        //        - draw the shadow on it
+        //for (list<Object*>::iterator i = objects.begin(); i != objects.end(); ++ i)
+        //{
+            // - if o has an height
+            //if ((*i)->getHeight() != 0)
+            //{
+                // - if base segment is within the shadow volume
+                //if (pointWithin)
+                //    - fill it with shadow
+                // - else
+                //    - erase shadow
+                //    - if base segment is intersecting shadow segements
+                //        - draw the shadow on it
+            //}
+        //}
 
         // ERASE SHADOW:
         //glStencilFunc(GL_EQUAL, 1, 1);
@@ -159,30 +139,18 @@ void Object::drawShadow(float lx, float ly, list<Object*> objects)
     }
 }
 
-void Object::drawEdgeShadow(float edge[4], float lx, float ly)
-{
-    if (doesEdgeCastShadow(edge[0], edge[1], edge[2], edge[3], lx, ly))
-    {
-        glBegin(GL_QUADS);
-            glVertex2f(edge[0], edge[1]);
-            glVertex2f(edge[0] + ((edge[0] - lx) * (height / 64.f)), edge[1] + ((edge[1] - ly) * (height / 64.f)));
-            glVertex2f(edge[2] + ((edge[2] - lx) * (height / 64.f)), edge[3] + ((edge[3] - ly) * (height / 64.f)));
-            glVertex2f(edge[2], edge[3]);
-        glEnd();
-    }
-}
-
-bool Object::doesEdgeCastShadow(float px1, float py1, float px2, float py2, float lx, float ly)
+bool Object::doesEdgeCastShadow(Segment *edge, float lx, float ly)
 {
     // normal of 2nd point minus 1st point
-    float nx = -1 * (py2 - py1);
-    float ny = px2 - px1;
+    float nx = -1 * (edge->p2.y - edge->p1.y);
+    float ny = edge->p2.x - edge->p1.x;
 
     // light minus 1st point
-    lx = px1 - lx;
-    ly = py1 - ly;
+    lx = edge->p1.x - lx;
+    ly = edge->p1.y - ly;
 
-    if (dotProduct(nx, ny, lx, ly) < 0.f)
+    // cross product
+    if (nx * lx + ny * ly < 0.f)
     {
         return true;
     }
@@ -190,11 +158,6 @@ bool Object::doesEdgeCastShadow(float px1, float py1, float px2, float py2, floa
     {
         return false;
     }
-}
-
-float Object::dotProduct(float x1, float y1, float x2, float y2)
-{
-    return x1 * x2 + y1 * y2;
 }
 
 float Object::getX()
