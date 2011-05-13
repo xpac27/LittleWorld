@@ -40,6 +40,12 @@ $(BIN): $(OBJECTS)
 ./util/Conf.o: util/Conf.cpp
 	$(CPP) -c util/Conf.cpp -o util/Conf.o $(FLAGS)
 
+./util/Vector2.o: util/Vector2.cpp
+	$(CPP) -c util/Vector2.cpp -o util/Vector2.o $(FLAGS)
+
+./util/IntersectionFunctions.o: util/IntersectionFunctions.cpp
+	$(CPP) -c util/IntersectionFunctions.cpp -o util/IntersectionFunctions.o $(FLAGS)
+
 ./util/Console.o: util/Console.cpp
 	$(CPP) -c util/Console.cpp -o util/Console.o $(FLAGS)
 
