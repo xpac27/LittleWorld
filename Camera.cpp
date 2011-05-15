@@ -55,7 +55,7 @@ void Camera::draw(list<Object*> objects)
 
     for (list<Object*>::iterator i = objects.begin(); i != objects.end(); ++ i)
     {
-        if ((*i)->getHeight() > 0.f)
+        if ((*i)->shadowEnabled() && (*i)->getHeight() > 0.f)
         {
             glPushMatrix();
             translateObject(*i);

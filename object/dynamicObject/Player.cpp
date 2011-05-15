@@ -4,11 +4,11 @@ using namespace boost;
 using namespace sf;
 using namespace std;
 
-Player::Player(World *w) : DynamicObject(w, 32.f)
+Player::Player(World *W) : DynamicObject(W, 32.f, false)
 {
     speed = 100.f;
 
-    position.set(192.f, 192.f);
+    position.set(512.f, 512.f);
     setSize(64.f);
 
     world->ON_MOUSE_LEFT_DOWN.connect(bind(&Player::onMouseLeftDown, this));

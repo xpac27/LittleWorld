@@ -13,7 +13,7 @@ class Enemy : public DynamicObject
 {
     public:
 
-        Enemy(World *w);
+        Enemy(World *W);
 
         virtual void draw();
         virtual void update(float time);

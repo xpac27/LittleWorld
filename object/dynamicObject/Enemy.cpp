@@ -3,7 +3,7 @@
 using namespace std;
 using namespace sf;
 
-Enemy::Enemy(World *w) : DynamicObject(w, 16.f)
+Enemy::Enemy(World *W) : DynamicObject(W, 16.f, true)
 {
     speed = 60.f;
 

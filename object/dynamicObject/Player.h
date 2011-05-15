@@ -12,7 +12,7 @@ class Player : public DynamicObject
 {
     public:
 
-        Player(World *w);
+        Player(World *W);
 
         virtual void draw();
         virtual void update(float time);

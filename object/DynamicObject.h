@@ -14,7 +14,7 @@ class DynamicObject : public Object
 {
     public:
 
-        DynamicObject(World *w, float h);
+        DynamicObject(World *W, float h, bool s);
 
         virtual void update(float time);
         virtual void remove();

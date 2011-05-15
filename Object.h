@@ -19,7 +19,7 @@ class Object
 {
     public:
 
-        Object(World *w, float h);
+        Object(World *W, float h, bool s);
 
         virtual void init();
         virtual void draw();
@@ -27,11 +27,13 @@ class Object
 
         void setSize(float s);
         void setPosition(float x, float y);
+        void setCastShadow(bool v);
         void updateShadow(float lx, float ly);
         void drawShadow();
         void drawWallShadows(std::list<Object*> objects);
         void drawWallShadow(Quad *shadow, float h);
 
+        bool shadowEnabled();
 
         float getX();
         float getY();
@@ -74,6 +76,8 @@ class Object
         float height;
         float size;
 
+        bool shadow;
+
         bool doesEdgeCastShadow(Segment *edge, float lx, float ly);
 };
 
@@ -83,7 +87,7 @@ class ObjectComparer
 
         bool operator() (Object *o1, Object *o2)
         {
-            return (*o1).getY() < (*o2).getY();
+            return (((*o1).getY() + (*o1).getY()) / 2.f) < (((*o2).getY() + (*o2).getY()) / 2.f);
         }
 };
 

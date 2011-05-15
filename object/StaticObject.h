@@ -9,7 +9,7 @@ class StaticObject : public Object
 {
     public:
 
-        StaticObject(World *w, float h, bool s);
+        StaticObject(World *W, float h, bool w, bool s);
 
         int getGridX();
         int getGridY();
@@ -24,7 +24,7 @@ class StaticObject : public Object
 
     private:
 
-        bool solid;
+        bool walkable;
 };
 
 #endif

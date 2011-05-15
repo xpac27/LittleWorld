@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(World *w, float x, float y, float h) : StaticObject(w, h, (h != 0))
+Tile::Tile(World *W, float x, float y, float h) : StaticObject(W, h, (h == 0.f), true)
 {
     position.set(x, y);
     setSize(128.f);

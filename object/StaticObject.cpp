@@ -1,8 +1,8 @@
 #include "StaticObject.h"
 
-StaticObject::StaticObject(World *w, float h, bool s) : Object(w, h)
+StaticObject::StaticObject(World *W, float h, bool w, bool s) : Object(W, h, s)
 {
-    solid = s;
+    walkable = w;
 }
 
 int StaticObject::getGridX()
@@ -17,5 +17,5 @@ int StaticObject::getGridY()
 
 bool StaticObject::isWalkable()
 {
-    return !solid;
+    return walkable;
 }

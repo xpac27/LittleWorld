@@ -2,9 +2,14 @@
 
 using namespace std;
 
-Object::Object(World *w, float h) : world(w), height(h)
+Object::Object(World *W, float h, bool s) : world(W), height(h), shadow(s)
 {
     index = height > 0.f ? 2.f : 1.f;
+
+    edgeBRCast = false;
+    edgeBLCast = false;
+    edgeTRCast = false;
+    edgeTLCast = false;
 
     position.set(0.f, 0.f, 0.f);
     setSize(32.f);
@@ -88,7 +93,7 @@ Quad Object::getEdgeShadow(Segment *edge, float lx, float ly)
 
 void Object::updateShadow(float lx, float ly)
 {
-    if (getHeight() == 64.f)
+    if (shadow && height > 0.f)
     {
         shadowBR = getEdgeShadow(&edgeBR, lx, ly);
         shadowBL = getEdgeShadow(&edgeBL, lx, ly);
@@ -112,34 +117,56 @@ void Object::drawShadow()
 
 void Object::drawWallShadows(list<Object*> objects)
 {
-    // Translated objects shadows toward object's position
-    Quad objectShadowTR;
-    Quad objectShadowTL;
-
-    // Objects screen position
-    Vector2 currentSP(getX() - getY(), (getX() + getY()) / 2.f);
-
-    float x, y;
-
-    for (list<Object*>::iterator i = objects.begin(); i != objects.end(); ++ i)
+    if (shadow && height > 0.f)
     {
-        if ((*i) != this && (*i)->getHeight() != 0.f && ((*i)->edgeTRCast || (*i)->edgeTLCast))
+        if (edgeBLCast) faceLeft.draw();
+        if (edgeBRCast) faceRight.draw();
+
+        if (!edgeBLCast || !edgeBRCast)
         {
-            x = ((*i)->getX() - (*i)->getY()) - currentSP.x;
-            y = ((*i)->getX() + (*i)->getY()) / 2.f - currentSP.y;
+            // Translated objects shadows toward object's position
+            Quad objectShadow;
 
-            if ((*i)->edgeTRCast)
-            {
-                objectShadowTR = (*i)->shadowTR;
-                objectShadowTR.translate(x, y);
-                drawWallShadow(&objectShadowTR, height < (*i)->getHeight() ? height : (*i)->getHeight());
-            }
+            // Objects screen position
+            Vector2 currentSP(getX() - getY(), (getX() + getY()) / 2.f);
 
-            if ((*i)->edgeTLCast)
+            float x, y;
+
+            for (list<Object*>::iterator i = objects.begin(); i != objects.end(); ++ i)
             {
-                objectShadowTL = (*i)->shadowTL;
-                objectShadowTL.translate(x, y);
-                drawWallShadow(&objectShadowTL, height < (*i)->getHeight() ? height : (*i)->getHeight());
+                if ((*i) != this && (*i)->shadowEnabled() && (*i)->getHeight() != 0.f)
+                {
+                    x = ((*i)->getX() - (*i)->getY()) - currentSP.x;
+                    y = ((*i)->getX() + (*i)->getY()) / 2.f - currentSP.y;
+
+                    if ((*i)->edgeTRCast)
+                    {
+                        objectShadow = (*i)->shadowTR;
+                        objectShadow.translate(x, y);
+                        drawWallShadow(&objectShadow, height < (*i)->getHeight() ? height : (*i)->getHeight());
+                    }
+
+                    if ((*i)->edgeTLCast)
+                    {
+                        objectShadow = (*i)->shadowTL;
+                        objectShadow.translate(x, y);
+                        drawWallShadow(&objectShadow, height < (*i)->getHeight() ? height : (*i)->getHeight());
+                    }
+
+                    if ((*i)->edgeBRCast)
+                    {
+                        objectShadow = (*i)->shadowBR;
+                        objectShadow.translate(x, y);
+                        drawWallShadow(&objectShadow, height < (*i)->getHeight() ? height : (*i)->getHeight());
+                    }
+
+                    if ((*i)->edgeBLCast)
+                    {
+                        objectShadow = (*i)->shadowBL;
+                        objectShadow.translate(x, y);
+                        drawWallShadow(&objectShadow, height < (*i)->getHeight() ? height : (*i)->getHeight());
+                    }
+                }
             }
         }
     }
@@ -149,38 +176,33 @@ void Object::drawWallShadow(Quad *shadow, float h)
 {
     vector<Vector2> pointList;
 
-    bool c1 = shadow->containsPosition(&edgeBL.p2);
-    bool c2 = shadow->containsPosition(&edgeBL.p1);
-    bool c3 = shadow->containsPosition(&edgeBR.p1);
+    bool c1 = !edgeBLCast && shadow->containsPosition(&edgeBL.p2);
+    bool c2 = (!edgeBLCast || !edgeBRCast) && shadow->containsPosition(&edgeBL.p1);
+    bool c3 = !edgeBRCast && shadow->containsPosition(&edgeBR.p1);
 
-    if (c1)
-    {
-        pointList.push_back(edgeBL.p2);
-    }
-    if (!c1 || !c2)
+    if (c1) pointList.push_back(edgeBL.p2);
+
+    if (!edgeBLCast && (!c1 || !c2))
     {
         edgeBL.getIntesectionToSegment(&shadow->s1, &pointList);
         edgeBL.getIntesectionToSegment(&shadow->s2, &pointList);
         edgeBL.getIntesectionToSegment(&shadow->s3, &pointList);
     }
-    if (c2)
-    {
-        pointList.push_back(edgeBL.p1);
-    }
-    if (!c2 || !c3)
+
+    if (c2) pointList.push_back(edgeBL.p1);
+
+    if (!edgeBRCast && (!c2 || !c3))
     {
         edgeBR.getIntesectionToSegment(&shadow->s1, &pointList);
         edgeBR.getIntesectionToSegment(&shadow->s2, &pointList);
         edgeBR.getIntesectionToSegment(&shadow->s3, &pointList);
     }
-    if (c3)
-    {
-        pointList.push_back(edgeBR.p1);
-    }
+
+    if (c3) pointList.push_back(edgeBR.p1);
 
     if (pointList.size() > 1)
     {
-        for (unsigned int i = 1; i < pointList.size(); i ++)
+        for (unsigned int i = 1; i < pointList.size(); i += 1)
         {
             glBegin(GL_QUADS);
                 glVertex2f(pointList[i-1].x, pointList[i-1].y);
@@ -233,5 +255,10 @@ float Object::getHeight()
 float Object::getSize()
 {
     return size;
+}
+
+bool Object::shadowEnabled()
+{
+    return shadow;
 }
 

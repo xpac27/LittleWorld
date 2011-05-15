@@ -2,7 +2,7 @@
 
 using namespace std;
 
-DynamicObject::DynamicObject(World *w, float h) : Object(w, h)
+DynamicObject::DynamicObject(World *W, float h, bool s) : Object(W, h, s)
 {
     canMove = false;
 }
