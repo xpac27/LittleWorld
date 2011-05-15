@@ -13,6 +13,7 @@ class Position
 
         void set(float x, float y);
         void set(float x, float y, float z);
+        void translate(float tx, float ty);
 
         float getDistanceTo(Position *p);
 

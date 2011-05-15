@@ -6,6 +6,7 @@
 #include "util/Position.h"
 #include "util/Segment.h"
 #include "util/Quad.h"
+#include "util/Vector2.h"
 
 #include <SFML/Graphics.hpp>
 #include <boost/bind.hpp>
@@ -28,7 +29,9 @@ class Object
         void setPosition(float x, float y);
         void updateShadow(float lx, float ly);
         void drawShadow();
-        void drawWallShadow(std::list<Object*> objects);
+        void drawWallShadows(std::list<Object*> objects);
+        void drawWallShadow(Quad *shadow, float h);
+
 
         float getX();
         float getY();

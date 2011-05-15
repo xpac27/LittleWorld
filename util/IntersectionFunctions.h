@@ -1,10 +1,10 @@
 #ifndef INTERSECTIONFUNCTIONS
 #define INTERSECTIONFUNCTIONS
 
+#include "Vector2.h"
+
 #include <vector>
 #include <cmath>
-
-#include "Vector2.h"
 
 struct IntersectionObject
 {

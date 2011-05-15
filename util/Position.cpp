@@ -28,6 +28,12 @@ void Position::set(float x, float y, float z)
     this->z = z;
 }
 
+void Position::translate(float tx, float ty)
+{
+    x += tx;
+    y += ty;
+}
+
 float Position::getDistanceTo(Position *p)
 {
     return sqrt(pow((x - p->x), 2) + pow((y - p->y), 2));

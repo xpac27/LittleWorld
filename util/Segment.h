@@ -1,7 +1,9 @@
 #ifndef DEF_SEGMENT
 #define DEF_SEGMENT
 
-#include "Position.h"
+#include "Vector2.h"
+#include "Segment.h"
+#include "IntersectionFunctions.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -13,11 +15,13 @@ class Segment
         Segment(float x1, float y1, float x2, float y2);
 
         void set(float x1, float y1, float x2, float y2);
+        void translate(float tx, float ty);
         void draw();
+        void getIntesectionToSegment(Segment *s, std::vector<Vector2> *pointList);
 
         // TODO put this in a vector
-        Position p1;
-        Position p2;
+        Vector2 p1;
+        Vector2 p2;
 };
 
 #endif

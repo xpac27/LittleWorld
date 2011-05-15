@@ -26,7 +26,7 @@ void Camera::draw(list<Object*> objects)
         translateObject(*i);
 
         (*i)->draw();
-        //(*i)->drawOutline();
+        (*i)->drawOutline();
         (*i)->updateShadow
         (
             (focus->getX() - (*i)->getX()) - (focus->getY() - (*i)->getY()),
@@ -55,12 +55,23 @@ void Camera::draw(list<Object*> objects)
 
     for (list<Object*>::iterator i = objects.begin(); i != objects.end(); ++ i)
     {
-        glPushMatrix();
-        translateObject(*i);
+        if ((*i)->getHeight() > 0.f)
+        {
+            glPushMatrix();
+            translateObject(*i);
 
-        (*i)->drawWallShadow(objects);
+            glStencilFunc(GL_EQUAL, 1, 1);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
 
-        glPopMatrix();
+            (*i)->draw();
+
+            glStencilFunc(GL_ALWAYS, 1, 1);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+            (*i)->drawWallShadows(objects);
+
+            glPopMatrix();
+        }
     }
 
     glPopMatrix();

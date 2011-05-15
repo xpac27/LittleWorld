@@ -110,219 +110,84 @@ void Object::drawShadow()
     if (edgeTLCast) shadowTL.draw();
 }
 
-void Object::drawWallShadow(list<Object*> objects)
+void Object::drawWallShadows(list<Object*> objects)
 {
-    if (height != 0)
+    // Translated objects shadows toward object's position
+    Quad objectShadowTR;
+    Quad objectShadowTL;
+
+    // Objects screen position
+    Vector2 currentSP(getX() - getY(), (getX() + getY()) / 2.f);
+
+    float x, y;
+
+    for (list<Object*>::iterator i = objects.begin(); i != objects.end(); ++ i)
     {
-        int n = 0;
-        IntersectionObject result;
-        float tx = getX() - getY();
-        float ty = (getX() + getY()) / 2.f;
-        float otx = 0.f;
-        float oty = 0.f;
-        float h = 0.f;
-
-        glStencilFunc(GL_EQUAL, 1, 1);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
-
-        glPushMatrix();
-        glTranslatef(0.f, -height, 0.f);
-        faceTop.draw();
-        glPopMatrix();
-
-        faceRight.draw();
-        faceLeft.draw();
-
-        glStencilFunc(GL_ALWAYS, 1, 1);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-        // loop through all objects as o
-        for (list<Object*>::iterator i = objects.begin(); i != objects.end(); ++ i)
+        if ((*i) != this && (*i)->getHeight() != 0.f && ((*i)->edgeTRCast || (*i)->edgeTLCast))
         {
-            // if o has an height
-            if ((*i) != this && (*i)->getHeight() != 0.f)
+            x = ((*i)->getX() - (*i)->getY()) - currentSP.x;
+            y = ((*i)->getX() + (*i)->getY()) / 2.f - currentSP.y;
+
+            if ((*i)->edgeTRCast)
             {
-                otx = (*i)->getX() - (*i)->getY() - tx;
-                oty = ((*i)->getX() + (*i)->getY()) / 2.f - ty;
-
-                if ((*i)->edgeTRCast)
-                {
-                    if (ContainFunctions::PointInQuad(edgeBL.p1.x, edgeBL.p1.y, (*i)->shadowTR.p1.x + otx, (*i)->shadowTR.p1.y + oty, (*i)->shadowTR.p2.x + otx, (*i)->shadowTR.p2.y + oty, (*i)->shadowTR.p3.x + otx, (*i)->shadowTR.p3.y + oty, (*i)->shadowTR.p4.x + otx, (*i)->shadowTR.p4.y + oty) && ContainFunctions::PointInQuad(edgeBL.p2.x, edgeBL.p2.y, (*i)->shadowTR.p1.x + otx, (*i)->shadowTR.p1.y + oty, (*i)->shadowTR.p2.x + otx, (*i)->shadowTR.p2.y + oty, (*i)->shadowTR.p3.x + otx, (*i)->shadowTR.p3.y + oty, (*i)->shadowTR.p4.x + otx, (*i)->shadowTR.p4.y + oty))
-                    {
-                        faceLeft.draw();
-                    }
-                    else
-                    {
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBL.p1.x, edgeBL.p1.y, edgeBL.p2.x, edgeBL.p2.y, (*i)->shadowTR.p1.x + otx, (*i)->shadowTR.p1.y + oty, (*i)->shadowTR.p2.x + otx, (*i)->shadowTR.p2.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBL.p1.x, edgeBL.p1.y - h);
-                                glVertex2f(edgeBL.p1.x, edgeBL.p1.y);
-                            glEnd();
-                        }
-
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBL.p1.x, edgeBL.p1.y, edgeBL.p2.x, edgeBL.p2.y, (*i)->shadowTR.p2.x + otx, (*i)->shadowTR.p2.y + oty, (*i)->shadowTR.p3.x + otx, (*i)->shadowTR.p3.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBL.p2.x, edgeBL.p2.y - h);
-                                glVertex2f(edgeBL.p2.x, edgeBL.p2.y);
-                            glEnd();
-                        }
-
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBL.p1.x, edgeBL.p1.y, edgeBL.p2.x, edgeBL.p2.y, (*i)->shadowTR.p3.x + otx, (*i)->shadowTR.p3.y + oty, (*i)->shadowTR.p4.x + otx, (*i)->shadowTR.p4.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBL.p2.x, edgeBL.p2.y - h);
-                                glVertex2f(edgeBL.p2.x, edgeBL.p2.y);
-                            glEnd();
-                        }
-                    }
-
-                    if (ContainFunctions::PointInQuad(edgeBR.p1.x, edgeBR.p1.y, (*i)->shadowTR.p1.x + otx, (*i)->shadowTR.p1.y + oty, (*i)->shadowTR.p2.x + otx, (*i)->shadowTR.p2.y + oty, (*i)->shadowTR.p3.x + otx, (*i)->shadowTR.p3.y + oty, (*i)->shadowTR.p4.x + otx, (*i)->shadowTR.p4.y + oty) && ContainFunctions::PointInQuad(edgeBR.p2.x, edgeBR.p2.y, (*i)->shadowTR.p1.x + otx, (*i)->shadowTR.p1.y + oty, (*i)->shadowTR.p2.x + otx, (*i)->shadowTR.p2.y + oty, (*i)->shadowTR.p3.x + otx, (*i)->shadowTR.p3.y + oty, (*i)->shadowTR.p4.x + otx, (*i)->shadowTR.p4.y + oty))
-                    {
-                        faceRight.draw();
-                    }
-                    else
-                    {
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBR.p1.x, edgeBR.p1.y, edgeBR.p2.x, edgeBR.p2.y, (*i)->shadowTR.p1.x + otx, (*i)->shadowTR.p1.y + oty, (*i)->shadowTR.p2.x + otx, (*i)->shadowTR.p2.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBR.p1.x, edgeBR.p1.y - h);
-                                glVertex2f(edgeBR.p1.x, edgeBR.p1.y);
-                            glEnd();
-                        }
-
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBR.p1.x, edgeBR.p1.y, edgeBR.p2.x, edgeBR.p2.y, (*i)->shadowTR.p2.x + otx, (*i)->shadowTR.p2.y + oty, (*i)->shadowTR.p3.x + otx, (*i)->shadowTR.p3.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBR.p2.x, edgeBR.p2.y - h);
-                                glVertex2f(edgeBR.p2.x, edgeBR.p2.y);
-                            glEnd();
-                        }
-
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBR.p1.x, edgeBR.p1.y, edgeBR.p2.x, edgeBR.p2.y, (*i)->shadowTR.p3.x + otx, (*i)->shadowTR.p3.y + oty, (*i)->shadowTR.p4.x + otx, (*i)->shadowTR.p4.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBR.p2.x, edgeBR.p2.y - h);
-                                glVertex2f(edgeBR.p2.x, edgeBR.p2.y);
-                            glEnd();
-                        }
-                    }
-                }
-
-                if ((*i)->edgeTLCast)
-                {
-                    if (ContainFunctions::PointInQuad(edgeBL.p1.x, edgeBL.p1.y, (*i)->shadowTL.p1.x + otx, (*i)->shadowTL.p1.y + oty, (*i)->shadowTL.p2.x + otx, (*i)->shadowTL.p2.y + oty, (*i)->shadowTL.p3.x + otx, (*i)->shadowTL.p3.y + oty, (*i)->shadowTL.p4.x + otx, (*i)->shadowTL.p4.y + oty) && ContainFunctions::PointInQuad(edgeBL.p2.x, edgeBL.p2.y, (*i)->shadowTL.p1.x + otx, (*i)->shadowTL.p1.y + oty, (*i)->shadowTL.p2.x + otx, (*i)->shadowTL.p2.y + oty, (*i)->shadowTL.p3.x + otx, (*i)->shadowTL.p3.y + oty, (*i)->shadowTL.p4.x + otx, (*i)->shadowTL.p4.y + oty))
-                    {
-                        faceLeft.draw();
-                    }
-                    else
-                    {
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBL.p1.x, edgeBL.p1.y, edgeBL.p2.x, edgeBL.p2.y, (*i)->shadowTL.p1.x + otx, (*i)->shadowTL.p1.y + oty, (*i)->shadowTL.p2.x + otx, (*i)->shadowTL.p2.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBL.p1.x, edgeBL.p1.y - h);
-                                glVertex2f(edgeBL.p1.x, edgeBL.p1.y);
-                            glEnd();
-                        }
-
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBL.p1.x, edgeBL.p1.y, edgeBL.p2.x, edgeBL.p2.y, (*i)->shadowTL.p2.x + otx, (*i)->shadowTL.p2.y + oty, (*i)->shadowTL.p3.x + otx, (*i)->shadowTL.p3.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBL.p1.x, edgeBL.p1.y - h);
-                                glVertex2f(edgeBL.p1.x, edgeBL.p1.y);
-                            glEnd();
-                        }
-
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBL.p1.x, edgeBL.p1.y, edgeBL.p2.x, edgeBL.p2.y, (*i)->shadowTL.p3.x + otx, (*i)->shadowTL.p3.y + oty, (*i)->shadowTL.p4.x + otx, (*i)->shadowTL.p4.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBL.p2.x, edgeBL.p2.y - h);
-                                glVertex2f(edgeBL.p2.x, edgeBL.p2.y);
-                            glEnd();
-                        }
-                    }
-
-                    if (ContainFunctions::PointInQuad(edgeBR.p1.x, edgeBR.p1.y, (*i)->shadowTL.p1.x + otx, (*i)->shadowTL.p1.y + oty, (*i)->shadowTL.p2.x + otx, (*i)->shadowTL.p2.y + oty, (*i)->shadowTL.p3.x + otx, (*i)->shadowTL.p3.y + oty, (*i)->shadowTL.p4.x + otx, (*i)->shadowTL.p4.y + oty) && ContainFunctions::PointInQuad(edgeBR.p2.x, edgeBR.p2.y, (*i)->shadowTL.p1.x + otx, (*i)->shadowTL.p1.y + oty, (*i)->shadowTL.p2.x + otx, (*i)->shadowTL.p2.y + oty, (*i)->shadowTL.p3.x + otx, (*i)->shadowTL.p3.y + oty, (*i)->shadowTL.p4.x + otx, (*i)->shadowTL.p4.y + oty))
-                    {
-                        faceRight.draw();
-                    }
-                    else
-                    {
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBR.p1.x, edgeBR.p1.y, edgeBR.p2.x, edgeBR.p2.y, (*i)->shadowTL.p1.x + otx, (*i)->shadowTL.p1.y + oty, (*i)->shadowTL.p2.x + otx, (*i)->shadowTL.p2.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBR.p1.x, edgeBR.p1.y - h);
-                                glVertex2f(edgeBR.p1.x, edgeBR.p1.y);
-                            glEnd();
-                        }
-
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBR.p1.x, edgeBR.p1.y, edgeBR.p2.x, edgeBR.p2.y, (*i)->shadowTL.p2.x + otx, (*i)->shadowTL.p2.y + oty, (*i)->shadowTL.p3.x + otx, (*i)->shadowTL.p3.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBR.p1.x, edgeBR.p1.y - h);
-                                glVertex2f(edgeBR.p1.x, edgeBR.p1.y);
-                            glEnd();
-                        }
-
-                        result = IntersectionFunctions::LineSegmentToLineSegmentIntersection(edgeBR.p1.x, edgeBR.p1.y, edgeBR.p2.x, edgeBR.p2.y, (*i)->shadowTL.p3.x + otx, (*i)->shadowTL.p3.y + oty, (*i)->shadowTL.p4.x + otx, (*i)->shadowTL.p4.y + oty);
-                        if (result.NumberOfSolutions() == 1)
-                        {
-                            h = (getHeight() < (*i)->getHeight() ? getHeight() : (*i)->getHeight());
-                            glBegin(GL_QUADS);
-                                glVertex2f(result.points[0].x, result.points[0].y);
-                                glVertex2f(result.points[0].x, result.points[0].y - h);
-                                glVertex2f(edgeBR.p2.x, edgeBR.p2.y - h);
-                                glVertex2f(edgeBR.p2.x, edgeBR.p2.y);
-                            glEnd();
-                        }
-                    }
-                }
+                objectShadowTR = (*i)->shadowTR;
+                objectShadowTR.translate(x, y);
+                drawWallShadow(&objectShadowTR, height < (*i)->getHeight() ? height : (*i)->getHeight());
             }
+
+            if ((*i)->edgeTLCast)
+            {
+                objectShadowTL = (*i)->shadowTL;
+                objectShadowTL.translate(x, y);
+                drawWallShadow(&objectShadowTL, height < (*i)->getHeight() ? height : (*i)->getHeight());
+            }
+        }
+    }
+}
+
+void Object::drawWallShadow(Quad *shadow, float h)
+{
+    vector<Vector2> pointList;
+
+    bool c1 = shadow->containsPosition(&edgeBL.p2);
+    bool c2 = shadow->containsPosition(&edgeBL.p1);
+    bool c3 = shadow->containsPosition(&edgeBR.p1);
+
+    if (c1)
+    {
+        pointList.push_back(edgeBL.p2);
+    }
+    if (!c1 || !c2)
+    {
+        edgeBL.getIntesectionToSegment(&shadow->s1, &pointList);
+        edgeBL.getIntesectionToSegment(&shadow->s2, &pointList);
+        edgeBL.getIntesectionToSegment(&shadow->s3, &pointList);
+    }
+    if (c2)
+    {
+        pointList.push_back(edgeBL.p1);
+    }
+    if (!c2 || !c3)
+    {
+        edgeBR.getIntesectionToSegment(&shadow->s1, &pointList);
+        edgeBR.getIntesectionToSegment(&shadow->s2, &pointList);
+        edgeBR.getIntesectionToSegment(&shadow->s3, &pointList);
+    }
+    if (c3)
+    {
+        pointList.push_back(edgeBR.p1);
+    }
+
+    if (pointList.size() > 1)
+    {
+        for (unsigned int i = 1; i < pointList.size(); i ++)
+        {
+            glBegin(GL_QUADS);
+                glVertex2f(pointList[i-1].x, pointList[i-1].y);
+                glVertex2f(pointList[i-1].x, pointList[i-1].y - h);
+                glVertex2f(pointList[i].x, pointList[i].y - h);
+                glVertex2f(pointList[i].x, pointList[i].y);
+            glEnd();
         }
     }
 }
