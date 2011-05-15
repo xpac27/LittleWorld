@@ -13,7 +13,6 @@
 #include <list>
 #include <iostream>
 
-
 class World
 {
     public:

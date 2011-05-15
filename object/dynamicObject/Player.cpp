@@ -8,7 +8,7 @@ Player::Player(World *w) : DynamicObject(w, 32.f)
 {
     speed = 100.f;
 
-    position.set(512.f, 512.f);
+    position.set(192.f, 192.f);
     setSize(64.f);
 
     world->ON_MOUSE_LEFT_DOWN.connect(bind(&Player::onMouseLeftDown, this));

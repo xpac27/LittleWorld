@@ -1,6 +1,8 @@
 #ifndef DEF_OBJECT
 #define DEF_OBJECT
 
+#include "util/IntersectionFunctions.h"
+#include "util/ContainFunctions.h"
 #include "util/Position.h"
 #include "util/Segment.h"
 #include "util/Quad.h"
@@ -24,7 +26,9 @@ class Object
 
         void setSize(float s);
         void setPosition(float x, float y);
-        void drawShadow(float lx, float ly, std::list<Object*> objects);
+        void updateShadow(float lx, float ly);
+        void drawShadow();
+        void drawWallShadow(std::list<Object*> objects);
 
         float getX();
         float getY();
@@ -34,7 +38,24 @@ class Object
 
         Quad getEdgeShadow(Segment *edge, float lx, float ly);
 
-        Object operator<(Object &o);
+        Segment edgeBL;
+        Segment edgeBR;
+        Segment edgeTL;
+        Segment edgeTR;
+
+        Quad faceLeft;
+        Quad faceRight;
+        Quad faceTop;
+
+        Quad shadowBR;
+        Quad shadowBL;
+        Quad shadowTR;
+        Quad shadowTL;
+
+        bool edgeBRCast;
+        bool edgeBLCast;
+        bool edgeTRCast;
+        bool edgeTLCast;
 
 
     protected:
@@ -50,16 +71,17 @@ class Object
         float height;
         float size;
 
-        Quad faceLeft;
-        Quad faceRight;
-        Quad faceTop;
-
-        Segment edgeBL;
-        Segment edgeBR;
-        Segment edgeTL;
-        Segment edgeTR;
-
         bool doesEdgeCastShadow(Segment *edge, float lx, float ly);
+};
+
+class ObjectComparer
+{
+    public:
+
+        bool operator() (Object *o1, Object *o2)
+        {
+            return (*o1).getY() < (*o2).getY();
+        }
 };
 
 #endif

@@ -17,7 +17,7 @@ void World::draw()
     {
         objectList.push_back(*Di);
     }
-    objectList.sort();
+    objectList.sort(ObjectComparer());
 
     camera.draw(objectList);
 }

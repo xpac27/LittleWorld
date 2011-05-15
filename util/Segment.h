@@ -15,6 +15,7 @@ class Segment
         void set(float x1, float y1, float x2, float y2);
         void draw();
 
+        // TODO put this in a vector
         Position p1;
         Position p2;
 };

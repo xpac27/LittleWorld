@@ -46,6 +46,9 @@ $(BIN): $(OBJECTS)
 ./util/IntersectionFunctions.o: util/IntersectionFunctions.cpp
 	$(CPP) -c util/IntersectionFunctions.cpp -o util/IntersectionFunctions.o $(FLAGS)
 
+./util/ContainFunctions.o: util/ContainFunctions.cpp
+	$(CPP) -c util/ContainFunctions.cpp -o util/ContainFunctions.o $(FLAGS)
+
 ./util/Console.o: util/Console.cpp
 	$(CPP) -c util/Console.cpp -o util/Console.o $(FLAGS)
 

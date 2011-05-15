@@ -16,23 +16,28 @@ void Game::init()
     world.addDynamicObject(p);
     world.setFocus(p);
 
-    for (unsigned int i = 0; i < 20; i ++)
-    {
-        Enemy *e = new Enemy(&world);
-        e->setPosition(Randomizer::Random(0, Conf::WORLD_WIDTH), Randomizer::Random(0, Conf::WORLD_HEIGHT));
-        world.addDynamicObject(e);
-    }
+    //for (unsigned int i = 0; i < 20; i ++)
+    //{
+        //Enemy *e = new Enemy(&world);
+        //e->setPosition(Randomizer::Random(0, Conf::WORLD_WIDTH), Randomizer::Random(0, Conf::WORLD_HEIGHT));
+        //world.addDynamicObject(e);
+    //}
 
     float height(0.f);
     int r(0);
+
+    world.addStaticObject(new Tile(&world, 192.f, 192.f, 64.f));
+    world.addStaticObject(new Tile(&world, 64.f, 0.f, 32.f));
+    world.addStaticObject(new Tile(&world, 0.f, 64.f, 32.f));
+    world.addStaticObject(new Tile(&world, 192.f, 0.f, 32.f));
 
     for (unsigned int x(0); x < Conf::WORLD_WIDTH / 64; x ++)
     {
         for (unsigned int y(0); y < Conf::WORLD_HEIGHT / 64; y ++)
         {
-            r = Randomizer::Random(0, 20);
+            //r = Randomizer::Random(0, 20);
             //height = ((r > 17) ? r - 17.f : 0.f) * 12.f;
-            height = ((r > 17) ? 5.f : 0.f) * 12.f;
+            //height = ((r > 17) ? 5.f : 0.f) * 12.f;
 
             world.addStaticObject(new Tile(&world, x * 64.f, y * 64.f, height));
         }

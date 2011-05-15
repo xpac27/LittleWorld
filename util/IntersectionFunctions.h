@@ -10,6 +10,8 @@ struct IntersectionObject
 {
     std::vector<Vector2> points;
 
+    // TODO remove methods from structures
+
     void InsertSolution(float x, float y)
     {
         points.push_back(Vector2(x, y));

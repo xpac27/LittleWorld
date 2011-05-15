@@ -16,31 +16,49 @@ void Camera::draw(list<Object*> objects)
     glPushMatrix();
     translateCamera();
 
+    glColorMask(1, 1, 1, 1);
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+
     for (list<Object*>::iterator i = objects.begin(); i != objects.end(); ++ i)
     {
-        glColorMask(1, 1, 1, 1);
-        glEnable(GL_DEPTH_TEST);
-        glDisable(GL_STENCIL_TEST);
-
         glPushMatrix();
         translateObject(*i);
 
         (*i)->draw();
-        (*i)->drawOutline();
-
-        glColorMask(0, 0, 0, 0);
-        glDisable(GL_DEPTH_TEST);
-        glEnable(GL_STENCIL_TEST);
-
-        glStencilFunc(GL_ALWAYS, 1, 1);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-        (*i)->drawShadow
+        //(*i)->drawOutline();
+        (*i)->updateShadow
         (
             (focus->getX() - (*i)->getX()) - (focus->getY() - (*i)->getY()),
-            ((focus->getX() - (*i)->getX()) + (focus->getY() - (*i)->getY())) / 2.f,
-            objects
+            ((focus->getX() - (*i)->getX()) + (focus->getY() - (*i)->getY())) / 2.f
         );
+
+        glPopMatrix();
+    }
+
+    glColorMask(0, 0, 0, 0);
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
+
+    glStencilFunc(GL_ALWAYS, 1, 1);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+    for (list<Object*>::iterator i = objects.begin(); i != objects.end(); ++ i)
+    {
+        glPushMatrix();
+        translateObject(*i);
+
+        (*i)->drawShadow();
+
+        glPopMatrix();
+    }
+
+    for (list<Object*>::iterator i = objects.begin(); i != objects.end(); ++ i)
+    {
+        glPushMatrix();
+        translateObject(*i);
+
+        (*i)->drawWallShadow(objects);
 
         glPopMatrix();
     }

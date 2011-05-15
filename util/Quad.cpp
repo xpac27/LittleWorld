@@ -1,5 +1,7 @@
 #include "Quad.h"
 
+using namespace std;
+
 Quad::Quad()
 {
     set(0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
