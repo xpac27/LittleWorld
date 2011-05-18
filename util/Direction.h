@@ -4,6 +4,8 @@
 #include <math.h>
 #include "Position.h"
 
+// TODO replace by Vector2
+
 class Direction
 {
     public:

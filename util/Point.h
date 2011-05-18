@@ -6,6 +6,8 @@
 #include <cstdlib>
 #include <iostream>
 
+// TODO Rename to Block
+
 class Point
 {
     public:

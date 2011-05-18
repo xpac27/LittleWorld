@@ -40,14 +40,14 @@ $(BIN): $(OBJECTS)
 ./util/Conf.o: util/Conf.cpp
 	$(CPP) -c util/Conf.cpp -o util/Conf.o $(FLAGS)
 
-./util/Vector2.o: util/Vector2.cpp
-	$(CPP) -c util/Vector2.cpp -o util/Vector2.o $(FLAGS)
+./util/primitive/Vector2.o: util/primitive/Vector2.cpp
+	$(CPP) -c util/primitive/Vector2.cpp -o util/primitive/Vector2.o $(FLAGS)
 
-./util/IntersectionFunctions.o: util/IntersectionFunctions.cpp
-	$(CPP) -c util/IntersectionFunctions.cpp -o util/IntersectionFunctions.o $(FLAGS)
+./util/geometry/IntersectionFunctions.o: util/geometry/IntersectionFunctions.cpp
+	$(CPP) -c util/geometry/IntersectionFunctions.cpp -o util/geometry/IntersectionFunctions.o $(FLAGS)
 
-./util/ContainFunctions.o: util/ContainFunctions.cpp
-	$(CPP) -c util/ContainFunctions.cpp -o util/ContainFunctions.o $(FLAGS)
+./util/geometry/ContainFunctions.o: util/geometry/ContainFunctions.cpp
+	$(CPP) -c util/geometry/ContainFunctions.cpp -o util/geometry/ContainFunctions.o $(FLAGS)
 
 ./util/Console.o: util/Console.cpp
 	$(CPP) -c util/Console.cpp -o util/Console.o $(FLAGS)
@@ -61,11 +61,11 @@ $(BIN): $(OBJECTS)
 ./util/Position.o: util/Position.cpp
 	$(CPP) -c util/Position.cpp -o util/Position.o $(FLAGS)
 
-./util/Segment.o: util/Segment.cpp
-	$(CPP) -c util/Segment.cpp -o util/Segment.o $(FLAGS)
+./util/primitive/Segment.o: util/primitive/Segment.cpp
+	$(CPP) -c util/primitive/Segment.cpp -o util/primitive/Segment.o $(FLAGS)
 
-./util/Quad.o: util/Quad.cpp
-	$(CPP) -c util/Quad.cpp -o util/Quad.o $(FLAGS)
+./util/primitive/Quad.o: util/primitive/Quad.cpp
+	$(CPP) -c util/primitive/Quad.cpp -o util/primitive/Quad.o $(FLAGS)
 
 ./util/Point.o: util/Point.cpp
 	$(CPP) -c util/Point.cpp -o util/Point.o $(FLAGS)

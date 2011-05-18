@@ -1,12 +1,12 @@
 #ifndef DEF_OBJECT
 #define DEF_OBJECT
 
-#include "util/IntersectionFunctions.h"
-#include "util/ContainFunctions.h"
+#include "util/geometry/IntersectionFunctions.h"
+#include "util/geometry/ContainFunctions.h"
+#include "util/primitive/Segment.h"
+#include "util/primitive/Quad.h"
+#include "util/primitive/Vector2.h"
 #include "util/Position.h"
-#include "util/Segment.h"
-#include "util/Quad.h"
-#include "util/Vector2.h"
 
 #include <SFML/Graphics.hpp>
 #include <boost/bind.hpp>
@@ -28,12 +28,18 @@ class Object
         void setSize(float s);
         void setPosition(float x, float y);
         void setCastShadow(bool v);
-        void updateShadow(float lx, float ly);
+        void updateShadows(float lx, float ly);
         void drawShadow();
         void drawWallShadows(std::list<Object*> objects);
         void drawWallShadow(Quad *shadow, float h);
+        Quad updateShadow(Quad *shadow, Segment *edge, float lx, float ly);
 
         bool shadowEnabled();
+
+        bool edgeCastShadowBR;
+        bool edgeCastShadowBL;
+        bool edgeCastShadowTR;
+        bool edgeCastShadowTL;
 
         float getX();
         float getY();
@@ -41,26 +47,15 @@ class Object
         float getSize();
         float getIndex();
 
-        Quad getEdgeShadow(Segment *edge, float lx, float ly);
+        Segment* getBaseEdgeBL();
+        Segment* getBaseEdgeBR();
+        Segment* getBaseEdgeTL();
+        Segment* getBaseEdgeTR();
 
-        Segment edgeBL;
-        Segment edgeBR;
-        Segment edgeTL;
-        Segment edgeTR;
-
-        Quad faceLeft;
-        Quad faceRight;
-        Quad faceTop;
-
-        Quad shadowBR;
-        Quad shadowBL;
-        Quad shadowTR;
-        Quad shadowTL;
-
-        bool edgeBRCast;
-        bool edgeBLCast;
-        bool edgeTRCast;
-        bool edgeTLCast;
+        Quad* getShadowBR();
+        Quad* getShadowBL();
+        Quad* getShadowTR();
+        Quad* getShadowTL();
 
 
     protected:
@@ -72,15 +67,24 @@ class Object
 
     private:
 
+        bool edgeCastShadow(Segment *edge, float lx, float ly);
+
+        bool shadow;
+
         float index;
         float height;
         float size;
 
-        bool shadow;
-
-        bool doesEdgeCastShadow(Segment *edge, float lx, float ly);
+        Quad faceL;
+        Quad faceR;
+        Quad faceT;
+        Quad shadowBR;
+        Quad shadowBL;
+        Quad shadowTR;
+        Quad shadowTL;
 };
 
+// TODO put this somewhere else
 class ObjectComparer
 {
     public:

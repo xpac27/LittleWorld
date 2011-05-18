@@ -29,21 +29,17 @@ void Quad::set(float x1, float y1, float x2, float y2, float x3, float y3, float
     s4.set(x4, y4, x1, y1);
 }
 
-void Quad::translate(float tx, float ty)
+void Quad::translate(Vector2 t)
 {
-    p1.x += tx;
-    p1.y += ty;
-    p2.x += tx;
-    p2.y += ty;
-    p3.x += tx;
-    p3.y += ty;
-    p4.x += tx;
-    p4.y += ty;
+    p1 += t;
+    p2 += t;
+    p3 += t;
+    p4 += t;
 
-    s1.translate(tx, ty);
-    s2.translate(tx, ty);
-    s3.translate(tx, ty);
-    s4.translate(tx, ty);
+    s1.translate(t);
+    s2.translate(t);
+    s3.translate(t);
+    s4.translate(t);
 }
 
 void Quad::draw()

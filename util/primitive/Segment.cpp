@@ -18,12 +18,10 @@ void Segment::set(float x1, float y1, float x2, float y2)
     p2.y = y2;
 }
 
-void Segment::translate(float tx, float ty)
+void Segment::translate(Vector2 t)
 {
-    p1.x += tx;
-    p1.y += ty;
-    p2.x += tx;
-    p2.y += ty;
+    p1 += t;
+    p2 += t;
 }
 
 void Segment::draw()

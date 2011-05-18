@@ -6,7 +6,6 @@
 
 #include "Game.h"
 #include "util/Conf.h"
-#include "util/IntersectionFunctions.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>

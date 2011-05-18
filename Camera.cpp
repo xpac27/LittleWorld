@@ -27,7 +27,7 @@ void Camera::draw(list<Object*> objects)
 
         (*i)->draw();
         (*i)->drawOutline();
-        (*i)->updateShadow
+        (*i)->updateShadows
         (
             (focus->getX() - (*i)->getX()) - (focus->getY() - (*i)->getY()),
             ((focus->getX() - (*i)->getX()) + (focus->getY() - (*i)->getY())) / 2.f

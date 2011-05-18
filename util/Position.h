@@ -3,6 +3,8 @@
 
 #include <math.h>
 
+// TODO Replace by Vector2
+
 class Position
 {
     public:
