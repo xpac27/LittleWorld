@@ -97,6 +97,11 @@ float Vector2::dot(const Vector2& pVec1,const Vector2& pVec2)
     return pVec1.x * pVec2.x + pVec1.y * pVec2.y;
 }
 
+float Vector2::distance(const Vector2& pVec1,const Vector2& pVec2)
+{
+    return sqrt(pow((pVec1.x - pVec2.x), 2) + pow((pVec1.y - pVec2.y), 2));
+}
+
 Vector2& Vector2::invert(Vector2& vect)
 {
     return vect *= -1;

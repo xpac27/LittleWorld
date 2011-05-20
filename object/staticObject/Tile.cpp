@@ -2,7 +2,9 @@
 
 Tile::Tile(World *W, float x, float y, float h) : StaticObject(W, h, (h == 0.f), true)
 {
-    position.set(x, y);
+    position.x = x;
+    position.y = y;
+
     setSize(128.f);
 }
 

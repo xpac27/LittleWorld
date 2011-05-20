@@ -7,12 +7,12 @@ StaticObject::StaticObject(World *W, float h, bool w, bool s) : Object(W, h, s)
 
 int StaticObject::getGridX()
 {
-    return position.getGridX();
+    return floor((position.x + 32.f) / 64.f);
 }
 
 int StaticObject::getGridY()
 {
-    return position.getGridY();
+    return floor((position.y + 32.f) / 64.f);
 }
 
 bool StaticObject::isWalkable()

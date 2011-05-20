@@ -8,7 +8,8 @@ Camera::Camera()
     tolerance = 50.f;
     inertia   = 0.3f;
 
-    position.set(0.f, 0.f, 0.f);
+    position.x = 0.f;
+    position.y = 0.f;
 }
 
 void Camera::draw(list<Object*> objects)
@@ -114,7 +115,7 @@ void Camera::update(float time)
     }
 }
 
-void Camera::toScreenPosition(Position *p)
+void Camera::toScreenPosition(Vector2 *p)
 {
     float nx = p->x;
     float ny = p->y;

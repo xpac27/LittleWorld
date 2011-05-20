@@ -6,7 +6,6 @@
 #include "util/primitive/Segment.h"
 #include "util/primitive/Quad.h"
 #include "util/primitive/Vector2.h"
-#include "util/Position.h"
 
 #include <SFML/Graphics.hpp>
 #include <boost/bind.hpp>
@@ -62,7 +61,7 @@ class Object
 
         World *world;
 
-        Position position;
+        Vector2 position;
 
 
     private:

@@ -11,7 +11,6 @@ Object::Object(World *W, float h, bool s) : world(W), height(h), shadow(s)
     edgeCastShadowTR = false;
     edgeCastShadowTL = false;
 
-    position.set(0.f, 0.f, 0.f);
     setSize(32.f);
 }
 
@@ -33,7 +32,8 @@ void Object::setSize(float s)
 
 void Object::setPosition(float x, float y)
 {
-    position.set(x, y);
+    position.x = x;
+    position.y = y;
 }
 
 void Object::draw()

@@ -5,6 +5,8 @@
 #include "Segment.h"
 #include "../geometry/ContainFunctions.h"
 
+#include <iostream>
+
 #include <SFML/Graphics.hpp>
 
 // TODO Rename to polygon and allow more and less than 4 points

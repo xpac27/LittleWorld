@@ -2,8 +2,8 @@
 #define DEF_UTIL_PATHFINDER
 
 #include "../object/StaticObject.h"
+#include "primitive/Vector2.h"
 #include "Console.h"
-#include "Position.h"
 #include "Point.h"
 
 #include <iostream>
@@ -19,12 +19,12 @@ class Pathfinder
 
         void addStaticObject(StaticObject *o);
 
-        std::vector<Position*> getPath(float x1, float y1, float x2, float y2, float s);
+        std::vector<Vector2*> getPath(Vector2 *from, Vector2 *to, float s);
 
 
     private:
 
-        std::vector<Position*> aStar(float x1, float y1, float x2, float y2);
+        std::vector<Vector2*> aStar(float x1, float y1, float x2, float y2);
         std::list<Point*> getTraversingPoints(float x1, float y1, float x2, float y2);
 
         Point* getPoint(int x, int y);

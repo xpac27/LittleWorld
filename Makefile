@@ -52,14 +52,8 @@ $(BIN): $(OBJECTS)
 ./util/Console.o: util/Console.cpp
 	$(CPP) -c util/Console.cpp -o util/Console.o $(FLAGS)
 
-./util/Direction.o: util/Direction.cpp
-	$(CPP) -c util/Direction.cpp -o util/Direction.o $(FLAGS)
-
 ./util/Pathfinder.o: util/Pathfinder.cpp
 	$(CPP) -c util/Pathfinder.cpp -o util/Pathfinder.o $(FLAGS)
-
-./util/Position.o: util/Position.cpp
-	$(CPP) -c util/Position.cpp -o util/Position.o $(FLAGS)
 
 ./util/primitive/Segment.o: util/primitive/Segment.cpp
 	$(CPP) -c util/primitive/Segment.cpp -o util/primitive/Segment.o $(FLAGS)

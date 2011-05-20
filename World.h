@@ -5,7 +5,6 @@
 #include "Object.h"
 #include "object/DynamicObject.h"
 #include "object/StaticObject.h"
-#include "util/Position.h"
 #include "util/Pathfinder.h"
 #include "util/Conf.h"
 

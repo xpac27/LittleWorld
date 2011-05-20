@@ -32,6 +32,7 @@ class Vector2
         static float length(const Vector2& vect);
         static float length2(const Vector2& vect);
         static float dot(const Vector2& pVec1, const Vector2& pVec2);
+        static float distance(const Vector2& pVec1, const Vector2& pVec2);
 
         static Vector2& invert(Vector2& vect);
         static Vector2& normalize(Vector2& vect);

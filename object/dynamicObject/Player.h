@@ -2,8 +2,8 @@
 #define DEF_PLAYER
 
 #include "../DynamicObject.h"
-#include "../../util/Position.h"
 #include "../../World.h"
+#include "../../util/primitive/Vector2.h"
 
 #include <boost/bind.hpp>
 #include <iostream>

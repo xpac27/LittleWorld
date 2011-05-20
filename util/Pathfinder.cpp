@@ -21,15 +21,15 @@ void Pathfinder::addStaticObject(StaticObject *o)
     }
 }
 
-vector<Position*> Pathfinder::getPath(float x1, float y1, float x2, float y2, float s)
+vector<Vector2*> Pathfinder::getPath(Vector2 *from, Vector2 *to, float s)
 {
-    vector<Position*> path;
+    vector<Vector2*> path;
 
-    if (pointIsWalkable(coordToGrid(x2), coordToGrid(y2)))
+    if (pointIsWalkable(coordToGrid(to->x), coordToGrid(to->y)))
     {
         // Calculate line direction
-        int const dx = (x1 < x2) ? 1 : -1;
-        int const dy = (y1 < y2) ? 1 : -1;
+        int const dx = (from->x < to->x) ? 1 : -1;
+        int const dy = (from->y < to->y) ? 1 : -1;
 
         bool pathIsWalkable = true;
 
@@ -39,8 +39,8 @@ vector<Position*> Pathfinder::getPath(float x1, float y1, float x2, float y2, fl
         list<Point*> points1;
         list<Point*> points2;
         list<Point*>::iterator i;
-        points1 = getTraversingPoints(x1 + (s * dx), y1 - (s * dy), x2 + (s * dx), y2 - (s * dy));
-        points2 = getTraversingPoints(x1 - (s * dx), y1 + (s * dy), x2 - (s * dx), y2 + (s * dy));
+        points1 = getTraversingPoints(from->x + (s * dx), from->y - (s * dy), to->x + (s * dx), to->y - (s * dy));
+        points2 = getTraversingPoints(from->x - (s * dx), from->y + (s * dy), to->x - (s * dx), to->y + (s * dy));
         points1.merge(points2);
 
         // Check if the direct path is safe
@@ -51,11 +51,11 @@ vector<Position*> Pathfinder::getPath(float x1, float y1, float x2, float y2, fl
 
         if (pathIsWalkable)
         {
-            path.push_back(new Position(x2, y2));
+            path.push_back(new Vector2(to->x, to->y));
         }
         else
         {
-            path = aStar(x1, y1, x2, y2);
+            path = aStar(from->x, from->y, to->x, to->y);
         }
     }
     else
@@ -114,9 +114,9 @@ list<Point*> Pathfinder::getTraversingPoints(float x1, float y1, float x2, float
     return points;
 }
 
-vector<Position*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
+vector<Vector2*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
 {
-    vector<Position*> path;
+    vector<Vector2*> path;
 
     // Define points to work with
     Point *start = getPointFromCoord(x1, y1);

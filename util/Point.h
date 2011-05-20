@@ -1,7 +1,7 @@
 #ifndef DEF_UTIL_POINT
 #define DEF_UTIL_POINT
 
-#include "Position.h"
+#include "primitive/Vector2.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -15,7 +15,7 @@ class Point
         Point();
         Point(int x, int y, bool w);
 
-        Position* getPosition();
+        Vector2* getPosition();
         Point* getParent();
 
         void setParent(Point *p);

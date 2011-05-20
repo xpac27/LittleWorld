@@ -20,9 +20,9 @@ Point::Point(int x, int y, bool w)
     this->y = y;
 }
 
-Position* Point::getPosition()
+Vector2* Point::getPosition()
 {
-    return new Position((float)(x * 64), (float)(y * 64));
+    return new Vector2((float)(x * 64), (float)(y * 64));
 }
 
 Point* Point::getParent()
