@@ -54,7 +54,8 @@ void DynamicObject::setDestination(Vector2 *d)
 {
     destination.x = d->x;
     destination.y = d->y;
-    direction -= destination;
+    direction.x = destination.x - position.x;
+    direction.y = destination.y - position.y;
     Vector2::normalize(direction);
     canMove = true;
 }

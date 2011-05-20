@@ -16,12 +16,12 @@ void Game::init()
     world.addDynamicObject(p);
     world.setFocus(p);
 
-    //for (unsigned int i = 0; i < 20; i ++)
-    //{
-        //Enemy *e = new Enemy(&world);
-        //e->setPosition(Randomizer::Random(0, Conf::WORLD_WIDTH), Randomizer::Random(0, Conf::WORLD_HEIGHT));
-        //world.addDynamicObject(e);
-    //}
+    for (unsigned int i = 0; i < 20; i ++)
+    {
+        Enemy *e = new Enemy(&world);
+        e->setPosition(Randomizer::Random(0, Conf::WORLD_WIDTH), Randomizer::Random(0, Conf::WORLD_HEIGHT));
+        world.addDynamicObject(e);
+    }
 
     float height(0.f);
     int r(0);
