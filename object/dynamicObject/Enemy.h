@@ -6,7 +6,6 @@
 #include "../../World.h"
 
 #include <SFML/System/Randomizer.hpp>
-#include <boost/bind.hpp>
 #include <iostream>
 
 class Enemy : public DynamicObject

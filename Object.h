@@ -8,7 +8,6 @@
 #include "util/primitive/Vector2.h"
 
 #include <SFML/Graphics.hpp>
-#include <boost/bind.hpp>
 #include <list>
 #include <iostream>
 

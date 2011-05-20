@@ -20,6 +20,10 @@ void DynamicObject::remove()
 {
 }
 
+void DynamicObject::onNotify(unsigned const int type)
+{
+}
+
 void DynamicObject::move(float time)
 {
     if (canMove == true)

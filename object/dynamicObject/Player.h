@@ -5,7 +5,6 @@
 #include "../../World.h"
 #include "../../util/primitive/Vector2.h"
 
-#include <boost/bind.hpp>
 #include <iostream>
 
 class Player : public DynamicObject
@@ -16,6 +15,7 @@ class Player : public DynamicObject
 
         virtual void draw();
         virtual void update(float time);
+        virtual void onNotify(unsigned const int type);
 
 
     private:

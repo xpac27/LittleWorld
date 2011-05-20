@@ -17,6 +17,7 @@ class DynamicObject : public Object
 
         virtual void update(float time);
         virtual void remove();
+        virtual void onNotify(unsigned const int type);
 
         void init(Pathfinder *p);
         void move(float time);

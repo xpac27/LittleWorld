@@ -8,7 +8,6 @@
 #include "util/Pathfinder.h"
 #include "util/Conf.h"
 
-#include <boost/signal.hpp>
 #include <list>
 #include <iostream>
 
@@ -18,8 +17,6 @@ class World
 
         World();
 
-        boost::signal<void ()> ON_MOUSE_LEFT_DOWN;
-
         void draw();
         void update(float time);
         void addDynamicObject(DynamicObject *o);
@@ -27,6 +24,9 @@ class World
         void setMousePosition(unsigned int x, unsigned int y);
         void setFocus(Object *o);
         void updateMousePosition(float mouseScreenX, float mouseScreenY);
+        void dispatch(unsigned const int type);
+
+        static unsigned const int ON_MOUSE_LEFT_DOWN;
 
         float mouseX;
         float mouseY;

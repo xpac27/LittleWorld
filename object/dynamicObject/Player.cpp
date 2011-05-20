@@ -1,6 +1,5 @@
 #include "Player.h"
 
-using namespace boost;
 using namespace std;
 
 Player::Player(World *W) : DynamicObject(W, 32.f, false)
@@ -11,15 +10,16 @@ Player::Player(World *W) : DynamicObject(W, 32.f, false)
     position.y = 512.f;
 
     setSize(64.f);
-
-    world->ON_MOUSE_LEFT_DOWN.connect(bind(&Player::onMouseLeftDown, this));
 }
 
-void Player::onMouseLeftDown()
+void Player::onNotify(unsigned const int type)
 {
-    // TODO find a way to not create a new vector each time
-    Vector2 p(world->mouseX, world->mouseY);
-    setPath(&p);
+    if (type == World::ON_MOUSE_LEFT_DOWN)
+    {
+        // TODO find a way to not create a new vector each time
+        Vector2 p(world->mouseX, world->mouseY);
+        setPath(&p);
+    }
 }
 
 void Player::draw()

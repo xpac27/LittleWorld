@@ -2,6 +2,8 @@
 
 using namespace std;
 
+unsigned const int World::ON_MOUSE_LEFT_DOWN = 1;
+
 World::World()
 {
 }
@@ -68,5 +70,13 @@ void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
     // Corect cursor
     mouseX += 16.f;
     mouseY += 8.f;
+}
+
+void World::dispatch(unsigned const int type)
+{
+    for (list<DynamicObject*>::iterator Di = dynamicObjectList.begin(); Di != dynamicObjectList.end(); ++ Di)
+    {
+        (*Di)->onNotify(type);
+    }
 }
 

@@ -56,7 +56,7 @@ void Game::onEvent(Event *event)
     {
         if (event->MouseButton.Button == Mouse::Left)
         {
-            world.ON_MOUSE_LEFT_DOWN();
+            world.dispatch(World::ON_MOUSE_LEFT_DOWN);
         }
     }
     // RESIZE
