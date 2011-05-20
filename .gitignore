@@ -1,6 +1,5 @@
 Icon*
 .*
 !.gitignore
-*.o
-littleWorld
+build
 
