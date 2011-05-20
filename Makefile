@@ -14,6 +14,5 @@ release:
 
 clean:
 	cd build && \
-	make clean && \
-	make
+	make clean
 
