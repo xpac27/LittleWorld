@@ -25,9 +25,26 @@ void Object::setSize(float s)
     float alfSize = size / 2.f;
     float quarterSize = size / 4.f;
 
-    faceL.set(-alfSize, 0.f, -alfSize, -height, 0.f, -height + quarterSize, 0.f, quarterSize);
-    faceR.set(alfSize, 0.f, alfSize, -height, 0.f, -height + quarterSize, 0.f, quarterSize);
-    faceT.set(0.f, -quarterSize, alfSize, 0.f, 0.f, quarterSize, -alfSize, 0.f);
+    faceL.clear();
+    faceL.addPoint(-alfSize, 0.f);
+    faceL.addPoint(-alfSize, -height);
+    faceL.addPoint(0.f, -height + quarterSize);
+    faceL.addPoint(0.f, quarterSize);
+    faceL.computeSegments();
+
+    faceR.clear();
+    faceR.addPoint(alfSize, 0.f);
+    faceR.addPoint(alfSize, -height);
+    faceR.addPoint(0.f, -height + quarterSize);
+    faceR.addPoint(0.f, quarterSize);
+    faceR.computeSegments();
+
+    faceT.clear();
+    faceT.addPoint(0.f, -quarterSize);
+    faceT.addPoint(alfSize, 0.f);
+    faceT.addPoint(0.f, quarterSize);
+    faceT.addPoint(-alfSize, 0.f);
+    faceT.computeSegments();
 }
 
 void Object::setPosition(float x, float y)
@@ -73,17 +90,16 @@ void Object::drawOutline()
     }
 }
 
-Quad Object::updateShadow(Quad *shadow, Segment *edge, float lx, float ly)
+void Object::updateShadow(Polygon *shadow, Segment *edge, float lx, float ly)
 {
     float h = height / 64.f;
 
-    shadow->set
-    (
-        edge->p1.x, edge->p1.y,
-        edge->p1.x + (edge->p1.x - lx) * h, edge->p1.y + (edge->p1.y - ly) * h,
-        edge->p2.x + (edge->p2.x - lx) * h, edge->p2.y + (edge->p2.y - ly) * h,
-        edge->p2.x, edge->p2.y
-    );
+    shadow->clear();
+    shadow->addPoint(Vector2(edge->p1.x, edge->p1.y));
+    shadow->addPoint(Vector2(edge->p1.x + (edge->p1.x - lx) * h, edge->p1.y + (edge->p1.y - ly) * h));
+    shadow->addPoint(Vector2(edge->p2.x + (edge->p2.x - lx) * h, edge->p2.y + (edge->p2.y - ly) * h));
+    shadow->addPoint(Vector2(edge->p2.x, edge->p2.y));
+    shadow->computeSegments();
 }
 
 void Object::updateShadows(float lx, float ly)
@@ -120,7 +136,7 @@ void Object::drawWallShadows(list<Object*> objects)
         if (!edgeCastShadowBL || !edgeCastShadowBR)
         {
             // Translated objects shadows toward object's position
-            Quad objectShadow;
+            Polygon objectShadow;
 
             // Objects screen position
             Vector2 currentSP(getX() - getY(), (getX() + getY()) / 2.f);
@@ -133,7 +149,7 @@ void Object::drawWallShadows(list<Object*> objects)
                     translation.x = ((*i)->getX() - (*i)->getY()) - currentSP.x;
                     translation.y = ((*i)->getX() + (*i)->getY()) / 2.f - currentSP.y;
 
-                    // TODO We could try to avoid cloning shadow Quads
+                    // TODO We could try to avoid cloning shadow Polygons
 
                     if ((*i)->edgeCastShadowTR)
                     {
@@ -168,9 +184,11 @@ void Object::drawWallShadows(list<Object*> objects)
     }
 }
 
-void Object::drawWallShadow(Quad *shadow, float h)
+void Object::drawWallShadow(Polygon *shadow, float h)
 {
     vector<Vector2> pointList;
+
+    unsigned int i;
 
     bool c1 = !edgeCastShadowBL && shadow->containsPosition(&getBaseEdgeBL()->p2);
     bool c2 = (!edgeCastShadowBL || !edgeCastShadowBR) && shadow->containsPosition(&getBaseEdgeBL()->p1);
@@ -180,18 +198,20 @@ void Object::drawWallShadow(Quad *shadow, float h)
 
     if (!edgeCastShadowBL && (!c1 || !c2))
     {
-        getBaseEdgeBL()->getIntesectionToSegment(&shadow->s1, &pointList);
-        getBaseEdgeBL()->getIntesectionToSegment(&shadow->s2, &pointList);
-        getBaseEdgeBL()->getIntesectionToSegment(&shadow->s3, &pointList);
+        for (i = 0; i < shadow->getTotalSegment(); i++)
+        {
+            getBaseEdgeBL()->collectIntesectionToSegment(shadow->getSegment(i), &pointList);
+        }
     }
 
     if (c2) pointList.push_back(getBaseEdgeBL()->p1);
 
     if (!edgeCastShadowBR && (!c2 || !c3))
     {
-        getBaseEdgeBR()->getIntesectionToSegment(&shadow->s1, &pointList);
-        getBaseEdgeBR()->getIntesectionToSegment(&shadow->s2, &pointList);
-        getBaseEdgeBR()->getIntesectionToSegment(&shadow->s3, &pointList);
+        for (i = 0; i < shadow->getTotalSegment(); i++)
+        {
+            getBaseEdgeBR()->collectIntesectionToSegment(shadow->getSegment(i), &pointList);
+        }
     }
 
     if (c3) pointList.push_back(getBaseEdgeBR()->p1);
@@ -260,40 +280,40 @@ bool Object::shadowEnabled()
 
 Segment* Object::getBaseEdgeBL()
 {
-    return &faceT.s3;
+    return faceT.getSegment(2);
 }
 
 Segment* Object::getBaseEdgeBR()
 {
-    return &faceT.s2;
+    return faceT.getSegment(1);
 }
 
 Segment* Object::getBaseEdgeTL()
 {
-    return &faceT.s4;
+    return faceT.getSegment(3);
 }
 
 Segment* Object::getBaseEdgeTR()
 {
-    return &faceT.s1;
+    return faceT.getSegment(0);
 }
 
-Quad* Object::getShadowBR()
+Polygon* Object::getShadowBR()
 {
     return &shadowBR;
 }
 
-Quad* Object::getShadowBL()
+Polygon* Object::getShadowBL()
 {
     return &shadowBL;
 }
 
-Quad* Object::getShadowTR()
+Polygon* Object::getShadowTR()
 {
     return &shadowTR;
 }
 
-Quad* Object::getShadowTL()
+Polygon* Object::getShadowTL()
 {
     return &shadowTL;
 }

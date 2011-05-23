@@ -1,14 +1,17 @@
 #ifndef CONTAINFUNCTIONS
 #define CONTAINFUNCTIONS
 
+#include "../primitive/Vector2.h"
+
 #include <cmath>
+#include <vector>
 
 class ContainFunctions
 {
 
     public:
 
-        static bool PointInQuad(float px, float py, float q1x, float q1y, float q2x, float q2y, float q3x, float q3y, float q4x, float q4y);
+        static bool PointInPolygon(Vector2 *p, std::vector<Vector2> *points);
 };
 
 #endif

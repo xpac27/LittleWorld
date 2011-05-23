@@ -4,7 +4,7 @@
 #include "util/geometry/IntersectionFunctions.h"
 #include "util/geometry/ContainFunctions.h"
 #include "util/primitive/Segment.h"
-#include "util/primitive/Quad.h"
+#include "util/primitive/Polygon.h"
 #include "util/primitive/Vector2.h"
 
 #include <SFML/Graphics.hpp>
@@ -29,8 +29,8 @@ class Object
         void updateShadows(float lx, float ly);
         void drawShadow();
         void drawWallShadows(std::list<Object*> objects);
-        void drawWallShadow(Quad *shadow, float h);
-        Quad updateShadow(Quad *shadow, Segment *edge, float lx, float ly);
+        void drawWallShadow(Polygon *shadow, float h);
+        void updateShadow(Polygon *shadow, Segment *edge, float lx, float ly);
 
         bool shadowEnabled();
 
@@ -50,10 +50,10 @@ class Object
         Segment* getBaseEdgeTL();
         Segment* getBaseEdgeTR();
 
-        Quad* getShadowBR();
-        Quad* getShadowBL();
-        Quad* getShadowTR();
-        Quad* getShadowTL();
+        Polygon* getShadowBR();
+        Polygon* getShadowBL();
+        Polygon* getShadowTR();
+        Polygon* getShadowTL();
 
 
     protected:
@@ -73,13 +73,13 @@ class Object
         float height;
         float size;
 
-        Quad faceL;
-        Quad faceR;
-        Quad faceT;
-        Quad shadowBR;
-        Quad shadowBL;
-        Quad shadowTR;
-        Quad shadowTL;
+        Polygon faceL;
+        Polygon faceR;
+        Polygon faceT;
+        Polygon shadowBR;
+        Polygon shadowBL;
+        Polygon shadowTR;
+        Polygon shadowTL;
 };
 
 // TODO put this somewhere else
