@@ -70,7 +70,7 @@ void Polygon::outline()
 
 bool Polygon::containsSegment(Segment *s)
 {
-    return containsPosition(&s->p1) && containsPosition(&s->p2);
+    return containsPosition(s->getPoint(0)) && containsPosition(s->getPoint(1));
 }
 
 bool Polygon::containsPosition(Vector2 *p)
@@ -88,7 +88,7 @@ int Polygon::getTotalSegment()
     return segments.size();
 }
 
-vector<Vector2> *Polygon::getPoinst()
+vector<Vector2> *Polygon::getPoints()
 {
     return &points;
 }

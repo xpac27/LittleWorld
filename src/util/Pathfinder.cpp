@@ -58,10 +58,6 @@ vector<Vector2*> Pathfinder::getPath(Vector2 *from, Vector2 *to, float s)
             path = aStar(from->x, from->y, to->x, to->y);
         }
     }
-    else
-    {
-        Console::log("not walkable");
-    }
 
     return path;
 }

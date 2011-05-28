@@ -16,9 +16,7 @@ void Player::onNotify(unsigned const int type)
 {
     if (type == World::ON_MOUSE_LEFT_DOWN)
     {
-        // TODO find a way to not create a new vector each time
-        Vector2 p(world->mouseX, world->mouseY);
-        setPath(&p);
+        setPath(new Vector2(world->mouseX, world->mouseY));
     }
 }
 

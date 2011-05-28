@@ -82,16 +82,5 @@ class Object
         Polygon shadowTL;
 };
 
-// TODO put this somewhere else
-class ObjectComparer
-{
-    public:
-
-        bool operator() (Object *o1, Object *o2)
-        {
-            return (((*o1).getY() + (*o1).getY()) / 2.f) < (((*o2).getY() + (*o2).getY()) / 2.f);
-        }
-};
-
 #endif
 

@@ -95,10 +95,10 @@ void Object::updateShadow(Polygon *shadow, Segment *edge, float lx, float ly)
     float h = height / 64.f;
 
     shadow->clear();
-    shadow->addPoint(Vector2(edge->p1.x, edge->p1.y));
-    shadow->addPoint(Vector2(edge->p1.x + (edge->p1.x - lx) * h, edge->p1.y + (edge->p1.y - ly) * h));
-    shadow->addPoint(Vector2(edge->p2.x + (edge->p2.x - lx) * h, edge->p2.y + (edge->p2.y - ly) * h));
-    shadow->addPoint(Vector2(edge->p2.x, edge->p2.y));
+    shadow->addPoint(Vector2(edge->getPoint(0)->x, edge->getPoint(0)->y));
+    shadow->addPoint(Vector2(edge->getPoint(0)->x + (edge->getPoint(0)->x - lx) * h, edge->getPoint(0)->y + (edge->getPoint(0)->y - ly) * h));
+    shadow->addPoint(Vector2(edge->getPoint(1)->x + (edge->getPoint(1)->x - lx) * h, edge->getPoint(1)->y + (edge->getPoint(1)->y - ly) * h));
+    shadow->addPoint(Vector2(edge->getPoint(1)->x, edge->getPoint(1)->y));
     shadow->computeSegments();
 }
 
@@ -190,11 +190,11 @@ void Object::drawWallShadow(Polygon *shadow, float h)
 
     unsigned int i;
 
-    bool c1 = !edgeCastShadowBL && shadow->containsPosition(&getBaseEdgeBL()->p2);
-    bool c2 = (!edgeCastShadowBL || !edgeCastShadowBR) && shadow->containsPosition(&getBaseEdgeBL()->p1);
-    bool c3 = !edgeCastShadowBR && shadow->containsPosition(&getBaseEdgeBR()->p1);
+    bool c1 = !edgeCastShadowBL && shadow->containsPosition(getBaseEdgeBL()->getPoint(1));
+    bool c2 = (!edgeCastShadowBL || !edgeCastShadowBR) && shadow->containsPosition(getBaseEdgeBL()->getPoint(0));
+    bool c3 = !edgeCastShadowBR && shadow->containsPosition(getBaseEdgeBR()->getPoint(0));
 
-    if (c1) pointList.push_back(getBaseEdgeBL()->p2);
+    if (c1) pointList.push_back(*getBaseEdgeBL()->getPoint(1));
 
     if (!edgeCastShadowBL && (!c1 || !c2))
     {
@@ -204,7 +204,7 @@ void Object::drawWallShadow(Polygon *shadow, float h)
         }
     }
 
-    if (c2) pointList.push_back(getBaseEdgeBL()->p1);
+    if (c2) pointList.push_back(*getBaseEdgeBL()->getPoint(0));
 
     if (!edgeCastShadowBR && (!c2 || !c3))
     {
@@ -214,7 +214,7 @@ void Object::drawWallShadow(Polygon *shadow, float h)
         }
     }
 
-    if (c3) pointList.push_back(getBaseEdgeBR()->p1);
+    if (c3) pointList.push_back(*getBaseEdgeBR()->getPoint(0));
 
     if (pointList.size() > 1)
     {
@@ -233,12 +233,12 @@ void Object::drawWallShadow(Polygon *shadow, float h)
 bool Object::edgeCastShadow(Segment *edge, float lx, float ly)
 {
     // normal of 2nd point minus 1st point
-    float nx = -1 * (edge->p2.y - edge->p1.y);
-    float ny = edge->p2.x - edge->p1.x;
+    float nx = -1 * (edge->getPoint(1)->y - edge->getPoint(0)->y);
+    float ny = edge->getPoint(1)->x - edge->getPoint(0)->x;
 
     // light minus 1st point
-    lx = edge->p1.x - lx;
-    ly = edge->p1.y - ly;
+    lx = edge->getPoint(0)->x - lx;
+    ly = edge->getPoint(0)->y - ly;
 
     // cross product
     if (nx * lx + ny * ly < 0.f)

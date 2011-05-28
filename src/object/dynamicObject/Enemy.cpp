@@ -20,9 +20,11 @@ void Enemy::update(float time)
 {
     if (!isCanMove() && sf::Randomizer::Random(0, 50) == 0)
     {
-        // TODO try to put this in one line with "new Vector2"
-        Vector2 p(sf::Randomizer::Random(position.x - 300, position.x + 300), sf::Randomizer::Random(position.y - 300, position.y + 300));
-        setPath(&p);
+        setPath(new Vector2
+        (
+            sf::Randomizer::Random(position.x - 300, position.x + 300),
+            sf::Randomizer::Random(position.y - 300, position.y + 300))
+        );
     }
     move(time);
 }

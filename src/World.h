@@ -3,6 +3,7 @@
 
 #include "Camera.h"
 #include "Object.h"
+#include "ObjectComparer.h"
 #include "object/DynamicObject.h"
 #include "object/StaticObject.h"
 #include "util/Pathfinder.h"

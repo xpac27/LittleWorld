@@ -33,7 +33,7 @@ IntersectionObject IntersectionFunctions::CircleToCircleIntersection(float x0_, 
     if (dist == r0_ + r1_)
     {
         //one solution
-        result.InsertSolution((x0_ - x1_) / (r0_ + r1_) * r0_ + x1_, (y0_ - y1_) / (r0_ + r1_) * r0_ + y1_);
+        result.points.push_back(Vector2((x0_ - x1_) / (r0_ + r1_) * r0_ + x1_, (y0_ - y1_) / (r0_ + r1_) * r0_ + y1_));
         return result;
     }
 
@@ -55,8 +55,8 @@ IntersectionObject IntersectionFunctions::CircleToCircleIntersection(float x0_, 
     r = Vector2(-d.y * (h / dist), d.x * (h / dist));
 
     // Determine the absolute intersection points
-    result.InsertSolution(v2 + r);
-    result.InsertSolution(v2 - r);
+    result.points.push_back(v2 + r);
+    result.points.push_back(v2 - r);
 
     return result;
 }
@@ -79,7 +79,7 @@ IntersectionObject IntersectionFunctions::LineToCircleIntersection(float x1_, fl
     if (distToCenter > r3_ * r3_) return result;
     if (distToCenter == r3_ * r3_)
     {
-        result.InsertSolution(midpt);
+        result.points.push_back(midpt);
         return result;
     }
     float distToIntersection;
@@ -96,8 +96,8 @@ IntersectionObject IntersectionFunctions::LineToCircleIntersection(float x1_, fl
     v1 *= lineSegmentLength;
     v1 *= distToIntersection;
 
-    result.InsertSolution(midpt + v1);
-    result.InsertSolution(midpt - v1);
+    result.points.push_back(midpt + v1);
+    result.points.push_back(midpt - v1);
 
     return result;
 }
@@ -126,7 +126,7 @@ IntersectionObject IntersectionFunctions::LineSegmentToCircleIntersection(float 
     if (distToCenter > r3_ * r3_) return result;
     if (distToCenter == r3_ * r3_)
     {
-        result.InsertSolution(midpt);
+        result.points.push_back(midpt);
         return result;
     }
     float distToIntersection;
@@ -147,13 +147,13 @@ IntersectionObject IntersectionFunctions::LineSegmentToCircleIntersection(float 
     if ((solution1.x - x1_) * v1.x + (solution1.y - y1_) * v1.y > 0 &&
         (solution1.x - x2_) * v1.x + (solution1.y - y2_) * v1.y < 0)
     {
-        result.InsertSolution(solution1);
+        result.points.push_back(solution1);
     }
     Vector2 solution2 = midpt - v1;
     if ((solution2.x - x1_) * v1.x + (solution2.y - y1_) * v1.y > 0 &&
         (solution2.x - x2_) * v1.x + (solution2.y - y2_) * v1.y < 0)
     {
-        result.InsertSolution(solution2);
+        result.points.push_back(solution2);
     }
     return result;
 }
@@ -182,7 +182,7 @@ IntersectionObject IntersectionFunctions::RayToCircleIntersection(float x1_, flo
     if (distToCenter > r3_ * r3_) return result;
     if (distToCenter == r3_ * r3_)
     {
-        result.InsertSolution(midpt);
+        result.points.push_back(midpt);
         return result;
     }
     float distToIntersection;
@@ -202,12 +202,12 @@ IntersectionObject IntersectionFunctions::RayToCircleIntersection(float x1_, flo
     Vector2 solution1 = midpt + v1;
     if ((solution1.x - x1_) * v1.x + (solution1.y - y1_) * v1.y > 0)
     {
-        result.InsertSolution(solution1);
+        result.points.push_back(solution1);
     }
     Vector2 solution2 = midpt - v1;
     if ((solution2.x - x1_) * v1.x + (solution2.y - y1_) * v1.y > 0)
     {
-        result.InsertSolution(solution2);
+        result.points.push_back(solution2);
     }
     return result;
 }
@@ -232,7 +232,7 @@ IntersectionObject IntersectionFunctions::LineToLineIntersection(float x1_, floa
             r = (((y1_ - y3_) * (x4_ - x3_)) - (x1_ - x3_) * (y4_ - y3_)) / d;
             s = (((y1_ - y3_) * (x2_ - x1_)) - (x1_ - x3_) * (y2_ - y1_)) / d;
 
-            result.InsertSolution(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_));
+            result.points.push_back(Vector2(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_)));
         }
     }
     return result;
@@ -255,7 +255,7 @@ IntersectionObject IntersectionFunctions::LineSegmentToLineSegmentIntersection(f
             {
                 if (s >= 0 && s <= 1)
                 {
-                    result.InsertSolution(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_));
+                    result.points.push_back(Vector2(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_)));
                 }
             }
         }
@@ -278,7 +278,7 @@ IntersectionObject IntersectionFunctions::LineSegmentToLineIntersection(float x1
             s = (((y1_ - y3_) * (x2_ - x1_)) - (x1_ - x3_) * (y2_ - y1_)) / d;
             if (r >= 0 && r <= 1)
             {
-                result.InsertSolution(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_));
+                result.points.push_back(Vector2(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_)));
             }
         }
     }
@@ -308,7 +308,7 @@ IntersectionObject IntersectionFunctions::RayToLineSegmentIntersection(float x1_
             {
                 if (s >= 0 && s <= 1)
                 {
-                    result.InsertSolution(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_));
+                    result.points.push_back(Vector2(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_)));
                 }
             }
         }
@@ -337,7 +337,7 @@ IntersectionObject IntersectionFunctions::RayToLineIntersection(float x1_, float
             s = (((y1_ - y3_) * (x2_ - x1_)) - (x1_ - x3_) * (y2_ - y1_)) / d;
             if (r >= 0)
             {
-                result.InsertSolution(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_));
+                result.points.push_back(Vector2(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_)));
             }
         }
     }
@@ -367,7 +367,7 @@ IntersectionObject IntersectionFunctions::RayToRayIntersection(float x1_, float 
             {
                 if (s >= 0)
                 {
-                    result.InsertSolution(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_));
+                    result.points.push_back(Vector2(x1_ + r * (x2_ - x1_), y1_ + r * (y2_ - y1_)));
                 }
             }
         }

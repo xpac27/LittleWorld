@@ -4,27 +4,28 @@
 #include "Vector2.h"
 #include "../geometry/IntersectionFunctions.h"
 
+#include <vector>
 #include <SFML/Graphics.hpp>
 
 class Segment
 {
     public:
 
-        Segment();
-        Segment(float x1, float y1, float x2, float y2);
         Segment(Vector2 p1, Vector2 p2);
+        Segment(float x1, float y1, float x2, float y2);
 
-        void set(float x1, float y1, float x2, float y2);
         void translate(Vector2 t);
         void draw();
         void collectIntesectionToSegment(Segment *s, std::vector<Vector2> *pointList);
 
-        // TODO make getters for points
-        // TODO make the above private
+        Vector2 *getPoint(unsigned int i);
 
-        // TODO put this in a vector
-        Vector2 p1;
-        Vector2 p2;
+        std::vector<Vector2> *getPoints();
+
+
+    private:
+
+        std::vector<Vector2> points;
 };
 
 #endif

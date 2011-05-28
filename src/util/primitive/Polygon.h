@@ -7,7 +7,6 @@
 
 #include <vector>
 #include <iostream>
-
 #include <SFML/Graphics.hpp>
 
 class Polygon
@@ -33,7 +32,7 @@ class Polygon
         Vector2 *getPoint(unsigned int i);
         Segment *getSegment(unsigned int i);
 
-        std::vector<Vector2> *getPoinst();
+        std::vector<Vector2> *getPoints();
         std::vector<Segment> *getSegments();
 
 
