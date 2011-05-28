@@ -2,8 +2,8 @@
 #define DEF_DYNAMICOBJECT
 
 #include "../Object.h"
-#include "../util/primitive/Vector2.h"
-#include "../util/Pathfinder.h"
+#include "../../graphics/Vector2.h"
+#include "../../ai/Pathfinder.h"
 
 #include <iostream>
 

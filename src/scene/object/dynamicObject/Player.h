@@ -3,7 +3,7 @@
 
 #include "../DynamicObject.h"
 #include "../../World.h"
-#include "../../util/primitive/Vector2.h"
+#include "../../../graphics/Vector2.h"
 
 #include <iostream>
 

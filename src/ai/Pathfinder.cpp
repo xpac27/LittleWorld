@@ -11,9 +11,9 @@ void Pathfinder::addStaticObject(StaticObject *o)
     int x = o->getGridX();
     int y = o->getGridY();
 
-    if (!pointExists(x, y))
+    if (!blockExists(x, y))
     {
-        grid[x][y] = new Point(x, y, o->isWalkable());
+        grid[x][y] = new Block(x, y, o->isWalkable());
     }
     else if (o->isWalkable())
     {
@@ -25,7 +25,7 @@ vector<Vector2*> Pathfinder::getPath(Vector2 *from, Vector2 *to, float s)
 {
     vector<Vector2*> path;
 
-    if (pointIsWalkable(coordToGrid(to->x), coordToGrid(to->y)))
+    if (blockIsWalkable(coordToGrid(to->x), coordToGrid(to->y)))
     {
         // Calculate line direction
         int const dx = (from->x < to->x) ? 1 : -1;
@@ -35,16 +35,16 @@ vector<Vector2*> Pathfinder::getPath(Vector2 *from, Vector2 *to, float s)
 
         s /= 4.f;
 
-        // Get traversing points
-        list<Point*> points1;
-        list<Point*> points2;
-        list<Point*>::iterator i;
-        points1 = getTraversingPoints(from->x + (s * dx), from->y - (s * dy), to->x + (s * dx), to->y - (s * dy));
-        points2 = getTraversingPoints(from->x - (s * dx), from->y + (s * dy), to->x - (s * dx), to->y + (s * dy));
-        points1.merge(points2);
+        // Get traversing blocks
+        list<Block*> blocks1;
+        list<Block*> blocks2;
+        list<Block*>::iterator i;
+        blocks1 = getTraversingBlocks(from->x + (s * dx), from->y - (s * dy), to->x + (s * dx), to->y - (s * dy));
+        blocks2 = getTraversingBlocks(from->x - (s * dx), from->y + (s * dy), to->x - (s * dx), to->y + (s * dy));
+        blocks1.merge(blocks2);
 
         // Check if the direct path is safe
-        for (i = points1.begin(); i != points1.end() && pathIsWalkable; ++ i)
+        for (i = blocks1.begin(); i != blocks1.end() && pathIsWalkable; ++ i)
         {
             pathIsWalkable = (*i)->walkable;
         }
@@ -62,9 +62,9 @@ vector<Vector2*> Pathfinder::getPath(Vector2 *from, Vector2 *to, float s)
     return path;
 }
 
-list<Point*> Pathfinder::getTraversingPoints(float x1, float y1, float x2, float y2)
+list<Block*> Pathfinder::getTraversingBlocks(float x1, float y1, float x2, float y2)
 {
-    list<Point*> points;
+    list<Block*> blocks;
 
     // Calculate m and b for the line equation:
     float const m = ((x1 == x2) ? 0.f : ((y2 - y1) / (x2 - x1)));
@@ -74,11 +74,11 @@ list<Point*> Pathfinder::getTraversingPoints(float x1, float y1, float x2, float
     float const dx = (x1 < x2) ? 1.f : -1.f;
     float const dy = (y1 < y2) ? 1.f : -1.f;
 
-    // Gather points
-    Point *current = getPointFromCoord(x1, y1);
-    Point *end = getPointFromCoord(x2, y2);
+    // Gather blocks
+    Block *current = getBlockFromCoord(x1, y1);
+    Block *end = getBlockFromCoord(x2, y2);
 
-    points.push_back(current);
+    blocks.push_back(current);
 
     unsigned int n = 0;
 
@@ -88,52 +88,52 @@ list<Point*> Pathfinder::getTraversingPoints(float x1, float y1, float x2, float
         // Get x next's value and check if it changes
         if (m == 0.f || floor(((((dy == 1) ? current->getYf() + dy : current->getYf()) - b) / m)) == current->getX())
         {
-            if (!pointExists(current->getX(), current->getY() + (int)dy))
+            if (!blockExists(current->getX(), current->getY() + (int)dy))
             {
-                return points;
+                return blocks;
             }
-            current = getPoint(current->getX(), current->getY() + (int)dy);
+            current = getBlock(current->getX(), current->getY() + (int)dy);
         }
         else
         {
-            if (!pointExists(current->getXf() + (int)dx, current->getY()))
+            if (!blockExists(current->getXf() + (int)dx, current->getY()))
             {
-                return points;
+                return blocks;
             }
-            current = getPoint(current->getXf() + (int)dx, current->getY());
+            current = getBlock(current->getXf() + (int)dx, current->getY());
         }
         n ++;
 
-        // Add this point to the list
-        points.push_back(current);
+        // Add this block to the list
+        blocks.push_back(current);
     }
-    return points;
+    return blocks;
 }
 
 vector<Vector2*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
 {
     vector<Vector2*> path;
 
-    // Define points to work with
-    Point *start = getPointFromCoord(x1, y1);
-    Point *end = getPointFromCoord(x2, y2);
-    Point *current;
-    Point *child;
+    // Define blocks to work with
+    Block *start = getBlockFromCoord(x1, y1);
+    Block *end = getBlockFromCoord(x2, y2);
+    Block *current;
+    Block *child;
 
     // Define the open and the close list
-    list<Point*> openList;
-    list<Point*> closedList;
-    list<Point*>::iterator i;
+    list<Block*> openList;
+    list<Block*> closedList;
+    list<Block*>::iterator i;
 
     unsigned int n = 0;
 
-    // Add the start point to the openList
+    // Add the start block to the openList
     openList.push_back(start);
     start->opened = true;
 
     while (n == 0 || (current != end && n < 50))
     {
-        // Look for the smallest F value in the openList and make it the current point
+        // Look for the smallest F value in the openList and make it the current block
         for (i = openList.begin(); i != openList.end(); ++ i)
         {
             if (i == openList.begin() || (*i)->getFScore() <= current->getFScore())
@@ -148,27 +148,27 @@ vector<Vector2*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
             break;
         }
 
-        // Remove the current point from the openList
+        // Remove the current block from the openList
         openList.remove(current);
         current->opened = false;
 
-        // Add the current point to the closedList
+        // Add the current block to the closedList
         closedList.push_back(current);
         current->closed = true;
 
-        // Get all current's adjacent walkable points
+        // Get all current's adjacent walkable blocks
         for (int x = -1; x < 2; x ++)
         {
             for (int y = -1; y < 2; y ++)
             {
-                // If it's current point then pass
+                // If it's current block then pass
                 if (x == 0 && y == 0)
                 {
                     continue;
                 }
 
-                // Get this point
-                child = getPoint(current->getX() + x, current->getY() + y);
+                // Get this block
+                child = getBlock(current->getX() + x, current->getY() + y);
 
                 // If it's closed or not walkable then pass
                 if (child->closed || !child->walkable)
@@ -179,13 +179,13 @@ vector<Vector2*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
                 // If we are at a corner
                 if (x != 0 && y != 0)
                 {
-                    // if the next horizontal point is not walkable or in the closed list then pass
-                    if (!pointIsWalkable(current->getX(), current->getY() + y) || getPoint(current->getX(), current->getY() + y)->closed)
+                    // if the next horizontal block is not walkable or in the closed list then pass
+                    if (!blockIsWalkable(current->getX(), current->getY() + y) || getBlock(current->getX(), current->getY() + y)->closed)
                     {
                         continue;
                     }
-                    // if the next vertical point is not walkable or in the closed list then pass
-                    if (!pointIsWalkable(current->getX() + x, current->getY()) || getPoint(current->getX() + x, current->getY())->closed)
+                    // if the next vertical block is not walkable or in the closed list then pass
+                    if (!blockIsWalkable(current->getX() + x, current->getY()) || getBlock(current->getX() + x, current->getY())->closed)
                     {
                         continue;
                     }
@@ -194,8 +194,8 @@ vector<Vector2*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
                 // If it's already in the openList
                 if (child->opened)
                 {
-                    // If it has a wroste g score than the one that pass through the current point
-                    // then its path is improved when it's parent is the current point
+                    // If it has a wroste g score than the one that pass through the current block
+                    // then its path is improved when it's parent is the current block
                     if (child->getGScore() > child->getGScore(current))
                     {
                         // Change its parent and g score
@@ -205,7 +205,7 @@ vector<Vector2*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
                 }
                 else
                 {
-                    // Add it to the openList with current point as parent
+                    // Add it to the openList with current block as parent
                     openList.push_back(child);
                     child->opened = true;
 
@@ -229,7 +229,7 @@ vector<Vector2*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
         (*i)->closed = false;
     }
 
-    // Resolve the path starting from the end point
+    // Resolve the path starting from the end block
     while (current->hasParent() && current != start)
     {
         path.push_back(current->getPosition());
@@ -240,32 +240,32 @@ vector<Vector2*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
     return path;
 }
 
-Point* Pathfinder::getPoint(int x, int y)
+Block* Pathfinder::getBlock(int x, int y)
 {
-    if (pointExists(x, y))
+    if (blockExists(x, y))
     {
         return grid[x][y];
     }
     else
     {
-        //Console::log("ERROR: failed to gather point " << x << "x" << y << " on grid");
-        return new Point(0, 0, false);
+        // !! We should not fall here
+        return new Block(0, 0, false);
     }
 }
 
-Point* Pathfinder::getPointFromCoord(float x, float y)
+Block* Pathfinder::getBlockFromCoord(float x, float y)
 {
-    return getPoint(coordToGrid(x), coordToGrid(y));
+    return getBlock(coordToGrid(x), coordToGrid(y));
 }
 
-bool Pathfinder::pointExists(int x, int y)
+bool Pathfinder::blockExists(int x, int y)
 {
     return (grid.count(x) != 0 && grid[x].count(y) != 0);
 }
 
-bool Pathfinder::pointIsWalkable(int x, int y)
+bool Pathfinder::blockIsWalkable(int x, int y)
 {
-    return (pointExists(x, y) && grid[x][y]->walkable);
+    return (blockExists(x, y) && grid[x][y]->walkable);
 }
 
 int Pathfinder::coordToGrid(float v)

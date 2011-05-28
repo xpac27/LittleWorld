@@ -4,8 +4,8 @@
 *
 ************************************/
 
-#include "Game.h"
-#include "util/Conf.h"
+#include "game/Game.h"
+#include "resources/Conf.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>

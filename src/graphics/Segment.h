@@ -2,7 +2,7 @@
 #define DEF_SEGMENT
 
 #include "Vector2.h"
-#include "../geometry/IntersectionFunctions.h"
+#include "../math/IntersectionFunctions.h"
 
 #include <vector>
 #include <SFML/Graphics.hpp>

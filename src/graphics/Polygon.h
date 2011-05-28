@@ -3,7 +3,7 @@
 
 #include "Vector2.h"
 #include "Segment.h"
-#include "../geometry/ContainFunctions.h"
+#include "../math/ContainFunctions.h"
 
 #include <vector>
 #include <iostream>

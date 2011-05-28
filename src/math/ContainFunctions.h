@@ -1,7 +1,7 @@
 #ifndef CONTAINFUNCTIONS
 #define CONTAINFUNCTIONS
 
-#include "../primitive/Vector2.h"
+#include "../graphics/Vector2.h"
 
 #include <cmath>
 #include <vector>

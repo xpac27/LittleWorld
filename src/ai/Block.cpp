@@ -1,8 +1,8 @@
-#include "Point.h"
+#include "Block.h"
 
 using namespace std;
 
-Point::Point()
+Block::Block()
 {
     parent = NULL;
     closed = false;
@@ -11,83 +11,83 @@ Point::Point()
     x = y = f = g = h = 0;
 }
 
-Point::Point(int x, int y, bool w)
+Block::Block(int x, int y, bool w)
 {
-    Point();
+    Block();
 
     this->walkable = w;
     this->x = x;
     this->y = y;
 }
 
-Vector2* Point::getPosition()
+Vector2* Block::getPosition()
 {
     return new Vector2((float)(x * 64), (float)(y * 64));
 }
 
-Point* Point::getParent()
+Block* Block::getParent()
 {
     return parent;
 }
 
-void Point::setParent(Point *p)
+void Block::setParent(Block *p)
 {
     parent = p;
 }
 
-int Point::getX()
+int Block::getX()
 {
     return x;
 }
 
-int Point::getY()
+int Block::getY()
 {
     return y;
 }
 
-float Point::getXf()
+float Block::getXf()
 {
     return (float)x;
 }
 
-float Point::getYf()
+float Block::getYf()
 {
     return (float)y;
 }
 
-int Point::getGScore(Point *p)
+int Block::getGScore(Block *p)
 {
     return p->g + ((x == p->x || y == p->y) ? 10 : 14);
 }
 
-int Point::getHScore(Point *p)
+int Block::getHScore(Block *p)
 {
     return (abs(p->x - x) + abs(p->y - y)) * 10;
 }
 
-int Point::getGScore()
+int Block::getGScore()
 {
     return g;
 }
 
-int Point::getHScore()
+int Block::getHScore()
 {
     return h;
 }
 
-int Point::getFScore()
+int Block::getFScore()
 {
     return f;
 }
 
-void Point::computeScores(Point *end)
+void Block::computeScores(Block *end)
 {
     g = getGScore(parent);
     h = getHScore(end);
     f = g + h;
 }
 
-bool Point::hasParent()
+bool Block::hasParent()
 {
     return parent != NULL;
 }

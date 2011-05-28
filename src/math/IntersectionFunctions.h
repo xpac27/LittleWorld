@@ -1,7 +1,7 @@
 #ifndef INTERSECTIONFUNCTIONS
 #define INTERSECTIONFUNCTIONS
 
-#include "../primitive/Vector2.h"
+#include "../graphics/Vector2.h"
 
 #include <vector>
 #include <cmath>

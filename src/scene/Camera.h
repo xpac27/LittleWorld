@@ -2,8 +2,8 @@
 #define DEF_CAMERA
 
 #include "Object.h"
-#include "util/primitive/Vector2.h"
-#include "util/Conf.h"
+#include "../graphics/Vector2.h"
+#include "../resources/Conf.h"
 
 #include <SFML/Graphics.hpp>
 #include <list>

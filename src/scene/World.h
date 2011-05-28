@@ -6,8 +6,8 @@
 #include "ObjectComparer.h"
 #include "object/DynamicObject.h"
 #include "object/StaticObject.h"
-#include "util/Pathfinder.h"
-#include "util/Conf.h"
+#include "../ai/Pathfinder.h"
+#include "../resources/Conf.h"
 
 #include <list>
 #include <iostream>

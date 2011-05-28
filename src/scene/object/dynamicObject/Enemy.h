@@ -2,8 +2,8 @@
 #define DEF_ENEMY
 
 #include "../DynamicObject.h"
-#include "../../util/primitive/Vector2.h"
 #include "../../World.h"
+#include "../../../graphics/Vector2.h"
 
 #include <SFML/System/Randomizer.hpp>
 #include <iostream>

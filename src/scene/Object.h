@@ -1,11 +1,11 @@
 #ifndef DEF_OBJECT
 #define DEF_OBJECT
 
-#include "util/geometry/IntersectionFunctions.h"
-#include "util/geometry/ContainFunctions.h"
-#include "util/primitive/Segment.h"
-#include "util/primitive/Polygon.h"
-#include "util/primitive/Vector2.h"
+#include "../math/IntersectionFunctions.h"
+#include "../math/ContainFunctions.h"
+#include "../graphics/Segment.h"
+#include "../graphics/Polygon.h"
+#include "../graphics/Vector2.h"
 
 #include <SFML/Graphics.hpp>
 #include <list>
