@@ -1,6 +1,7 @@
 #ifndef DEF_OBJECT
 #define DEF_OBJECT
 
+#include "Light.h"
 #include "../math/IntersectionFunctions.h"
 #include "../math/ContainFunctions.h"
 #include "../graphics/Segment.h"
@@ -26,11 +27,11 @@ class Object
         void setSize(float s);
         void setPosition(float x, float y);
         void setCastShadow(bool v);
-        void updateShadows(float lx, float ly);
+        void updateShadows(Light *l);
         void drawShadow();
         void drawWallShadows(std::list<Object*> objects);
         void drawWallShadow(Polygon *shadow, float h);
-        void updateShadow(Polygon *shadow, Segment *edge, float lx, float ly);
+        void updateShadow(Polygon *shadow, Segment *edge, Light *light);
 
         bool shadowEnabled();
 
@@ -65,7 +66,7 @@ class Object
 
     private:
 
-        bool edgeCastShadow(Segment *edge, float lx, float ly);
+        bool edgeCastShadow(Segment *edge, Light *light);
 
         bool shadow;
 

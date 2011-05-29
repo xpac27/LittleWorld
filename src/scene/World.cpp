@@ -21,7 +21,7 @@ void World::draw()
     }
     objectList.sort(ObjectComparer());
 
-    camera.draw(objectList);
+    camera.draw(objectList, lightList);
 }
 
 void World::update(float time)
@@ -46,6 +46,11 @@ void World::addStaticObject(StaticObject *o)
     o->init();
     staticObjectList.push_back(o);
     pathfinder.addStaticObject(o);
+}
+
+void World::addLight(Light *o)
+{
+    lightList.push_back(o);
 }
 
 void World::setFocus(Object *o)

@@ -31,12 +31,18 @@ void Game::init()
         for (unsigned int y(0); y < Conf::WORLD_HEIGHT / 64; y ++)
         {
             r = Randomizer::Random(0, 20);
-            height = ((r > 15) ? r - 15.f : 0.f) * 12.f;
+            //height = ((r > 15) ? r - 15.f : 0.f) * 12.f;
             //height = ((r > 17) ? 5.f : 0.f) * 12.f;
+            height = ((r > 19) ? 5.f : 0.f) * 12.f;
 
             world.addStaticObject(new Tile(&world, x * 64.f, y * 64.f, height));
         }
     }
+
+    world.addLight(new Light(128.f, 128.f, 60.f, 1.f, 0.f, 0.f));
+    world.addLight(new Light(512.f, 512.f, 60.f, 0.f, 1.f, 0.f));
+    world.addLight(new Light(640.f, 128.f, 60.f, 0.f, 0.f, 1.f));
+    world.addLight(new Light(360.f, 128.f, 60.f, 1.f, 1.f, 1.f));
 }
 
 void Game::draw()

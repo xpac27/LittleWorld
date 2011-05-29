@@ -53,13 +53,13 @@ int main()
     //glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-    glClearDepth(1.0f);
-    glClearStencil(0);
+    glClearDepth(GL_ONE);
+    glClearStencil(GL_ZERO);
     glDepthFunc(GL_LEQUAL);
-    glClearColor(0.f, 0.f, 0.f, 0.f);
+    glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 
     // Setup an ortho projection
-    glViewport(0, 0, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
+    glViewport(0.f, 0.f, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.f, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, 0.f, 0.f, 1.f);
@@ -124,9 +124,6 @@ int main()
                     break;
             }
         }
-
-        // Clear depth buffer
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         // Reset matix
         glLoadIdentity();

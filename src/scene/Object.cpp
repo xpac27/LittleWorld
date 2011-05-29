@@ -90,31 +90,34 @@ void Object::drawOutline()
     }
 }
 
-void Object::updateShadow(Polygon *shadow, Segment *edge, float lx, float ly)
+void Object::updateShadow(Polygon *shadow, Segment *edge, Light *light)
 {
     float h = height / 64.f;
 
     shadow->clear();
     shadow->addPoint(Vector2(edge->getPoint(0)->x, edge->getPoint(0)->y));
-    shadow->addPoint(Vector2(edge->getPoint(0)->x + (edge->getPoint(0)->x - lx) * h, edge->getPoint(0)->y + (edge->getPoint(0)->y - ly) * h));
-    shadow->addPoint(Vector2(edge->getPoint(1)->x + (edge->getPoint(1)->x - lx) * h, edge->getPoint(1)->y + (edge->getPoint(1)->y - ly) * h));
+    shadow->addPoint(Vector2(edge->getPoint(0)->x + (edge->getPoint(0)->x - light->getX()) * h, edge->getPoint(0)->y + (edge->getPoint(0)->y - light->getY()) * h));
+    shadow->addPoint(Vector2(edge->getPoint(1)->x + (edge->getPoint(1)->x - light->getX()) * h, edge->getPoint(1)->y + (edge->getPoint(1)->y - light->getY()) * h));
     shadow->addPoint(Vector2(edge->getPoint(1)->x, edge->getPoint(1)->y));
     shadow->computeSegments();
 }
 
-void Object::updateShadows(float lx, float ly)
+void Object::updateShadows(Light *l)
 {
+    Light light = *l;
+    light.setPosition((l->getX() - position.x) - (l->getY() - position.y), ((l->getX() - position.x) + (l->getY() - position.y)) / 2.f);
+
     if (shadow && height > 0.f)
     {
-        edgeCastShadowBR = shadow && edgeCastShadow(getBaseEdgeBR(), lx, ly);
-        edgeCastShadowBL = shadow && edgeCastShadow(getBaseEdgeBL(), lx, ly);
-        edgeCastShadowTR = shadow && edgeCastShadow(getBaseEdgeTR(), lx, ly);
-        edgeCastShadowTL = shadow && edgeCastShadow(getBaseEdgeTL(), lx, ly);
+        edgeCastShadowBR = shadow && edgeCastShadow(getBaseEdgeBR(), &light);
+        edgeCastShadowBL = shadow && edgeCastShadow(getBaseEdgeBL(), &light);
+        edgeCastShadowTR = shadow && edgeCastShadow(getBaseEdgeTR(), &light);
+        edgeCastShadowTL = shadow && edgeCastShadow(getBaseEdgeTL(), &light);
 
-        if (edgeCastShadowBR) updateShadow(&shadowBR, getBaseEdgeBR(), lx, ly);
-        if (edgeCastShadowBL) updateShadow(&shadowBL, getBaseEdgeBL(), lx, ly);
-        if (edgeCastShadowTR) updateShadow(&shadowTR, getBaseEdgeTR(), lx, ly);
-        if (edgeCastShadowTL) updateShadow(&shadowTL, getBaseEdgeTL(), lx, ly);
+        if (edgeCastShadowBR) updateShadow(&shadowBR, getBaseEdgeBR(), &light);
+        if (edgeCastShadowBL) updateShadow(&shadowBL, getBaseEdgeBL(), &light);
+        if (edgeCastShadowTR) updateShadow(&shadowTR, getBaseEdgeTR(), &light);
+        if (edgeCastShadowTL) updateShadow(&shadowTL, getBaseEdgeTL(), &light);
     }
 }
 
@@ -230,15 +233,15 @@ void Object::drawWallShadow(Polygon *shadow, float h)
     }
 }
 
-bool Object::edgeCastShadow(Segment *edge, float lx, float ly)
+bool Object::edgeCastShadow(Segment *edge, Light *light)
 {
     // normal of 2nd point minus 1st point
     float nx = -1 * (edge->getPoint(1)->y - edge->getPoint(0)->y);
     float ny = edge->getPoint(1)->x - edge->getPoint(0)->x;
 
     // light minus 1st point
-    lx = edge->getPoint(0)->x - lx;
-    ly = edge->getPoint(0)->y - ly;
+    float lx = edge->getPoint(0)->x - light->getX();
+    float ly = edge->getPoint(0)->y - light->getY();
 
     // cross product
     if (nx * lx + ny * ly < 0.f)

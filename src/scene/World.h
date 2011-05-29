@@ -2,6 +2,7 @@
 #define DEF_WORLD
 
 #include "Camera.h"
+#include "Light.h"
 #include "Object.h"
 #include "ObjectComparer.h"
 #include "object/DynamicObject.h"
@@ -22,6 +23,7 @@ class World
         void update(float time);
         void addDynamicObject(DynamicObject *o);
         void addStaticObject(StaticObject *o);
+        void addLight(Light *o);
         void setMousePosition(unsigned int x, unsigned int y);
         void setFocus(Object *o);
         void updateMousePosition(float mouseScreenX, float mouseScreenY);
@@ -37,6 +39,7 @@ class World
 
         std::list<DynamicObject*> dynamicObjectList;
         std::list<StaticObject*>  staticObjectList;
+        std::list<Light*>         lightList;
 
         Camera camera;
         Pathfinder pathfinder;

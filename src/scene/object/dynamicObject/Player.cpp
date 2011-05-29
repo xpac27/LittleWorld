@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Player::Player(World *W) : DynamicObject(W, 32.f, false)
+Player::Player(World *W) : DynamicObject(W, 32.f, true)
 {
     speed = 100.f;
 
