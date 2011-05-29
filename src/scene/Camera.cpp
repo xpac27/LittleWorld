@@ -14,9 +14,33 @@ Camera::Camera()
 
 void Camera::draw(list<Object*> objects)
 {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glPushMatrix();
     translateCamera();
 
+    // Lighting
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    GLfloat ambientColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+
+    glPushMatrix();
+    translateObject(focus);
+
+    GLfloat LightAmb[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    GLfloat LightDif[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat LightPos[] = {0.f, 0.f, 40.0f, 1.0f};
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmb);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDif);
+    glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
+    glPopMatrix();
+
+    // Draw all objects
     glColorMask(1, 1, 1, 1);
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_STENCIL_TEST);
@@ -37,6 +61,7 @@ void Camera::draw(list<Object*> objects)
         glPopMatrix();
     }
 
+    // Draw projected shadows to stencil buffer
     glColorMask(0, 0, 0, 0);
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
@@ -77,12 +102,13 @@ void Camera::draw(list<Object*> objects)
 
     glPopMatrix();
 
+    // Fill stencil buffer
     glColorMask(1, 1, 1, 1);
     glEnable(GL_DEPTH_TEST);
     glStencilFunc(GL_EQUAL, 1, 1);
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
-    glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
+    glColor4f(0.0f, 0.0f, 0.0f, 0.4f);
 
     glBegin(GL_QUADS);
         glVertex2f(0.f, 0.f);
@@ -92,6 +118,17 @@ void Camera::draw(list<Object*> objects)
     glEnd();
 
     glDisable(GL_STENCIL_TEST);
+
+    // Contrast
+    glBlendFunc( GL_DST_COLOR, GL_ONE );
+    glColor4f(1.8f, 1.8f, 1.8f, 1.f);
+    glBegin(GL_QUADS);
+        glVertex2f(0.f, 0.f);
+        glVertex2f(Conf::SCREEN_WIDTH, 0.f);
+        glVertex2f(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
+        glVertex2f(0.f, Conf::SCREEN_HEIGHT);
+    glEnd();
+    glDisable(GL_BLEND);
 }
 
 void Camera::update(float time)
@@ -161,7 +198,7 @@ void Camera::translateObject(Object *o)
         (o->getX() + o->getY()) / 2.f,
 
         // Z index is calc using screen's Y coord lowered to tiles screen height + object's index
-        -100.f / (((o->getX() + o->getY()) / 2.f) / 64.f + o->getIndex())
+        (o->getHeight() == 0.f) ? -1.f : -1.f / (((o->getX() + o->getY()) / 2.f) / 64.f + o->getIndex())
     );
 }
 

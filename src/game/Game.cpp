@@ -62,6 +62,7 @@ void Game::onEvent(Event *event)
     // RESIZE
     else if (event->Type == Event::Resized)
     {
+        // TODO put this in the World class
         if ((float)event->Size.Width / (float)event->Size.Height > Conf::SCREEN_WIDTH / Conf::SCREEN_HEIGHT)
         {
             windowScale = Conf::SCREEN_HEIGHT / event->Size.Height;
@@ -77,6 +78,7 @@ void Game::onEvent(Event *event)
 
 void Game::setMousePosition(unsigned int x, unsigned int y)
 {
+    // TODO put the transformation in the World class
     world.updateMousePosition((x + windowPaddingLeft) * windowScale, (y + windowPaddingTop) * windowScale);
 }
 

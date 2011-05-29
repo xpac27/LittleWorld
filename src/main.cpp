@@ -47,20 +47,22 @@ int main()
 
     // Setup rendering
     glShadeModel(GL_SMOOTH);
+    //glEnable(GL_POINT_SMOOTH);
+    //glEnable(GL_LINE_SMOOTH);
+    //glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+    //glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
     glClearDepth(1.0f);
     glClearStencil(0);
-    glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.f, 0.f, 0.f, 0.f);
 
     // Setup an ortho projection
     glViewport(0, 0, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.f, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, 0.f, 0.f, 100.f);
+    glOrtho(0.f, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, 0.f, 0.f, 1.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
