@@ -22,7 +22,7 @@ class Object
 
         virtual void init();
         virtual void draw();
-        virtual void drawOutline();
+        virtual void outline();
 
         void setSize(float s);
         void setPosition(float x, float y);
@@ -68,6 +68,8 @@ class Object
 
         bool edgeCastShadow(Segment *edge, Light *light);
 
+        Polygon getFaceTop();
+
         bool shadow;
 
         float index;
@@ -77,6 +79,7 @@ class Object
         Polygon faceL;
         Polygon faceR;
         Polygon faceT;
+        Polygon faceT_high;
         Polygon shadowBR;
         Polygon shadowBL;
         Polygon shadowTR;

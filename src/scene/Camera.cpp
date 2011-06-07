@@ -92,6 +92,7 @@ void Camera::draw(std::list<Object*> objects, std::list<Light*> lights)
                 glPushMatrix();
                 translateObject(*o);
 
+                // TODO Try to remove this step and object reordering by changing the depth func
                 // Clear object volume from the stencil buffer
                 glStencilFunc(GL_EQUAL, GL_ONE, GL_ONE);
                 glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
@@ -152,6 +153,25 @@ void Camera::draw(std::list<Object*> objects, std::list<Light*> lights)
 
     // Deactivate stencil buffer
     glDisable(GL_STENCIL_TEST);
+
+    // Enable writing on the color mask
+    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    for (list<Object*>::iterator o = objects.begin(); o != objects.end(); ++ o)
+    {
+        glPushMatrix();
+        translateObject(*o);
+
+        (*o)->outline();
+
+        glPopMatrix();
+    }
+
+    // Disable writing to the color mask
+    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+    glDisable(GL_BLEND);
 
     glPopMatrix();
 }

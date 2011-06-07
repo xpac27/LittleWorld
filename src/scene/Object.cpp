@@ -24,20 +24,24 @@ void Object::setSize(float s)
 
     float alfSize = size / 2.f;
     float quarterSize = size / 4.f;
+    float heighthSize = size / 8.f;
 
-    faceL.clear();
-    faceL.addPoint(-alfSize, 0.f);
-    faceL.addPoint(-alfSize, -height);
-    faceL.addPoint(0.f, -height + quarterSize);
-    faceL.addPoint(0.f, quarterSize);
-    faceL.computeSegments();
+    if (height > 0.f)
+    {
+        faceL.clear();
+        faceL.addPoint(-alfSize, 0.f);
+        faceL.addPoint(-alfSize, -height);
+        faceL.addPoint(0.f, -height + quarterSize);
+        faceL.addPoint(0.f, quarterSize);
+        faceL.computeSegments();
 
-    faceR.clear();
-    faceR.addPoint(alfSize, 0.f);
-    faceR.addPoint(alfSize, -height);
-    faceR.addPoint(0.f, -height + quarterSize);
-    faceR.addPoint(0.f, quarterSize);
-    faceR.computeSegments();
+        faceR.clear();
+        faceR.addPoint(alfSize, 0.f);
+        faceR.addPoint(alfSize, -height);
+        faceR.addPoint(0.f, -height + quarterSize);
+        faceR.addPoint(0.f, quarterSize);
+        faceR.computeSegments();
+    }
 
     faceT.clear();
     faceT.addPoint(0.f, -quarterSize);
@@ -45,6 +49,31 @@ void Object::setSize(float s)
     faceT.addPoint(0.f, quarterSize);
     faceT.addPoint(-alfSize, 0.f);
     faceT.computeSegments();
+
+    if (size >= 96.f)
+    {
+        faceT_high.clear();
+
+        faceT_high.addPoint(0.f, 0.f);
+        faceT_high.addPoint(-quarterSize, heighthSize);
+        faceT_high.addPoint(-alfSize, 0.f);
+        faceT_high.addPoint(-quarterSize, -heighthSize);
+
+        faceT_high.addPoint(0.f, 0.f);
+        faceT_high.addPoint(-quarterSize, -heighthSize);
+        faceT_high.addPoint(0.f, -quarterSize);
+        faceT_high.addPoint(quarterSize, -heighthSize);
+
+        faceT_high.addPoint(0.f, 0.f);
+        faceT_high.addPoint(quarterSize, -heighthSize);
+        faceT_high.addPoint(alfSize, 0.f);
+        faceT_high.addPoint(quarterSize, heighthSize);
+
+        faceT_high.addPoint(0.f, 0.f);
+        faceT_high.addPoint(quarterSize, heighthSize);
+        faceT_high.addPoint(0.f, quarterSize);
+        faceT_high.addPoint(-quarterSize, heighthSize);
+    }
 }
 
 void Object::setPosition(float x, float y)
@@ -57,67 +86,88 @@ void Object::draw()
 {
     if (height == 0)
     {
-        faceT.draw();
+        glNormal3f(0.f, -1.f, 0.f);
+        getFaceTop().draw();
     }
     else
     {
         glPushMatrix();
         glTranslatef(0.f, -height, 0.f);
-        faceT.draw();
+
+        glNormal3f(0.f, -1.f, 0.f);
+        getFaceTop().draw();
+
         glPopMatrix();
+
         glColor4f(0.6f, 0.6f, 0.6f, 1.f);
+        glNormal3f(-0.7f, 0.7f, 0.f);
         faceL.draw();
+
+        glNormal3f(0.7f, 0.7f, 0.f);
         faceR.draw();
     }
 }
 
-void Object::drawOutline()
+void Object::outline()
 {
-    glColor4f(1.f, 1.f, 1.f, 0.6f);
+    glColor4f(1.f, 1.f, 1.f, 0.04);
 
     if (height == 0)
     {
-        faceT.outline();
+        getFaceTop().outline();
     }
     else
     {
         faceL.outline();
         faceR.outline();
+
         glPushMatrix();
         glTranslatef(0.f, -height, 0.f);
-        faceT.outline();
+
+        getFaceTop().outline();
+
         glPopMatrix();
     }
 }
 
 void Object::updateShadow(Polygon *shadow, Segment *edge, Light *light)
 {
-    float h = height / 64.f;
+    float f = (light->getHeight() - height > 1.f) ? (light->getHeight() - height) / height : 0.001f;
 
     shadow->clear();
     shadow->addPoint(Vector2(edge->getPoint(0)->x, edge->getPoint(0)->y));
-    shadow->addPoint(Vector2(edge->getPoint(0)->x + (edge->getPoint(0)->x - light->getX()) * h, edge->getPoint(0)->y + (edge->getPoint(0)->y - light->getY()) * h));
-    shadow->addPoint(Vector2(edge->getPoint(1)->x + (edge->getPoint(1)->x - light->getX()) * h, edge->getPoint(1)->y + (edge->getPoint(1)->y - light->getY()) * h));
+    shadow->addPoint(Vector2(edge->getPoint(0)->x + (edge->getPoint(0)->x - light->getX()) / f, edge->getPoint(0)->y + (edge->getPoint(0)->y - light->getY()) / f));
+    shadow->addPoint(Vector2(edge->getPoint(1)->x + (edge->getPoint(1)->x - light->getX()) / f, edge->getPoint(1)->y + (edge->getPoint(1)->y - light->getY()) / f));
     shadow->addPoint(Vector2(edge->getPoint(1)->x, edge->getPoint(1)->y));
     shadow->computeSegments();
 }
 
 void Object::updateShadows(Light *l)
 {
-    Light light = *l;
-    light.setPosition((l->getX() - position.x) - (l->getY() - position.y), ((l->getX() - position.x) + (l->getY() - position.y)) / 2.f);
-
     if (shadow && height > 0.f)
     {
-        edgeCastShadowBR = shadow && edgeCastShadow(getBaseEdgeBR(), &light);
-        edgeCastShadowBL = shadow && edgeCastShadow(getBaseEdgeBL(), &light);
-        edgeCastShadowTR = shadow && edgeCastShadow(getBaseEdgeTR(), &light);
-        edgeCastShadowTL = shadow && edgeCastShadow(getBaseEdgeTL(), &light);
+        if (l->getIntensityAtPosition(position) > 0.01f)
+        {
+            Light light = *l;
+            light.setPosition((l->getX() - position.x) - (l->getY() - position.y), ((l->getX() - position.x) + (l->getY() - position.y)) / 2.f);
 
-        if (edgeCastShadowBR) updateShadow(&shadowBR, getBaseEdgeBR(), &light);
-        if (edgeCastShadowBL) updateShadow(&shadowBL, getBaseEdgeBL(), &light);
-        if (edgeCastShadowTR) updateShadow(&shadowTR, getBaseEdgeTR(), &light);
-        if (edgeCastShadowTL) updateShadow(&shadowTL, getBaseEdgeTL(), &light);
+            edgeCastShadowBR = shadow && edgeCastShadow(getBaseEdgeBR(), &light);
+            edgeCastShadowBL = shadow && edgeCastShadow(getBaseEdgeBL(), &light);
+            edgeCastShadowTR = shadow && edgeCastShadow(getBaseEdgeTR(), &light);
+            edgeCastShadowTL = shadow && edgeCastShadow(getBaseEdgeTL(), &light);
+
+            if (edgeCastShadowBR) updateShadow(&shadowBR, getBaseEdgeBR(), &light);
+            if (edgeCastShadowBL) updateShadow(&shadowBL, getBaseEdgeBL(), &light);
+            if (edgeCastShadowTR) updateShadow(&shadowTR, getBaseEdgeTR(), &light);
+            if (edgeCastShadowTL) updateShadow(&shadowTL, getBaseEdgeTL(), &light);
+        }
+        else
+        {
+            edgeCastShadowBR = false;
+            edgeCastShadowBL = false;
+            edgeCastShadowTR = false;
+            edgeCastShadowTL = false;
+        }
     }
 }
 
@@ -131,6 +181,8 @@ void Object::drawShadow()
 
 void Object::drawWallShadows(list<Object*> objects)
 {
+    // TODO Handle roof shadows
+
     if (shadow && height > 0.f)
     {
         if (edgeCastShadowBL) faceL.draw();
@@ -231,6 +283,15 @@ void Object::drawWallShadow(Polygon *shadow, float h)
             glEnd();
         }
     }
+}
+
+Polygon Object::getFaceTop()
+{
+    if (size >= 96.f)
+    {
+        return faceT_high;
+    }
+    return faceT;
 }
 
 bool Object::edgeCastShadow(Segment *edge, Light *light)

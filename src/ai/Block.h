@@ -6,7 +6,6 @@
 #include <cstdlib>
 #include <iostream>
 
-// TODO Rename to Block
 
 class Block
 {

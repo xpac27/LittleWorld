@@ -18,6 +18,8 @@ class Light
         float getX();
         float getY();
         float getHeight();
+        float getIntensityFromDistance(float d);
+        float getIntensityAtPosition(Vector2 p);
 
 
     private:
@@ -26,6 +28,9 @@ class Light
         float red;
         float green;
         float blue;
+        float ca;
+        float la;
+        float qa;
 
         Vector2 position;
 };
