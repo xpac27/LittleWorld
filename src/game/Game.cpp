@@ -1,5 +1,6 @@
 #include "Game.h"
 
+using namespace std;
 using namespace sf;
 
 Game::Game(const Input &i) : input(i)
@@ -32,7 +33,7 @@ void Game::init()
         {
             r = Randomizer::Random(0, 20);
             //height = ((r > 15) ? r - 15.f : 0.f) * 12.f;
-            //height = ((r > 18) ? Randomizer::Random(1, 8) : 0.f) * 12.f;
+            height = ((r > 18) ? Randomizer::Random(1, 8) : 0.f) * 12.f;
             //height = ((r > 17) ? 5.f : 0.f) * 12.f;
             //height = ((r > 19) ? 5.f : 0.f) * 12.f;
 
@@ -69,14 +70,13 @@ void Game::onEvent(Event *event)
     // RESIZE
     else if (event->Type == Event::Resized)
     {
-        // TODO put this in the World class
         if ((float)event->Size.Width / (float)event->Size.Height > Conf::SCREEN_WIDTH / Conf::SCREEN_HEIGHT)
         {
-            windowScale = Conf::SCREEN_HEIGHT / event->Size.Height;
+            windowScale= Conf::SCREEN_HEIGHT / event->Size.Height;
         }
         else
         {
-            windowScale = Conf::SCREEN_WIDTH / event->Size.Width;
+            windowScale= Conf::SCREEN_WIDTH / event->Size.Width;
         }
         windowPaddingLeft = ((float)event->Size.Width - (Conf::SCREEN_WIDTH / windowScale)) / -2.f;
         windowPaddingTop  = ((float)event->Size.Height - (Conf::SCREEN_HEIGHT / windowScale)) / -2.f;
@@ -85,7 +85,6 @@ void Game::onEvent(Event *event)
 
 void Game::setMousePosition(unsigned int x, unsigned int y)
 {
-    // TODO put the transformation in the World class
-    world.updateMousePosition((x + windowPaddingLeft) * windowScale, (y + windowPaddingTop) * windowScale);
+    world.updateMousePosition((x + windowPaddingLeft) * windowScale - Conf::SCREEN_WIDTH / 2.f, (y + windowPaddingTop) * windowScale - Conf::SCREEN_HEIGHT / 2.f);
 }
 

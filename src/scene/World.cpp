@@ -19,7 +19,8 @@ void World::draw()
     {
         objectList.push_back(*Di);
     }
-    objectList.sort(ObjectComparer());
+    // Looks light this is not useful
+    //objectList.sort(ObjectComparer());
 
     camera.draw(objectList, lightList);
 }
@@ -60,10 +61,6 @@ void World::setFocus(Object *o)
 
 void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
 {
-    // Origin is on the screen so correct position
-    mouseScreenX -= Conf::SCREEN_WIDTH / 2.f;
-    mouseScreenY -= Conf::SCREEN_HEIGHT / 2.f;
-
     // Apply transformation
     mouseX = (mouseScreenX + (mouseScreenY * 2.f)) / 2.f;
     mouseY = ((mouseScreenY * 2.f) - mouseScreenX) / 2.f;
@@ -71,10 +68,6 @@ void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
     // Add camera offset
     mouseX += camera.getX();
     mouseY += camera.getY();
-
-    // Corect cursor
-    mouseX += 16.f;
-    mouseY += 8.f;
 }
 
 void World::dispatch(unsigned const int type)

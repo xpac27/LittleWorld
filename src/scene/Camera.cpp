@@ -92,7 +92,6 @@ void Camera::draw(std::list<Object*> objects, std::list<Light*> lights)
                 glPushMatrix();
                 translateObject(*o);
 
-                // TODO Try to remove this step and object reordering by changing the depth func
                 // Clear object volume from the stencil buffer
                 glStencilFunc(GL_EQUAL, GL_ONE, GL_ONE);
                 glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
@@ -226,8 +225,9 @@ void Camera::translateCamera()
 {
     glTranslatef
     (
-        position.y - position.x + 288.f + (Conf::SCREEN_WIDTH / 2.f) - (Conf::SCREEN_HEIGHT / 2.f), // Origin is centered on the screen
-        ((position.x + position.y - (Conf::SCREEN_WIDTH / 2.f) - (Conf::SCREEN_HEIGHT / 2.f)) / -2.f) - 64.f, // So minus alf screen width and height
+        // Origin is centered on the screen so add alf screen width and height
+        (Conf::SCREEN_WIDTH / 2.f) + (position.y - position.x),
+        (Conf::SCREEN_HEIGHT / 2.f) + ((position.x + position.y) / -2.f),
         0.f
     );
 }
