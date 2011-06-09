@@ -29,7 +29,7 @@ class Object
         void setCastShadow(bool v);
         void updateShadows(Light *l);
         void drawShadow();
-        void drawWallShadows(std::list<Object*> objects);
+        void drawWallShadows(std::list<Object*> *objects);
         void drawWallShadow(Polygon *shadow, float h);
         void updateShadow(Polygon *shadow, Segment *edge, Light *light);
 

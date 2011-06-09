@@ -179,7 +179,7 @@ void Object::drawShadow()
     if (edgeCastShadowTL) shadowTL.draw();
 }
 
-void Object::drawWallShadows(list<Object*> objects)
+void Object::drawWallShadows(list<Object*> *objects)
 {
     // TODO Handle roof shadows
 
@@ -197,14 +197,12 @@ void Object::drawWallShadows(list<Object*> objects)
             Vector2 currentSP(getX() - getY(), (getX() + getY()) / 2.f);
             Vector2 translation;
 
-            for (list<Object*>::iterator i = objects.begin(); i != objects.end(); ++ i)
+            for (list<Object*>::iterator i = objects->begin(); i != objects->end(); ++ i)
             {
                 if ((*i) != this && (*i)->shadowEnabled() && (*i)->getHeight() != 0.f)
                 {
                     translation.x = ((*i)->getX() - (*i)->getY()) - currentSP.x;
                     translation.y = ((*i)->getX() + (*i)->getY()) / 2.f - currentSP.y;
-
-                    // TODO We could try to avoid cloning shadow Polygons
 
                     if ((*i)->edgeCastShadowTR)
                     {

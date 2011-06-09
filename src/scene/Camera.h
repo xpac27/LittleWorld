@@ -17,7 +17,7 @@ class Camera
         Camera();
 
         void update(float time);
-        void draw(std::list<Object*> objects, std::list<Light*> lights);
+        void draw(std::list<Object*> *objects, std::list<Light*> *lights);
         void setFocus(Object *o);
         void toScreenPosition(Vector2 *p);
 

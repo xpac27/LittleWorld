@@ -12,7 +12,7 @@ Camera::Camera()
     position.y = 0.f;
 }
 
-void Camera::draw(std::list<Object*> objects, std::list<Light*> lights)
+void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
 {
     // When rendered use addition for colour.
     glBlendFunc(GL_ONE, GL_ONE);
@@ -37,7 +37,7 @@ void Camera::draw(std::list<Object*> objects, std::list<Light*> lights)
     // Disable writing to the color mask
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 
-    for (list<Object*>::iterator o = objects.begin(); o != objects.end(); ++ o)
+    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
         glPushMatrix();
         translateObject(*o);
@@ -54,10 +54,10 @@ void Camera::draw(std::list<Object*> objects, std::list<Light*> lights)
     glEnable(GL_STENCIL_TEST);
 
     // For each light in the scene
-    for (list<Light*>::iterator l = lights.begin(); l != lights.end(); ++ l)
+    for (list<Light*>::iterator l = lights->begin(); l != lights->end(); ++ l)
     {
         // generate shadow volumes
-        for (list<Object*>::iterator o = objects.begin(); o != objects.end(); ++ o)
+        for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
         {
             if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
             {
@@ -72,7 +72,7 @@ void Camera::draw(std::list<Object*> objects, std::list<Light*> lights)
         glStencilFunc(GL_ALWAYS, GL_ONE, GL_ONE);
         glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-        for (list<Object*>::iterator o = objects.begin(); o != objects.end(); ++ o)
+        for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
         {
             if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
             {
@@ -85,7 +85,7 @@ void Camera::draw(std::list<Object*> objects, std::list<Light*> lights)
             }
         }
 
-        for (list<Object*>::iterator o = objects.begin(); o != objects.end(); ++ o)
+        for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
         {
             if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
             {
@@ -130,7 +130,7 @@ void Camera::draw(std::list<Object*> objects, std::list<Light*> lights)
         glPopMatrix();
 
         // Render the entire scene
-        for (list<Object*>::iterator o = objects.begin(); o != objects.end(); ++ o)
+        for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
         {
             glPushMatrix();
             translateObject(*o);
@@ -158,7 +158,7 @@ void Camera::draw(std::list<Object*> objects, std::list<Light*> lights)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    for (list<Object*>::iterator o = objects.begin(); o != objects.end(); ++ o)
+    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
         glPushMatrix();
         translateObject(*o);

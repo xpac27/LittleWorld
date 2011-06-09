@@ -22,7 +22,7 @@ void World::draw()
     // Looks light this is not useful
     //objectList.sort(ObjectComparer());
 
-    camera.draw(objectList, lightList);
+    camera.draw(&objectList, &lightList);
 }
 
 void World::update(float time)
