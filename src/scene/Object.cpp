@@ -87,7 +87,7 @@ void Object::draw()
     if (height == 0)
     {
         glNormal3f(0.f, -1.f, 0.f);
-        getFaceTop().draw();
+        getFaceTop()->draw();
     }
     else
     {
@@ -95,7 +95,7 @@ void Object::draw()
         glTranslatef(0.f, -height, 0.f);
 
         glNormal3f(0.f, -1.f, 0.f);
-        getFaceTop().draw();
+        getFaceTop()->draw();
 
         glPopMatrix();
 
@@ -114,7 +114,7 @@ void Object::outline()
 
     if (height == 0)
     {
-        getFaceTop().outline();
+        getFaceTop()->outline();
     }
     else
     {
@@ -124,7 +124,7 @@ void Object::outline()
         glPushMatrix();
         glTranslatef(0.f, -height, 0.f);
 
-        getFaceTop().outline();
+        getFaceTop()->outline();
 
         glPopMatrix();
     }
@@ -179,10 +179,8 @@ void Object::drawShadow()
     if (edgeCastShadowTL) shadowTL.draw();
 }
 
-void Object::drawWallShadows(list<Object*> *objects)
+void Object::drawSelfShadows(list<Object*> *objects)
 {
-    // TODO Handle roof shadows
-
     if (shadow && height > 0.f)
     {
         if (edgeCastShadowBL) faceL.draw();
@@ -197,6 +195,8 @@ void Object::drawWallShadows(list<Object*> *objects)
             Vector2 currentSP(getX() - getY(), (getX() + getY()) / 2.f);
             Vector2 translation;
 
+            float h;
+
             for (list<Object*>::iterator i = objects->begin(); i != objects->end(); ++ i)
             {
                 if ((*i) != this && (*i)->shadowEnabled() && (*i)->getHeight() != 0.f)
@@ -204,32 +204,34 @@ void Object::drawWallShadows(list<Object*> *objects)
                     translation.x = ((*i)->getX() - (*i)->getY()) - currentSP.x;
                     translation.y = ((*i)->getX() + (*i)->getY()) / 2.f - currentSP.y;
 
+                    h = height < (*i)->getHeight() ? height : (*i)->getHeight();
+
                     if ((*i)->edgeCastShadowTR)
                     {
                         objectShadow = (*(*i)->getShadowTR());
                         objectShadow.translate(translation);
-                        drawWallShadow(&objectShadow, height < (*i)->getHeight() ? height : (*i)->getHeight());
+                        drawWallShadow(&objectShadow, h);
                     }
 
                     if ((*i)->edgeCastShadowTL)
                     {
                         objectShadow = (*(*i)->getShadowTL());
                         objectShadow.translate(translation);
-                        drawWallShadow(&objectShadow, height < (*i)->getHeight() ? height : (*i)->getHeight());
+                        drawWallShadow(&objectShadow, h);
                     }
 
                     if ((*i)->edgeCastShadowBR)
                     {
                         objectShadow = (*(*i)->getShadowBR());
                         objectShadow.translate(translation);
-                        drawWallShadow(&objectShadow, height < (*i)->getHeight() ? height : (*i)->getHeight());
+                        drawWallShadow(&objectShadow, h);
                     }
 
                     if ((*i)->edgeCastShadowBL)
                     {
                         objectShadow = (*(*i)->getShadowBL());
                         objectShadow.translate(translation);
-                        drawWallShadow(&objectShadow, height < (*i)->getHeight() ? height : (*i)->getHeight());
+                        drawWallShadow(&objectShadow, h);
                     }
                 }
             }
@@ -243,31 +245,37 @@ void Object::drawWallShadow(Polygon *shadow, float h)
 
     unsigned int i;
 
-    bool c1 = !edgeCastShadowBL && shadow->containsPosition(getBaseEdgeBL()->getPoint(1));
-    bool c2 = (!edgeCastShadowBL || !edgeCastShadowBR) && shadow->containsPosition(getBaseEdgeBL()->getPoint(0));
-    bool c3 = !edgeCastShadowBR && shadow->containsPosition(getBaseEdgeBR()->getPoint(0));
+    bool c1 = shadow->containsPosition(getBaseEdgeBL()->getPoint(1));
+    bool c2 = shadow->containsPosition(getBaseEdgeBL()->getPoint(0));
+    bool c3 = shadow->containsPosition(getBaseEdgeBR()->getPoint(0));
 
-    if (c1) pointList.push_back(*getBaseEdgeBL()->getPoint(1));
-
-    if (!edgeCastShadowBL && (!c1 || !c2))
+    if (!edgeCastShadowBL)
     {
-        for (i = 0; i < shadow->getTotalSegment(); i++)
+        if (c1) pointList.push_back(*getBaseEdgeBL()->getPoint(1));
+
+        if ((!c1 || !c2))
         {
-            getBaseEdgeBL()->collectIntesectionToSegment(shadow->getSegment(i), &pointList);
+            for (i = 0; i < shadow->getTotalSegment(); i++)
+            {
+                getBaseEdgeBL()->collectIntesectionToSegment(shadow->getSegment(i), &pointList);
+            }
         }
     }
 
-    if (c2) pointList.push_back(*getBaseEdgeBL()->getPoint(0));
-
-    if (!edgeCastShadowBR && (!c2 || !c3))
+    if (!edgeCastShadowBL || !edgeCastShadowBR)
     {
-        for (i = 0; i < shadow->getTotalSegment(); i++)
+        if (c2) pointList.push_back(*getBaseEdgeBL()->getPoint(0));
+
+        if (!c2 || !c3)
         {
-            getBaseEdgeBR()->collectIntesectionToSegment(shadow->getSegment(i), &pointList);
+            for (i = 0; i < shadow->getTotalSegment(); i++)
+            {
+                getBaseEdgeBR()->collectIntesectionToSegment(shadow->getSegment(i), &pointList);
+            }
         }
     }
 
-    if (c3) pointList.push_back(*getBaseEdgeBR()->getPoint(0));
+    if (!edgeCastShadowBR && c3) pointList.push_back(*getBaseEdgeBR()->getPoint(0));
 
     if (pointList.size() > 1)
     {
@@ -283,13 +291,13 @@ void Object::drawWallShadow(Polygon *shadow, float h)
     }
 }
 
-Polygon Object::getFaceTop()
+Polygon* Object::getFaceTop()
 {
     if (size >= 96.f)
     {
-        return faceT_high;
+        return &faceT_high;
     }
-    return faceT;
+    return &faceT;
 }
 
 bool Object::edgeCastShadow(Segment *edge, Light *light)
@@ -358,6 +366,25 @@ Segment* Object::getBaseEdgeTL()
 Segment* Object::getBaseEdgeTR()
 {
     return faceT.getSegment(0);
+}
+
+Polygon* Object::getFace(unsigned int f)
+{
+    switch (f)
+    {
+        case 0:
+            return getFaceTop();
+            break;
+        case 1:
+            return &faceT;
+            break;
+        case 2:
+            return &faceL;
+            break;
+        case 3:
+            return &faceR;
+            break;
+    }
 }
 
 Polygon* Object::getShadowBR()

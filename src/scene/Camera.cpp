@@ -102,7 +102,7 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
                 glStencilFunc(GL_ALWAYS, GL_ONE, GL_ONE);
                 glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-                (*o)->drawWallShadows(objects);
+                (*o)->drawSelfShadows(objects);
 
                 glPopMatrix();
             }
@@ -114,8 +114,8 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
         glEnable(GL_BLEND);
         glEnable(GL_COLOR_MATERIAL);
 
-        // Only render where stencil egual zero
-        glStencilFunc(GL_EQUAL, GL_ZERO, GL_ONE);
+        // Only render where stencil is not egual to one
+        glStencilFunc(GL_NOTEQUAL, GL_ONE, GL_ONE);
         glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
         // Enable writing on the color mask

@@ -41,6 +41,7 @@ int main()
     // Create main window
     WindowSettings Settings;
     Settings.AntialiasingLevel = 4;
+    Settings.StencilBits = 8;
     RenderWindow application(VideoMode(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT), "Game", (Style::Close | Style::Resize), Settings);
     application.PreserveOpenGLStates(true);
     application.UseVerticalSync(true);

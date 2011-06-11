@@ -29,7 +29,7 @@ class Object
         void setCastShadow(bool v);
         void updateShadows(Light *l);
         void drawShadow();
-        void drawWallShadows(std::list<Object*> *objects);
+        void drawSelfShadows(std::list<Object*> *objects);
         void drawWallShadow(Polygon *shadow, float h);
         void updateShadow(Polygon *shadow, Segment *edge, Light *light);
 
@@ -51,6 +51,7 @@ class Object
         Segment* getBaseEdgeTL();
         Segment* getBaseEdgeTR();
 
+        Polygon* getFace(unsigned int f);
         Polygon* getShadowBR();
         Polygon* getShadowBL();
         Polygon* getShadowTR();
@@ -68,7 +69,7 @@ class Object
 
         bool edgeCastShadow(Segment *edge, Light *light);
 
-        Polygon getFaceTop();
+        Polygon* getFaceTop();
 
         bool shadow;
 
