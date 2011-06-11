@@ -4,7 +4,6 @@
 #include "Light.h"
 #include "../math/IntersectionFunctions.h"
 #include "../math/ContainFunctions.h"
-#include "../graphics/Segment.h"
 #include "../graphics/Polygon.h"
 #include "../graphics/Vector2.h"
 
@@ -29,33 +28,13 @@ class Object
         void setCastShadow(bool v);
         void updateShadows(Light *l);
         void drawShadow();
-        void drawSelfShadows(std::list<Object*> *objects);
-        void drawWallShadow(Polygon *shadow, float h);
-        void updateShadow(Polygon *shadow, Segment *edge, Light *light);
 
         bool shadowEnabled();
-
-        bool edgeCastShadowBR;
-        bool edgeCastShadowBL;
-        bool edgeCastShadowTR;
-        bool edgeCastShadowTL;
 
         float getX();
         float getY();
         float getHeight();
         float getSize();
-        float getIndex();
-
-        Segment* getBaseEdgeBL();
-        Segment* getBaseEdgeBR();
-        Segment* getBaseEdgeTL();
-        Segment* getBaseEdgeTR();
-
-        Polygon* getFace(unsigned int f);
-        Polygon* getShadowBR();
-        Polygon* getShadowBL();
-        Polygon* getShadowTR();
-        Polygon* getShadowTL();
 
 
     protected:
@@ -66,8 +45,6 @@ class Object
 
 
     private:
-
-        bool edgeCastShadow(Segment *edge, Light *light);
 
         Polygon* getFaceTop();
 
@@ -80,11 +57,6 @@ class Object
         Polygon faceL;
         Polygon faceR;
         Polygon faceT;
-        Polygon faceT_high;
-        Polygon shadowBR;
-        Polygon shadowBL;
-        Polygon shadowTR;
-        Polygon shadowTL;
 };
 
 #endif
