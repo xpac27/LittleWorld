@@ -1,8 +1,7 @@
 #ifndef DEF_POLYGON
 #define DEF_POLYGON
 
-#include "Vector2.h"
-#include "../math/ContainFunctions.h"
+#include "../math/Vector3.h"
 
 #include <vector>
 #include <iostream>
@@ -15,22 +14,23 @@ class Polygon
         Polygon();
 
         void draw();
-        void outline();
-        void addPoint(Vector2 p);
-        void addPoint(float x, float y);
+        void drawOutline();
+        void drawVertices();
+        void addPoint(Vector3 p);
+        void addPoint(float x, float y, float z);
         void clear();
-        void translate(Vector2 t);
+        void translate(Vector3 t);
 
         int getTotalPoint();
 
-        Vector2 *getPoint(unsigned int i);
+        Vector3 *getPoint(unsigned int i);
 
-        std::vector<Vector2> *getPoints();
+        std::vector<Vector3> *getPoints();
 
 
     private:
 
-        std::vector<Vector2> points;
+        std::vector<Vector3> points;
 };
 
 #endif

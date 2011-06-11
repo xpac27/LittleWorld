@@ -15,6 +15,11 @@ int StaticObject::getGridY()
     return floor((position.y + 32.f) / 64.f);
 }
 
+int StaticObject::getGridZ()
+{
+    return floor((position.z + 32.f) / 64.f);
+}
+
 bool StaticObject::isWalkable()
 {
     return walkable;

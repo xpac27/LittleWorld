@@ -28,10 +28,14 @@ void DynamicObject::move(float time)
 {
     if (canMove == true)
     {
-        if (Vector2::distance(position, destination) > 5.f)
+        if (Vector3Util::dist(position, destination) > 5.f)
         {
+            // TODO try thus:
+            //position += direction * speed * time;
+
             position.x += direction.x * speed * time;
             position.y += direction.y * speed * time;
+            position.z += direction.z * speed * time;
         }
         else if (path.size() > 0)
         {
@@ -50,20 +54,29 @@ void DynamicObject::resetDestination()
     destination = position;
 }
 
-void DynamicObject::setDestination(Vector2 *d)
+void DynamicObject::setDestination(Vector3 *d)
 {
+    // TODO try this:
+    //destination = d;
+    //direction = destination - position;
+
     destination.x = d->x;
     destination.y = d->y;
+    destination.z = d->z;
+
     direction.x = destination.x - position.x;
     direction.y = destination.y - position.y;
-    Vector2::normalize(direction);
+    direction.z = destination.z - position.z;
+
+    Vector3Util::Normalize(direction);
+
     canMove = true;
 }
 
-void DynamicObject::setPath(Vector2 *destination)
+void DynamicObject::setPath(float x, float y)
 {
     resetDestination();
-    path = pathfinder->getPath(&position, destination, getSize());
+    path = pathfinder->getPath(&position, x, y, getSize());
     canMove = true;
 }
 

@@ -6,14 +6,14 @@ Polygon::Polygon()
 {
 }
 
-void Polygon::addPoint(Vector2 p)
+void Polygon::addPoint(Vector3 p)
 {
     points.push_back(p);
 }
 
-void Polygon::addPoint(float x, float y)
+void Polygon::addPoint(float x, float y, float z)
 {
-    addPoint(Vector2(x, y));
+    addPoint(Vector3(x, y, z));
 }
 
 void Polygon::clear()
@@ -21,7 +21,7 @@ void Polygon::clear()
     points.clear();
 }
 
-void Polygon::translate(Vector2 t)
+void Polygon::translate(Vector3 t)
 {
     for (unsigned int i = 0; i < points.size(); i ++)
     {
@@ -32,21 +32,23 @@ void Polygon::translate(Vector2 t)
 void Polygon::draw()
 {
     glBegin(GL_POLYGON);
-    for (unsigned int i = 0; i < points.size(); i ++)
-    {
-        glVertex2f(points[i].x, points[i].y);
-    }
+    drawVertices();
     glEnd();
 }
 
-void Polygon::outline()
+void Polygon::drawOutline()
 {
     glBegin(GL_LINE_LOOP);
+    drawVertices();
+    glEnd();
+}
+
+void Polygon::drawVertices()
+{
     for (unsigned int i = 0; i < points.size(); i ++)
     {
-        glVertex2f(points[i].x, points[i].y);
+        glVertex3f(points[i].x, points[i].y, points[i].z);
     }
-    glEnd();
 }
 
 int Polygon::getTotalPoint()
@@ -54,12 +56,12 @@ int Polygon::getTotalPoint()
     return points.size();
 }
 
-vector<Vector2> *Polygon::getPoints()
+vector<Vector3> *Polygon::getPoints()
 {
     return &points;
 }
 
-Vector2 *Polygon::getPoint(unsigned int i)
+Vector3 *Polygon::getPoint(unsigned int i)
 {
     return &points[i];
 }

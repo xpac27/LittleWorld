@@ -1,7 +1,7 @@
 #ifndef BLOCK
 #define BLOCK
 
-#include "../graphics/Vector2.h"
+#include "../math/Vector3.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -14,7 +14,7 @@ class Block
         Block();
         Block(int x, int y, bool w);
 
-        Vector2* getPosition();
+        Vector3* getPosition();
         Block* getParent();
 
         void setParent(Block *p);

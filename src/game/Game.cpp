@@ -20,7 +20,7 @@ void Game::init()
     for (unsigned int i = 0; i < 20; i ++)
     {
         Enemy *e = new Enemy(&world);
-        e->setPosition(Randomizer::Random(0, Conf::WORLD_WIDTH), Randomizer::Random(0, Conf::WORLD_HEIGHT));
+        e->setPosition(Randomizer::Random(0, Conf::WORLD_WIDTH), 0.f, Randomizer::Random(0, Conf::WORLD_HEIGHT));
         world.addDynamicObject(e);
     }
 
@@ -37,14 +37,14 @@ void Game::init()
             //height = ((r > 17) ? 5.f : 0.f) * 12.f;
             //height = ((r > 19) ? 5.f : 0.f) * 12.f;
 
-            world.addStaticObject(new Tile(&world, x * 64.f, y * 64.f, height));
+            world.addStaticObject(new Tile(&world, x * 64.f, 0.f, y * 64.f, height));
         }
     }
 
-    world.addLight(new Light(128.f, 128.f, 40.f, 1.f, 0.f, 0.f));
-    world.addLight(new Light(512.f, 512.f, 40.f, 0.f, 1.f, 0.f));
-    world.addLight(new Light(640.f, 128.f, 40.f, 0.f, 0.f, 1.f));
-    world.addLight(new Light(360.f, 128.f, 40.f, 1.f, 1.f, 1.f));
+    world.addLight(new Light(128.f, 40.f, 128.f, 1.f, 0.f, 0.f));
+    world.addLight(new Light(512.f, 40.f, 512.f, 0.f, 1.f, 0.f));
+    world.addLight(new Light(640.f, 40.f, 128.f, 0.f, 0.f, 1.f));
+    world.addLight(new Light(360.f, 40.f, 128.f, 1.f, 1.f, 1.f));
 }
 
 void Game::draw()

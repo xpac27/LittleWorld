@@ -19,11 +19,11 @@ void onWindowResized(float width, float height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    if (width / height < Conf::SCREEN_WIDTH / Conf::SCREEN_HEIGHT)
+    if (width / height > Conf::SCREEN_WIDTH / Conf::SCREEN_HEIGHT)
     {
         glOrtho
         (
-            Conf::SCREEN_WIDTH / -2.f - ((width - Conf::SCREEN_WIDTH) / 2.f),
+            Conf::SCREEN_WIDTH / -2.f + ((width - Conf::SCREEN_WIDTH) / -2.f),
             Conf::SCREEN_WIDTH / 2.f + ((width - Conf::SCREEN_WIDTH) / 2.f),
             Conf::SCREEN_HEIGHT / -2.f,
             Conf::SCREEN_HEIGHT / 2.f,
@@ -37,7 +37,7 @@ void onWindowResized(float width, float height)
         (
             Conf::SCREEN_WIDTH / -2.f,
             Conf::SCREEN_WIDTH / 2.f,
-            Conf::SCREEN_HEIGHT / -2.f - ((height - Conf::SCREEN_HEIGHT) / 2.f),
+            Conf::SCREEN_HEIGHT / -2.f + ((height - Conf::SCREEN_HEIGHT) / -2.f),
             Conf::SCREEN_HEIGHT / 2.f + ((height - Conf::SCREEN_HEIGHT) / 2.f),
             -1000.f,
             1000.f

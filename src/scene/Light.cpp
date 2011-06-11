@@ -1,9 +1,7 @@
 #include "Light.h"
 
-Light::Light(float x, float y, float h, float r, float g, float b)
+Light::Light(float x, float y, float z, float r, float g, float b)
 {
-    height = h;
-
     red   = r;
     green = g;
     blue  = b;
@@ -12,13 +10,12 @@ Light::Light(float x, float y, float h, float r, float g, float b)
     la = 0.01f;
     qa = 0.0001f;
 
-    position.x = x;
-    position.y = y;
+    setPosition(x, y, z);
 }
 
 void Light::setup()
 {
-    GLfloat LightPos[] = {0.f, 0.f, height, 1.f};
+    GLfloat LightPos[] = {0.f, 0.f, position.y, 1.f};
     GLfloat LightAmb[] = {red, green, blue, 0.f};
     GLfloat LightDif[] = {red, green, blue, 1.f};
 
@@ -31,10 +28,11 @@ void Light::setup()
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, qa);
 }
 
-void Light::setPosition(float x, float y)
+void Light::setPosition(float x, float y, float z)
 {
     position.x = x;
     position.y = y;
+    position.z = z;
 }
 
 float Light::getX()
@@ -47,18 +45,13 @@ float Light::getY()
     return position.y;
 }
 
-float Light::getHeight()
-{
-    return height;
-}
-
 float Light::getIntensityFromDistance(float distance)
 {
     return 1 / (ca + la * distance + qa * pow(distance, 2));
 }
 
-float Light::getIntensityAtPosition(Vector2 p)
+float Light::getIntensityAtPosition(Vector3 p)
 {
-    return getIntensityFromDistance(Vector2::distance(position, p));
+    return getIntensityFromDistance(Vector3Util::dist(position, p));
 }
 

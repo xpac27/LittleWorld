@@ -67,7 +67,7 @@ void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
 
     // Add camera offset
     mouseX += camera.getX();
-    mouseY += camera.getY();
+    mouseY += camera.getZ();
 }
 
 void World::dispatch(unsigned const int type)

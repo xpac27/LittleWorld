@@ -10,13 +10,14 @@ Camera::Camera()
 
     position.x = 0.f;
     position.y = 0.f;
+    position.z = 0.f;
 }
 
 void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
 {
     // Translate to camera's position
     glPushMatrix();
-    glTranslatef(position.x * -1.f, position.y * -1.f, 0.f);
+    glTranslatef(position.x * -1.f,  position.y * -1.f, position.z * -1.f);
 
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
@@ -28,10 +29,10 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
     for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
         glPushMatrix();
-        glTranslatef((*o)->getX(), (*o)->getY(), 0.f);
+        glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
 
         (*o)->draw();
-        //(*o)->outline();
+        (*o)->drawOutline();
 
         glPopMatrix();
     }
@@ -220,16 +221,15 @@ void Camera::update(float time)
     {
         position.y += ((focus->getY() - tolerance) - position.y) / (inertia / time);
     }
-}
 
-void Camera::toScreenPosition(Vector2 *p)
-{
-    float nx = p->x;
-    float ny = p->y;
-    p->x = nx - ny;
-    p->y = (nx + ny) / 2.f;
-    p->x += position.y - position.x + 288.f + (Conf::SCREEN_WIDTH / 2.f) - (Conf::SCREEN_HEIGHT / 2.f);
-    p->y += ((position.x + position.y - (Conf::SCREEN_WIDTH / 2.f) - (Conf::SCREEN_HEIGHT / 2.f)) / -2.f) - 64.f;
+    if (position.z - focus->getZ() > tolerance)
+    {
+        position.z -= (position.z - (focus->getZ() + tolerance)) / (inertia / time);
+    }
+    else if (focus->getZ() - position.z > tolerance)
+    {
+        position.z += ((focus->getZ() - tolerance) - position.z) / (inertia / time);
+    }
 }
 
 void Camera::setFocus(Object *o)
@@ -245,5 +245,10 @@ float Camera::getX()
 float Camera::getY()
 {
     return position.y;
+}
+
+float Camera::getZ()
+{
+    return position.z;
 }
 

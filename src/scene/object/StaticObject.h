@@ -13,6 +13,7 @@ class StaticObject : public Object
 
         int getGridX();
         int getGridY();
+        int getGridZ();
 
         bool isWalkable();
 

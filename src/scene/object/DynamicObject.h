@@ -2,7 +2,8 @@
 #define DEF_DYNAMICOBJECT
 
 #include "../Object.h"
-#include "../../graphics/Vector2.h"
+#include "../../math/Vector3.h"
+#include "../../math/Vector3Util.h"
 #include "../../ai/Pathfinder.h"
 
 #include <iostream>
@@ -21,8 +22,8 @@ class DynamicObject : public Object
 
         void init(Pathfinder *p);
         void move(float time);
-        void setDestination(Vector2 *d);
-        void setPath(Vector2 *destination);
+        void setDestination(Vector3 *d);
+        void setPath(float x, float y);
         void resetDestination();
 
 
@@ -35,12 +36,12 @@ class DynamicObject : public Object
 
     private:
 
-        std::vector<Vector2*> path;
+        std::vector<Vector3*> path;
 
         Pathfinder *pathfinder;
 
-        Vector2 destination;
-        Vector2 direction;
+        Vector3 destination;
+        Vector3 direction;
 
         bool canMove;
 };

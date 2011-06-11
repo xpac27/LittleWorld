@@ -2,7 +2,7 @@
 #define PATHFINDER
 
 #include "../scene/object/StaticObject.h"
-#include "../graphics/Vector2.h"
+#include "../math/Vector3.h"
 #include "Block.h"
 
 #include <iostream>
@@ -18,12 +18,12 @@ class Pathfinder
 
         void addStaticObject(StaticObject *o);
 
-        std::vector<Vector2*> getPath(Vector2 *from, Vector2 *to, float s);
+        std::vector<Vector3*> getPath(Vector3 *from, float x, float y, float s);
 
 
     private:
 
-        std::vector<Vector2*> aStar(float x1, float y1, float x2, float y2);
+        std::vector<Vector3*> aStar(float x1, float y1, float x2, float y2);
         std::list<Block*> getTraversingBlocks(float x1, float y1, float x2, float y2);
 
         Block* getBlock(int x, int y);

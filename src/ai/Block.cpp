@@ -2,6 +2,7 @@
 
 using namespace std;
 
+// TODO handle height of Vector3 positions
 Block::Block()
 {
     parent = NULL;
@@ -20,9 +21,9 @@ Block::Block(int x, int y, bool w)
     this->y = y;
 }
 
-Vector2* Block::getPosition()
+Vector3* Block::getPosition()
 {
-    return new Vector2((float)(x * 64), (float)(y * 64));
+    return new Vector3((float)(x * 64), 0.f, (float)(y * 64));
 }
 
 Block* Block::getParent()

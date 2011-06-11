@@ -3,7 +3,7 @@
 
 #include "Light.h"
 #include "Object.h"
-#include "../graphics/Vector2.h"
+#include "../math/Vector3.h"
 #include "../resources/Conf.h"
 
 #include <SFML/Graphics.hpp>
@@ -19,17 +19,17 @@ class Camera
         void update(float time);
         void draw(std::list<Object*> *objects, std::list<Light*> *lights);
         void setFocus(Object *o);
-        void toScreenPosition(Vector2 *p);
 
         float getX();
         float getY();
+        float getZ();
 
 
     private:
 
         Object* focus;
 
-        Vector2 position;
+        Vector3 position;
 
         float speed;
         float tolerance;

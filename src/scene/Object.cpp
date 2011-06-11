@@ -17,53 +17,51 @@ void Object::setSize(float s)
 {
     size = s;
 
-    float alfSize = size / 2.f;
-    float quarterSize = size / 4.f;
-    float heighthSize = size / 8.f;
+    float alfSize = size / 4.f;
 
     if (height > 0.f)
     {
         faceL.clear();
-        faceL.addPoint(-alfSize, 0.f);
-        faceL.addPoint(-alfSize, -height);
-        faceL.addPoint(0.f, -height + quarterSize);
-        faceL.addPoint(0.f, quarterSize);
+        faceL.addPoint(-alfSize, 0.f,    alfSize);
+        faceL.addPoint(-alfSize, height, alfSize);
+        faceL.addPoint( alfSize, height, alfSize);
+        faceL.addPoint( alfSize, 0.f,    alfSize);
 
         faceR.clear();
-        faceR.addPoint(alfSize, 0.f);
-        faceR.addPoint(alfSize, -height);
-        faceR.addPoint(0.f, -height + quarterSize);
-        faceR.addPoint(0.f, quarterSize);
+        faceR.addPoint(alfSize, 0.f,    alfSize );
+        faceR.addPoint(alfSize, height, alfSize );
+        faceR.addPoint(alfSize, height,-alfSize );
+        faceR.addPoint(alfSize, 0.f,   -alfSize );
     }
 
     faceT.clear();
-    faceT.addPoint(0.f, -quarterSize);
-    faceT.addPoint(alfSize, 0.f);
-    faceT.addPoint(0.f, quarterSize);
-    faceT.addPoint(-alfSize, 0.f);
+    faceT.addPoint(-alfSize, height, -alfSize);
+    faceT.addPoint( alfSize, height, -alfSize);
+    faceT.addPoint( alfSize, height,  alfSize);
+    faceT.addPoint(-alfSize, height,  alfSize);
 }
 
-void Object::setPosition(float x, float y)
+void Object::setPosition(float x, float y, float z)
 {
     position.x = x;
     position.y = y;
+    position.z = z;
 }
 
 void Object::draw()
 {
     // TODO remove
-    glBegin(GL_LINES);
-    glColor3d(size / 2.f, 0.0, 0.0);
-    glVertex3d(0.0, 0.0, 0.0);
-    glVertex3d(size / 2.f, 0.0, 0.0);
-    glColor3d(0.0, size / 2.f, 0.0);
-    glVertex3d(0.0, 0.0, 0.0);
-    glVertex3d(0.0, size / 2.f, 0.0);
-    glColor3d(0.0, 0.0, size / 2.f);
-    glVertex3d(0.0, 0.0, 0.0);
-    glVertex3d(0.0, 0.0, size / 2.f);
-    glEnd();
-    return;
+    //glBegin(GL_LINES);
+    //glColor3d(1.f, 0.0, 0.0);
+    //glVertex3d(0.0, 0.0, 0.0);
+    //glVertex3d(size / 2.f, 0.0, 0.0);
+    //glColor3d(0.0, 1.f, 0.0);
+    //glVertex3d(0.0, 0.0, 0.0);
+    //glVertex3d(0.0, size / 2.f, 0.0);
+    //glColor3d(0.0, 0.0, 1.f);
+    //glVertex3d(0.0, 0.0, 0.0);
+    //glVertex3d(0.0, 0.0, size / 2.f);
+    //glEnd();
 
     if (height == 0)
     {
@@ -85,19 +83,19 @@ void Object::draw()
     }
 }
 
-void Object::outline()
+void Object::drawOutline()
 {
     glColor4f(1.f, 1.f, 1.f, 0.04);
 
     if (height == 0)
     {
-        faceT.outline();
+        faceT.drawOutline();
     }
     else
     {
-        faceL.outline();
-        faceR.outline();
-        faceT.outline();
+        faceL.drawOutline();
+        faceR.drawOutline();
+        faceT.drawOutline();
     }
 }
 
@@ -105,9 +103,9 @@ void Object::updateShadows(Light *l)
 {
     if (shadow && height > 0.f)
     {
-        if (l->getIntensityAtPosition(position) > 0.01f)
-        {
-        }
+        //if (l->getIntensityAtPosition(position) > 0.01f)
+        //{
+        //}
     }
 }
 
@@ -123,6 +121,11 @@ float Object::getX()
 float Object::getY()
 {
     return position.y;
+}
+
+float Object::getZ()
+{
+    return position.z;
 }
 
 float Object::getHeight()

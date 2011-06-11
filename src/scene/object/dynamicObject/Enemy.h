@@ -3,7 +3,6 @@
 
 #include "../DynamicObject.h"
 #include "../../World.h"
-#include "../../../graphics/Vector2.h"
 
 #include <SFML/System/Randomizer.hpp>
 #include <iostream>

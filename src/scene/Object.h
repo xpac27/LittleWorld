@@ -2,10 +2,8 @@
 #define DEF_OBJECT
 
 #include "Light.h"
-#include "../math/IntersectionFunctions.h"
-#include "../math/ContainFunctions.h"
 #include "../graphics/Polygon.h"
-#include "../graphics/Vector2.h"
+#include "../math/Vector3.h"
 
 #include <SFML/Graphics.hpp>
 #include <list>
@@ -21,10 +19,10 @@ class Object
 
         virtual void init();
         virtual void draw();
-        virtual void outline();
+        virtual void drawOutline();
 
         void setSize(float s);
-        void setPosition(float x, float y);
+        void setPosition(float x, float y, float z);
         void setCastShadow(bool v);
         void updateShadows(Light *l);
         void drawShadow();
@@ -33,6 +31,7 @@ class Object
 
         float getX();
         float getY();
+        float getZ();
         float getHeight();
         float getSize();
 
@@ -41,7 +40,7 @@ class Object
 
         World *world;
 
-        Vector2 position;
+        Vector3 position;
 
 
     private:

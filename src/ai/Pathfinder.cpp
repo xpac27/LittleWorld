@@ -9,7 +9,7 @@ Pathfinder::Pathfinder()
 void Pathfinder::addStaticObject(StaticObject *o)
 {
     int x = o->getGridX();
-    int y = o->getGridY();
+    int y = o->getGridZ();
 
     if (!blockExists(x, y))
     {
@@ -21,15 +21,15 @@ void Pathfinder::addStaticObject(StaticObject *o)
     }
 }
 
-vector<Vector2*> Pathfinder::getPath(Vector2 *from, Vector2 *to, float s)
+vector<Vector3*> Pathfinder::getPath(Vector3 *from, float x, float y, float s)
 {
-    vector<Vector2*> path;
+    vector<Vector3*> path;
 
-    if (blockIsWalkable(coordToGrid(to->x), coordToGrid(to->y)))
+    if (blockIsWalkable(coordToGrid(x), coordToGrid(y)))
     {
         // Calculate line direction
-        int const dx = (from->x < to->x) ? 1 : -1;
-        int const dy = (from->y < to->y) ? 1 : -1;
+        int const dx = (from->x < x) ? 1 : -1;
+        int const dy = (from->y < y) ? 1 : -1;
 
         bool pathIsWalkable = true;
 
@@ -39,8 +39,8 @@ vector<Vector2*> Pathfinder::getPath(Vector2 *from, Vector2 *to, float s)
         list<Block*> blocks1;
         list<Block*> blocks2;
         list<Block*>::iterator i;
-        blocks1 = getTraversingBlocks(from->x + (s * dx), from->y - (s * dy), to->x + (s * dx), to->y - (s * dy));
-        blocks2 = getTraversingBlocks(from->x - (s * dx), from->y + (s * dy), to->x - (s * dx), to->y + (s * dy));
+        blocks1 = getTraversingBlocks(from->x + (s * dx), from->y - (s * dy), x + (s * dx), y - (s * dy));
+        blocks2 = getTraversingBlocks(from->x - (s * dx), from->y + (s * dy), x - (s * dx), y + (s * dy));
         blocks1.merge(blocks2);
 
         // Check if the direct path is safe
@@ -51,17 +51,18 @@ vector<Vector2*> Pathfinder::getPath(Vector2 *from, Vector2 *to, float s)
 
         if (pathIsWalkable)
         {
-            path.push_back(new Vector2(to->x, to->y));
+            path.push_back(new Vector3(x, 0.f, y));
         }
         else
         {
-            path = aStar(from->x, from->y, to->x, to->y);
+            path = aStar(from->x, from->z, x, y);
         }
     }
 
     return path;
 }
 
+// TODO handle height of Vector3 positions
 list<Block*> Pathfinder::getTraversingBlocks(float x1, float y1, float x2, float y2)
 {
     list<Block*> blocks;
@@ -110,9 +111,10 @@ list<Block*> Pathfinder::getTraversingBlocks(float x1, float y1, float x2, float
     return blocks;
 }
 
-vector<Vector2*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
+// TODO handle height of Vector3 positions
+vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
 {
-    vector<Vector2*> path;
+    vector<Vector3*> path;
 
     // Define blocks to work with
     Block *start = getBlockFromCoord(x1, y1);
