@@ -27,11 +27,6 @@ class Camera
 
     private:
 
-        void translateCamera();
-        void translateObject(Object *o);
-        void translateLight(Light *l);
-        void translate(float x, float y, float h, float i);
-
         Object* focus;
 
         Vector2 position;

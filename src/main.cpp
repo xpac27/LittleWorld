@@ -19,17 +19,29 @@ void onWindowResized(float width, float height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    float space;
-
-    if (width / height > Conf::SCREEN_WIDTH / Conf::SCREEN_HEIGHT)
+    if (width / height < Conf::SCREEN_WIDTH / Conf::SCREEN_HEIGHT)
     {
-        space = abs(((Conf::SCREEN_HEIGHT / (height / width)) - Conf::SCREEN_WIDTH) / 2.f);
-        glOrtho(-1.f * space, Conf::SCREEN_WIDTH + space, Conf::SCREEN_HEIGHT, 0.f, 0.f, 100.f);
+        glOrtho
+        (
+            Conf::SCREEN_WIDTH / -2.f - ((width - Conf::SCREEN_WIDTH) / 2.f),
+            Conf::SCREEN_WIDTH / 2.f + ((width - Conf::SCREEN_WIDTH) / 2.f),
+            Conf::SCREEN_HEIGHT / -2.f,
+            Conf::SCREEN_HEIGHT / 2.f,
+            -1000.f,
+            1000.f
+        );
     }
     else
     {
-        space = abs(((Conf::SCREEN_WIDTH / (width / height)) - Conf::SCREEN_HEIGHT) / 2.f);
-        glOrtho(0.f, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT + space, -1.f * space, 0.f, 100.f);
+        glOrtho
+        (
+            Conf::SCREEN_WIDTH / -2.f,
+            Conf::SCREEN_WIDTH / 2.f,
+            Conf::SCREEN_HEIGHT / -2.f - ((height - Conf::SCREEN_HEIGHT) / 2.f),
+            Conf::SCREEN_HEIGHT / 2.f + ((height - Conf::SCREEN_HEIGHT) / 2.f),
+            -1000.f,
+            1000.f
+        );
     }
 
     glMatrixMode(GL_MODELVIEW);
@@ -63,7 +75,7 @@ int main()
     glViewport(0.f, 0.f, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.f, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT, 0.f, 0.f, 1.f);
+    glOrtho(Conf::SCREEN_WIDTH / -2.f, Conf::SCREEN_WIDTH / 2.f, Conf::SCREEN_HEIGHT / -2.f, Conf::SCREEN_HEIGHT / 2.f, -1000.f, 1000.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -126,8 +138,13 @@ int main()
             }
         }
 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         // Reset matix
         glLoadIdentity();
+
+        glRotatef(35.264, 1.0, 0.0, 0.0);
+        glRotatef(-45.0, 0.0, 1.0, 0.0);
 
         //Update
         game.update(clock.GetElapsedTime());
@@ -135,6 +152,18 @@ int main()
 
         // Draw...
         game.draw();
+
+        glBegin(GL_LINES);
+        glColor3d(40.0, 0.0, 0.0);
+        glVertex3d(0.0, 0.0, 0.0);
+        glVertex3d(40.0, 0.0, 0.0);
+        glColor3d(0.0, 40.0, 0.0);
+        glVertex3d(0.0, 0.0, 0.0);
+        glVertex3d(0.0, 40.0, 0.0);
+        glColor3d(0.0, 0.0, 40.0);
+        glVertex3d(0.0, 0.0, 0.0);
+        glVertex3d(0.0, 0.0, 40.0);
+        glEnd();
 
         // Finally, display the rendered frame on screen
         application.Display();

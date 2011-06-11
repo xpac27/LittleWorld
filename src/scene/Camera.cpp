@@ -14,6 +14,31 @@ Camera::Camera()
 
 void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
 {
+    // Translate to camera's position
+    glPushMatrix();
+    glTranslatef(position.x * -1.f, position.y * -1.f, 0.f);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        glPushMatrix();
+        glTranslatef((*o)->getX(), (*o)->getY(), 0.f);
+
+        (*o)->draw();
+        //(*o)->outline();
+
+        glPopMatrix();
+    }
+
+    glPopMatrix();
+
+    /*
     // When rendered use addition for colour.
     glBlendFunc(GL_ONE, GL_ONE);
 
@@ -173,6 +198,7 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
     glDisable(GL_BLEND);
 
     glPopMatrix();
+    */
 }
 
 void Camera::update(float time)
@@ -219,32 +245,5 @@ float Camera::getX()
 float Camera::getY()
 {
     return position.y;
-}
-
-void Camera::translateCamera()
-{
-    glTranslatef
-    (
-        // Origin is centered on the screen so add alf screen width and height
-        (Conf::SCREEN_WIDTH / 2.f) + (position.y - position.x),
-        (Conf::SCREEN_HEIGHT / 2.f) + ((position.x + position.y) / -2.f),
-        0.f
-    );
-}
-
-void Camera::translateObject(Object *o)
-{
-    translate(o->getX(), o->getY(), o->getHeight(), o->getIndex());
-}
-
-void Camera::translateLight(Light *l)
-{
-    translate(l->getX(), l->getY(), 0.f, 0.f);
-}
-
-void Camera::translate(float x, float y, float h, float i)
-{
-    // Z index is calc using screen's Y coord lowered to tiles screen height + object's index
-    glTranslatef(x - y, (x + y) / 2.f, (h == 0.f) ? -1.f : -1.f / (((x + y) / 2.f) / 64.f + i));
 }
 
