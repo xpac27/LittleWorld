@@ -45,6 +45,11 @@ float Light::getY()
     return position.y;
 }
 
+float Light::getZ()
+{
+    return position.z;
+}
+
 float Light::getIntensityFromDistance(float distance)
 {
     return 1 / (ca + la * distance + qa * pow(distance, 2));

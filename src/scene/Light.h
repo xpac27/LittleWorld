@@ -18,6 +18,7 @@ class Light
 
         float getX();
         float getY();
+        float getZ();
         float getIntensityFromDistance(float d);
         float getIntensityAtPosition(Vector3 p);
 

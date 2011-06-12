@@ -57,15 +57,15 @@ void Object::draw()
     }
     else
     {
-        glNormal3f(0.f, -1.f, 0.f);
+        glNormal3f(0.f, 1.f, 0.f);
         faceT.draw();
 
         glColor4f(0.6f, 0.6f, 0.6f, 1.f);
 
-        glNormal3f(-0.7f, 0.7f, 0.f);
+        glNormal3f(0.f, 0.f, 1.f);
         faceL.draw();
 
-        glNormal3f(0.7f, 0.7f, 0.f);
+        glNormal3f(1.f, 0.f, 0.f);
         faceR.draw();
     }
 }
