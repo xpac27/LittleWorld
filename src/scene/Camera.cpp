@@ -15,30 +15,6 @@ Camera::Camera()
 
 void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
 {
-    // Translate to camera's position
-    //glPushMatrix();
-    //glTranslatef(position.x * -1.f,  position.y * -1.f, position.z * -1.f);
-
-    //glEnable(GL_DEPTH_TEST);
-    //glDepthMask(GL_TRUE);
-    //glClear(GL_DEPTH_BUFFER_BIT);
-    //glClear(GL_COLOR_BUFFER_BIT);
-
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    //{
-        //glPushMatrix();
-        //glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-
-        //(*o)->draw();
-        //(*o)->drawOutline();
-
-        //glPopMatrix();
-    //}
-
-    //glPopMatrix();
-
     // When rendered use addition for colour.
     glBlendFunc(GL_ONE, GL_ONE);
 

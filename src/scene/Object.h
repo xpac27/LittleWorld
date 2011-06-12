@@ -6,7 +6,6 @@
 #include "../math/Vector3.h"
 
 #include <SFML/Graphics.hpp>
-#include <list>
 #include <iostream>
 
 class World;
@@ -45,17 +44,13 @@ class Object
 
     private:
 
-        Polygon* getFaceTop();
-
         bool shadow;
 
-        float index;
         float height;
         float size;
 
-        Polygon faceL;
-        Polygon faceR;
-        Polygon faceT;
+        Polygon shape;
+        Polygon shadows;
 };
 
 #endif

@@ -6,63 +6,42 @@ Polygon::Polygon()
 {
 }
 
-void Polygon::addPoint(Vector3 p)
+void Polygon::addTriangle(Triangle t)
 {
-    points.push_back(p);
+    triangles.push_back(t);
 }
 
-void Polygon::addPoint(float x, float y, float z)
+void Polygon::addTriangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3)
 {
-    addPoint(Vector3(x, y, z));
+    addTriangle(Triangle(x1, y1, z1, x2, y2, z2, x3, y3, z3));
 }
 
 void Polygon::clear()
 {
-    points.clear();
+    triangles.clear();
 }
 
 void Polygon::translate(Vector3 t)
 {
-    for (unsigned int i = 0; i < points.size(); i ++)
+    for (unsigned int i = 0; i < triangles.size(); i ++)
     {
-        points[i] += t;
+        triangles[i].translate(t);
     }
 }
 
 void Polygon::draw()
 {
-    glBegin(GL_POLYGON);
-    drawVertices();
-    glEnd();
+    for (unsigned int i = 0; i < triangles.size(); i ++)
+    {
+        triangles[i].draw();
+    }
 }
 
 void Polygon::drawOutline()
 {
-    glBegin(GL_LINE_LOOP);
-    drawVertices();
-    glEnd();
-}
-
-void Polygon::drawVertices()
-{
-    for (unsigned int i = 0; i < points.size(); i ++)
+    for (unsigned int i = 0; i < triangles.size(); i ++)
     {
-        glVertex3f(points[i].x, points[i].y, points[i].z);
+        triangles[i].drawOutline();
     }
-}
-
-int Polygon::getTotalPoint()
-{
-    return points.size();
-}
-
-vector<Vector3> *Polygon::getPoints()
-{
-    return &points;
-}
-
-Vector3 *Polygon::getPoint(unsigned int i)
-{
-    return &points[i];
 }
 
