@@ -33,7 +33,7 @@ vector<Vector3*> Pathfinder::getPath(Vector3 *from, float x, float y, float s)
 
         bool pathIsWalkable = true;
 
-        s /= 4.f;
+        s /= 2.f;
 
         // Get traversing blocks
         list<Block*> blocks1;
@@ -69,7 +69,7 @@ list<Block*> Pathfinder::getTraversingBlocks(float x1, float y1, float x2, float
 
     // Calculate m and b for the line equation:
     float const m = ((x1 == x2) ? 0.f : ((y2 - y1) / (x2 - x1)));
-    float const b = ((y1 + 32.f) / 64.f) - (m * ((x1 + 32.f) / 64.f));
+    float const b = ((y1 + 64.f) / 128.f) - (m * ((x1 + 64.f) / 128.f));
 
     // Calculate line direction
     float const dx = (x1 < x2) ? 1.f : -1.f;
@@ -272,6 +272,6 @@ bool Pathfinder::blockIsWalkable(int x, int y)
 
 int Pathfinder::coordToGrid(float v)
 {
-    return (int)floor((v + 32.f) / 64.f);
+    return (int)floor((v + 64.f) / 128.f);
 }
 

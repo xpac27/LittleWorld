@@ -62,8 +62,12 @@ void World::setFocus(Object *o)
 void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
 {
     // Apply transformation
-    mouseX = (mouseScreenX + (mouseScreenY * 2.f)) / 2.f;
-    mouseY = ((mouseScreenY * 2.f) - mouseScreenX) / 2.f;
+    mouseY = (mouseScreenY * 2.f - mouseScreenX) / 2.f;
+    mouseX = mouseScreenX + mouseY;
+
+    // Scale
+    mouseY *= 2.f;
+    mouseX *= 2.f;
 
     // Add camera offset
     mouseX += camera.getX();

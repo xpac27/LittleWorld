@@ -23,7 +23,7 @@ Block::Block(int x, int y, bool w)
 
 Vector3* Block::getPosition()
 {
-    return new Vector3((float)(x * 64), 0.f, (float)(y * 64));
+    return new Vector3((float)(x * 128), 0.f, (float)(y * 128));
 }
 
 Block* Block::getParent()

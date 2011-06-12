@@ -17,7 +17,7 @@ void Object::setSize(float s)
 {
     size = s;
 
-    float alfSize = size / 4.f;
+    float alfSize = size / 2.f;
 
     if (height > 0.f)
     {
@@ -50,19 +50,6 @@ void Object::setPosition(float x, float y, float z)
 
 void Object::draw()
 {
-    // TODO remove
-    //glBegin(GL_LINES);
-    //glColor3d(1.f, 0.0, 0.0);
-    //glVertex3d(0.0, 0.0, 0.0);
-    //glVertex3d(size / 2.f, 0.0, 0.0);
-    //glColor3d(0.0, 1.f, 0.0);
-    //glVertex3d(0.0, 0.0, 0.0);
-    //glVertex3d(0.0, size / 2.f, 0.0);
-    //glColor3d(0.0, 0.0, 1.f);
-    //glVertex3d(0.0, 0.0, 0.0);
-    //glVertex3d(0.0, 0.0, size / 2.f);
-    //glEnd();
-
     if (height == 0)
     {
         glNormal3f(0.f, -1.f, 0.f);

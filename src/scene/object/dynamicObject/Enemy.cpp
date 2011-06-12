@@ -2,9 +2,9 @@
 
 using namespace std;
 
-Enemy::Enemy(World *W) : DynamicObject(W, 16.f, true)
+Enemy::Enemy(World *W) : DynamicObject(W, 32.f, true)
 {
-    speed = 60.f;
+    speed = 120.f;
 
     setSize(32.f);
 }

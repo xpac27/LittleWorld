@@ -2,14 +2,12 @@
 
 using namespace std;
 
-Player::Player(World *W) : DynamicObject(W, 32.f, true)
+Player::Player(World *W) : DynamicObject(W, 64.f, true)
 {
-    speed = 100.f;
+    speed = 200.f;
 
-    //position.x = 512.f;
-    //position.y = 512.f;
-    position.x = 0.f;
-    position.y = 0.f;
+    position.x = 512.f;
+    position.z = 512.f;
 
     setSize(64.f);
 }

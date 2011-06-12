@@ -27,17 +27,13 @@ void Game::init()
     float height(0.f);
     int r(0);
 
-    for (unsigned int x(0); x < Conf::WORLD_WIDTH / 64; x ++)
+    for (unsigned int x(0); x < Conf::WORLD_WIDTH / 128; x ++)
     {
-        for (unsigned int y(0); y < Conf::WORLD_HEIGHT / 64; y ++)
+        for (unsigned int y(0); y < Conf::WORLD_HEIGHT / 128; y ++)
         {
             r = Randomizer::Random(0, 20);
-            //height = ((r > 15) ? r - 15.f : 0.f) * 12.f;
             height = ((r > 18) ? Randomizer::Random(1, 8) : 0.f) * 12.f;
-            //height = ((r > 17) ? 5.f : 0.f) * 12.f;
-            //height = ((r > 19) ? 5.f : 0.f) * 12.f;
-
-            world.addStaticObject(new Tile(&world, x * 64.f, 0.f, y * 64.f, height));
+            world.addStaticObject(new Tile(&world, x * 128.f, 0.f, y * 128.f, height));
         }
     }
 
