@@ -21,15 +21,15 @@ void Pathfinder::addStaticObject(StaticObject *o)
     }
 }
 
-vector<Vector3*> Pathfinder::getPath(Vector3 *from, float x, float y, float s)
+vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float toY, float s)
 {
     vector<Vector3*> path;
 
-    if (blockIsWalkable(coordToGrid(x), coordToGrid(y)))
+    if (blockIsWalkable(coordToGrid(toX), coordToGrid(toY)))
     {
         // Calculate line direction
-        int const dx = (from->x < x) ? 1 : -1;
-        int const dy = (from->y < y) ? 1 : -1;
+        int const dx = (fromX < toX) ? 1 : -1;
+        int const dy = (fromY < toY) ? 1 : -1;
 
         bool pathIsWalkable = true;
 
@@ -39,8 +39,8 @@ vector<Vector3*> Pathfinder::getPath(Vector3 *from, float x, float y, float s)
         list<Block*> blocks1;
         list<Block*> blocks2;
         list<Block*>::iterator i;
-        blocks1 = getTraversingBlocks(from->x + (s * dx), from->y - (s * dy), x + (s * dx), y - (s * dy));
-        blocks2 = getTraversingBlocks(from->x - (s * dx), from->y + (s * dy), x - (s * dx), y + (s * dy));
+        blocks1 = getTraversingBlocks(fromX + (s * dx), fromY - (s * dy), toX + (s * dx), toY - (s * dy));
+        blocks2 = getTraversingBlocks(fromX - (s * dx), fromY + (s * dy), toX - (s * dx), toY + (s * dy));
         blocks1.merge(blocks2);
 
         // Check if the direct path is safe
@@ -51,11 +51,11 @@ vector<Vector3*> Pathfinder::getPath(Vector3 *from, float x, float y, float s)
 
         if (pathIsWalkable)
         {
-            path.push_back(new Vector3(x, 0.f, y));
+            path.push_back(new Vector3(toX, 0.f, toY));
         }
         else
         {
-            path = aStar(from->x, from->z, x, y);
+            path = aStar(fromX, fromY, toX, toY);
         }
     }
 

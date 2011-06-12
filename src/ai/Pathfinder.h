@@ -18,7 +18,7 @@ class Pathfinder
 
         void addStaticObject(StaticObject *o);
 
-        std::vector<Vector3*> getPath(Vector3 *from, float x, float y, float s);
+        std::vector<Vector3*> getPath(float fromX, float fromY, float toX, float toY, float s);
 
 
     private:

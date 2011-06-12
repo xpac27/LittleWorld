@@ -73,10 +73,10 @@ void DynamicObject::setDestination(Vector3 *d)
     canMove = true;
 }
 
-void DynamicObject::setPath(float x, float y)
+void DynamicObject::setPath(float x, float z)
 {
     resetDestination();
-    path = pathfinder->getPath(&position, x, y, getSize());
+    path = pathfinder->getPath(position.x, position.z, x, z, getSize());
     canMove = true;
 }
 

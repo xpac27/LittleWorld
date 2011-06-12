@@ -23,7 +23,7 @@ class DynamicObject : public Object
         void init(Pathfinder *p);
         void move(float time);
         void setDestination(Vector3 *d);
-        void setPath(float x, float y);
+        void setPath(float x, float z);
         void resetDestination();
 
 

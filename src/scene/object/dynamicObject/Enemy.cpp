@@ -22,8 +22,8 @@ void Enemy::update(float time)
     {
         setPath
         (
-            sf::Randomizer::Random(position.x - 300, position.x + 300),
-            sf::Randomizer::Random(position.y - 300, position.y + 300)
+            sf::Randomizer::Random(position.x - 600, position.x + 600),
+            sf::Randomizer::Random(position.z - 600, position.z + 600)
         );
     }
     move(time);
