@@ -30,7 +30,7 @@ class Vector3Util
         static void SetLength(Vector3& vect, Scalar length);
         static void SetLength_s(Vector3& vect, Scalar length);
 
-        static Scalar  Dot(const Vector3& vec1, const Vector3& vec2);
+        static Scalar Dot(const Vector3& vec1, const Vector3& vec2);
 
         static Vector3 ToNormalized(const Vector3& vect);
         static Vector3 ToNormalized_s(const Vector3& vect);

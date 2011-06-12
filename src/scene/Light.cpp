@@ -7,8 +7,8 @@ Light::Light(float x, float y, float z, float r, float g, float b)
     blue  = b;
 
     ca = 1.0f;
-    la = 0.01f;
-    qa = 0.0001f;
+    la = 0.005f;
+    qa = 0.00001f;
 
     setPosition(x, y, z);
 }
@@ -58,5 +58,10 @@ float Light::getIntensityFromDistance(float distance)
 float Light::getIntensityAtPosition(Vector3 p)
 {
     return getIntensityFromDistance(Vector3Util::dist(position, p));
+}
+
+Vector3 Light::getPosition()
+{
+    return position;
 }
 

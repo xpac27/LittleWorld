@@ -58,13 +58,13 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
     for (list<Light*>::iterator l = lights->begin(); l != lights->end(); ++ l)
     {
         // generate shadow volumes
-        //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-        //{
-            //if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
-            //{
-                //(*o)->updateShadows(*l);
-            //}
-        //}
+        for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+        {
+            if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
+            {
+                (*o)->updateShadows(*l);
+            }
+        }
 
         // clear the stencil buffer
         //glClear(GL_STENCIL_BUFFER_BIT);
@@ -80,7 +80,7 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
                 //glPushMatrix();
                 //translateObject(*o);
 
-                //(*o)->drawShadow();
+                //(*o)->drawShadow(*l);
 
                 //glPopMatrix();
             //}
@@ -114,6 +114,7 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
             glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
 
             (*o)->draw();
+            (*o)->drawShadow(*l);
 
             glPopMatrix();
         }

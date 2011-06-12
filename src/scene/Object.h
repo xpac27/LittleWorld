@@ -3,6 +3,7 @@
 
 #include "Light.h"
 #include "../graphics/Polygon.h"
+#include "../graphics/Point.h"
 #include "../math/Vector3.h"
 
 #include <SFML/Graphics.hpp>
@@ -22,9 +23,8 @@ class Object
 
         void setSize(float s);
         void setPosition(float x, float y, float z);
-        void setCastShadow(bool v);
         void updateShadows(Light *l);
-        void drawShadow();
+        void drawShadow(Light *l);
 
         bool shadowEnabled();
 
@@ -49,8 +49,9 @@ class Object
         float height;
         float size;
 
+        Point p1, p2, p3, p4, p5, p6, p7, p8;
+
         Polygon shape;
-        Polygon shadows;
 };
 
 #endif

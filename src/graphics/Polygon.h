@@ -1,6 +1,7 @@
 #ifndef DEF_POLYGON
 #define DEF_POLYGON
 
+#include "Point.h"
 #include "Triangle.h"
 #include "../math/Vector3.h"
 
@@ -16,15 +17,17 @@ class Polygon
 
         void draw();
         void drawOutline();
-        void addTriangle(Triangle t);
-        void addTriangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3);
-        void translate(Vector3 t);
+        void drawShadow(Vector3 lightPosition);
+        void addTriangle(Point *p1, Point *p2, Point *p3);
         void clear();
+        void updateConnectivity();
+        void updateShadows(Vector3 lightPosition);
 
 
     private:
 
-        std::vector<Triangle> triangles;
+        std::vector<Triangle> triangles; // rename to shapeVolume
+        std::vector<Point*> silhouette;
 };
 
 #endif

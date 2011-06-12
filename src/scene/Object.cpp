@@ -19,78 +19,40 @@ void Object::setSize(float s)
 
     shape.clear();
 
+    p1 = Point(-alfSize, height, -alfSize);
+    p2 = Point( alfSize, height, -alfSize);
+    p3 = Point( alfSize, height,  alfSize);
+    p4 = Point(-alfSize, height,  alfSize);
+
     // FACE TOP
-    shape.addTriangle
-    (
-        -alfSize, height, -alfSize,
-         alfSize, height, -alfSize,
-         alfSize, height,  alfSize
-    );
-    shape.addTriangle
-    (
-         alfSize, height,  alfSize,
-        -alfSize, height,  alfSize,
-        -alfSize, height, -alfSize
-    );
+    shape.addTriangle(&p1, &p2, &p3);
+    shape.addTriangle(&p3, &p4, &p1);
 
     if (height > 0.f)
     {
+        p5 = Point(-alfSize, 0.f,  alfSize);
+        p6 = Point( alfSize, 0.f,  alfSize);
+        p7 = Point( alfSize, 0.f, -alfSize);
+        p8 = Point(-alfSize, 0.f, -alfSize);
+
         // FACE FRONT LEFT
-        shape.addTriangle
-        (
-            -alfSize, 0.f,    alfSize,
-            -alfSize, height, alfSize,
-             alfSize, height, alfSize
-        );
-        shape.addTriangle
-        (
-             alfSize, height, alfSize,
-             alfSize, 0.f,    alfSize,
-            -alfSize, 0.f,    alfSize
-        );
+        shape.addTriangle(&p5, &p4, &p3);
+        shape.addTriangle(&p3, &p6, &p5);
 
         // FACE FRONT RIGHT
-        shape.addTriangle
-        (
-            alfSize, 0.f,     alfSize,
-            alfSize, height,  alfSize,
-            alfSize, height, -alfSize
-        );
-        shape.addTriangle
-        (
-            alfSize, height, -alfSize,
-            alfSize, 0.f,    -alfSize,
-            alfSize, 0.f,     alfSize
-        );
+        shape.addTriangle(&p6, &p3, &p2);
+        shape.addTriangle(&p2, &p7, &p6);
 
         // FACE BACK LEFT
-        shape.addTriangle
-        (
-            -alfSize, height, -alfSize,
-            -alfSize, height,  alfSize,
-            -alfSize, 0.f,     alfSize
-        );
-        shape.addTriangle
-        (
-            -alfSize, 0.f,     alfSize,
-            -alfSize, 0.f,    -alfSize,
-            -alfSize, height, -alfSize
-        );
+        shape.addTriangle(&p1, &p4, &p5);
+        shape.addTriangle(&p5, &p8, &p1);
 
         // FACE BACK RIGHT
-        shape.addTriangle
-        (
-             alfSize, height, -alfSize,
-            -alfSize, height, -alfSize,
-            -alfSize, 0.f,    -alfSize
-        );
-        shape.addTriangle
-        (
-            -alfSize, 0.f,    -alfSize,
-             alfSize, 0.f,    -alfSize,
-             alfSize, height, -alfSize
-        );
+        shape.addTriangle(&p2, &p1, &p8);
+        shape.addTriangle(&p8, &p7, &p2);
     }
+
+    shape.updateConnectivity();
 }
 
 void Object::setPosition(float x, float y, float z)
@@ -119,11 +81,14 @@ void Object::updateShadows(Light *l)
         //if (l->getIntensityAtPosition(position) > 0.01f)
         //{
         //}
+
+        shape.updateShadows(l->getPosition() - position);
     }
 }
 
-void Object::drawShadow()
+void Object::drawShadow(Light *l)
 {
+    shape.drawShadow(l->getPosition() - position);
 }
 
 float Object::getX()

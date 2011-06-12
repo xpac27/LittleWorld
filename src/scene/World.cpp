@@ -11,13 +11,13 @@ World::World()
 void World::draw()
 {
     list<Object*> objectList;
-    for (list<StaticObject*>::iterator Si = staticObjectList.begin(); Si != staticObjectList.end(); ++ Si)
+    for (list<StaticObject*>::iterator i = staticObjectList.begin(); i != staticObjectList.end(); ++ i)
     {
-        objectList.push_back(*Si);
+        objectList.push_back(*i);
     }
-    for (list<DynamicObject*>::iterator Di = dynamicObjectList.begin(); Di != dynamicObjectList.end(); ++ Di)
+    for (list<DynamicObject*>::iterator i = dynamicObjectList.begin(); i != dynamicObjectList.end(); ++ i)
     {
-        objectList.push_back(*Di);
+        objectList.push_back(*i);
     }
     // Looks light this is not useful
     //objectList.sort(ObjectComparer());
@@ -27,8 +27,7 @@ void World::draw()
 
 void World::update(float time)
 {
-    list<DynamicObject*>::iterator i;
-    for (i = dynamicObjectList.begin(); i != dynamicObjectList.end(); ++ i)
+    for (list<DynamicObject*>::iterator i = dynamicObjectList.begin(); i != dynamicObjectList.end(); ++ i)
     {
         (*i)->update(time);
     }
@@ -76,9 +75,9 @@ void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
 
 void World::dispatch(unsigned const int type)
 {
-    for (list<DynamicObject*>::iterator Di = dynamicObjectList.begin(); Di != dynamicObjectList.end(); ++ Di)
+    for (list<DynamicObject*>::iterator i = dynamicObjectList.begin(); i != dynamicObjectList.end(); ++ i)
     {
-        (*Di)->onNotify(type);
+        (*i)->onNotify(type);
     }
 }
 
