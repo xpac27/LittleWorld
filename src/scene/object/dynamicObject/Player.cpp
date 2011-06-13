@@ -9,7 +9,7 @@ Player::Player(World *W) : DynamicObject(W, 64.f, true)
     position.x = 512.f;
     position.z = 512.f;
 
-    setSize(128.f);
+    setSize(64.f);
 }
 
 void Player::onNotify(unsigned const int type)

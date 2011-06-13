@@ -36,22 +36,11 @@ void Polygon::drawShadow(Vector3 lightPosition)
 {
     Vector3 p1, p2;
 
+    // Draw the shadow volume's sides
     for (unsigned int p = 1; p < silhouette.size(); p += 2)
     {
-        p1 = (*silhouette[p - 1] - lightPosition);
-        p2 = (*silhouette[p] - lightPosition);
-
-        if (p1.y > 0.f)
-        {
-            p1 *= 100.f;
-            p1.y = -10.f;
-        }
-
-        if (p2.y > 0.f)
-        {
-            p2.y *= 100.f;
-            p2.y = -10.f;
-        }
+        p1 = (*silhouette[p - 1] - lightPosition) * 10000.f;
+        p2 = (*silhouette[p] - lightPosition) * 10000.f;
 
         glBegin(GL_TRIANGLES);
             glVertex3f(silhouette[p - 1]->x, silhouette[p - 1]->y, silhouette[p - 1]->z);
@@ -64,6 +53,29 @@ void Polygon::drawShadow(Vector3 lightPosition)
             glVertex3f(p2.x, p2.y, p2.z);
             glVertex3f(p1.x, p1.y, p1.z);
         glEnd();
+    }
+
+    // Cap near
+    for (unsigned int t = 0; t < triangles.size(); t ++)
+    {
+        if (!triangles[t].lighted)
+        {
+            triangles[t].setCCW();
+            triangles[t].draw();
+            triangles[t].setCW();
+        }
+    }
+
+    // Cap far
+    for (unsigned int t = 0; t < triangles.size(); t ++)
+    {
+        if (!triangles[t].lighted)
+        {
+            triangles[t].setTransformationMIN(lightPosition);
+            triangles[t].setTransformationMUL(10000.f);
+            triangles[t].draw();
+            triangles[t].resetTransformation();
+        }
     }
 }
 
@@ -119,7 +131,7 @@ void Polygon::updateShadows(Vector3 lightPosition)
     // Compute which triangles are casting shadows
     for (unsigned int t = 0; t < triangles.size(); t ++)
     {
-        triangles[t].lighted = Vector3Util::Dot(lightPosition, triangles[t].normal) < 0;
+        triangles[t].lighted = Vector3Util::Dot(lightPosition, triangles[t].getNormal()) < 0;
     }
 
     bool silhouettePoints[3];

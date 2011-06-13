@@ -17,14 +17,27 @@ class Triangle
 
         void draw();
         void drawOutline();
-        void drawVertices();
+        void setCW();
+        void setCCW();
+        void setTransformationMIN(Vector3 v);
+        void setTransformationADD(Vector3 v);
+        void setTransformationMUL(float n);
+        void setTransformationDIV(float n);
+        void resetTransformation();
+        void setAllVertex();
         void update();
 
+        Vector3 getNormal();
+
         bool lighted;
+        bool cw;
+        bool transformed;
 
         Point* points[3];
 
-        Vector3 normal;
+        Vector3 pointsTransformed[3];
+        Vector3 normalCW;
+        Vector3 normalCCW;
 };
 
 #endif

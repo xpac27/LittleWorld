@@ -27,6 +27,13 @@ class Camera
 
     private:
 
+        void drawAll(std::list<Object*> *objects);
+        void outlineAll(std::list<Object*> *objects);
+        void drawAllShadows(std::list<Object*> *objects, Light *l);
+        void updateAllShadows(std::list<Object*> *objects, Light *l);
+        void translateObject(Object *o);
+        void setupLight(Light *l);
+
         Object* focus;
 
         Vector3 position;

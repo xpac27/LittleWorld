@@ -4,7 +4,6 @@
 #include "Camera.h"
 #include "Light.h"
 #include "Object.h"
-#include "ObjectComparer.h"
 #include "object/DynamicObject.h"
 #include "object/StaticObject.h"
 #include "../ai/Pathfinder.h"

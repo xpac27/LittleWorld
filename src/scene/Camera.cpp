@@ -18,6 +18,9 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
     // When rendered use addition for colour.
     glBlendFunc(GL_ONE, GL_ONE);
 
+    // Activate cull facing
+    glEnable(GL_CULL_FACE);
+
     // Use a black ambient color
     GLfloat ambientColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
@@ -38,53 +41,41 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
     // Disable writing to the color mask
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 
-    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    {
-        glPushMatrix();
-        glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-
-        (*o)->draw();
-
-        glPopMatrix();
-    }
+    // Draw scene
+    drawAll(objects);
 
     // Disable writting on depth mask
     glDepthMask(GL_FALSE);
 
     // Activate stencil buffer
-    //glEnable(GL_STENCIL_TEST);
+    glEnable(GL_STENCIL_TEST);
 
     // For each light in the scene
     for (list<Light*>::iterator l = lights->begin(); l != lights->end(); ++ l)
     {
         // generate shadow volumes
-        for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-        {
-            if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
-            {
-                (*o)->updateShadows(*l);
-            }
-        }
+        updateAllShadows(objects, *l);
 
         // clear the stencil buffer
-        //glClear(GL_STENCIL_BUFFER_BIT);
+        glClear(GL_STENCIL_BUFFER_BIT);
 
-        // Render shadow volumes to stencil buffer
-        //glStencilFunc(GL_ALWAYS, GL_ONE, GL_ONE);
-        //glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+        // Setup depth and stencil func
+        glDepthFunc(GL_LESS);
+        glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFFFL);
 
-        //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-        //{
-            //if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
-            //{
-                //glPushMatrix();
-                //translateObject(*o);
+        // First Pass. Increase Stencil Value In The Shadow
+        glFrontFace(GL_CW);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+        drawAllShadows(objects, *l);
 
-                //(*o)->drawShadow(*l);
+        // Second Pass. Decrease Stencil Value In The Shadow
+        glFrontFace(GL_CCW);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
+        drawAllShadows(objects, *l);
 
-                //glPopMatrix();
-            //}
-        //}
+        // Setup depth and stencil func
+        glDepthFunc(GL_LEQUAL);
+        glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
 
         // Activate the current light only
         glEnable(GL_LIGHTING);
@@ -92,32 +83,16 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
         glEnable(GL_BLEND);
         glEnable(GL_COLOR_MATERIAL);
 
-        // Only render where stencil is not egual to one
-        //glStencilFunc(GL_NOTEQUAL, GL_ONE, GL_ONE);
-        //glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+        // Place the light to the right position
+        setupLight(*l);
 
         // Enable writing on the color mask
         glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
 
-        // Place the light to the right position
-        glPushMatrix();
-        glTranslatef((*l)->getX(), (*l)->getY(), (*l)->getZ());
-
-        (*l)->setup();
-
-        glPopMatrix();
-
         // Render the entire scene
-        for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-        {
-            glPushMatrix();
-            glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-
-            (*o)->draw();
-            (*o)->drawShadow(*l);
-
-            glPopMatrix();
-        }
+        glFrontFace(GL_CW);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+        drawAll(objects);
 
         // Deactive the current light
         glDisable(GL_LIGHTING);
@@ -132,20 +107,17 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
     // Deactivate stencil buffer
     glDisable(GL_STENCIL_TEST);
 
+    // Disable cull facing
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
+
     // Enable writing on the color mask
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    {
-        glPushMatrix();
-        glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-
-        (*o)->drawOutline();
-
-        glPopMatrix();
-    }
+    // Draw wireframe
+    outlineAll(objects);
 
     // Disable writing to the color mask
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
@@ -202,5 +174,67 @@ float Camera::getY()
 float Camera::getZ()
 {
     return position.z;
+}
+
+void Camera::drawAll(std::list<Object*> *objects)
+{
+    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        glPushMatrix();
+        translateObject(*o);
+        (*o)->draw();
+        glPopMatrix();
+    }
+}
+
+void Camera::outlineAll(std::list<Object*> *objects)
+{
+    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        glPushMatrix();
+        glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
+
+        (*o)->drawOutline();
+
+        glPopMatrix();
+    }
+}
+
+void Camera::drawAllShadows(std::list<Object*> *objects, Light *l)
+{
+    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
+        {
+            glPushMatrix();
+            translateObject(*o);
+            (*o)->drawShadow(l);
+            glPopMatrix();
+        }
+    }
+}
+
+void Camera::updateAllShadows(std::list<Object*> *objects, Light *l)
+{
+    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
+        {
+            (*o)->updateShadows(l);
+        }
+    }
+}
+
+void Camera::translateObject(Object *o)
+{
+    glTranslatef(o->getX(), o->getY(), o->getZ());
+}
+
+void Camera::setupLight(Light *l)
+{
+    glPushMatrix();
+    glTranslatef(l->getX(), l->getY(), l->getZ());
+    l->setup();
+    glPopMatrix();
 }
 
