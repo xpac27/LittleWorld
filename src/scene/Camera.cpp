@@ -15,111 +15,108 @@ Camera::Camera()
 
 void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
 {
-    // When rendered use addition for colour.
-    glBlendFunc(GL_ONE, GL_ONE);
-
-    // Activate cull facing
-    glEnable(GL_CULL_FACE);
+    // Translate to camera's position
+    glPushMatrix();
+    glTranslatef(position.x * -1.f,  position.y * -1.f, position.z * -1.f);
 
     // Use a black ambient color
     GLfloat ambientColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
 
-    // Clear the color mask
+
+    // STEP 0: setup
+    // =============
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Translate to camera's position
-    glPushMatrix();
-    glTranslatef(position.x * -1.f,  position.y * -1.f, position.z * -1.f);
-
-    // Render the entire scene to the depth buffer (no textures, only ambient lights)
-    glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-    glClear(GL_DEPTH_BUFFER_BIT);
-
-    // Disable writing to the color mask
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 
-    // Draw scene
+
+    // STEP 1: render depth
+    // ====================
+
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    glFrontFace(GL_CW);
     drawAll(objects);
 
-    // Disable writting on depth mask
     glDepthMask(GL_FALSE);
 
-    // Activate stencil buffer
+
+    // STEP 2: loop through lights
+    // ===========================
+
     glEnable(GL_STENCIL_TEST);
 
-    // For each light in the scene
     for (list<Light*>::iterator l = lights->begin(); l != lights->end(); ++ l)
     {
-        // generate shadow volumes
-        updateAllShadows(objects, *l);
+        // STEP 3: render shadow volumes
+        // =============================
 
-        // clear the stencil buffer
         glClear(GL_STENCIL_BUFFER_BIT);
 
-        // Setup depth and stencil func
         glDepthFunc(GL_LESS);
         glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFFFL);
 
-        // First Pass. Increase Stencil Value In The Shadow
+        updateAllShadows(objects, *l);
+
         glFrontFace(GL_CW);
         glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
         drawAllShadows(objects, *l);
 
-        // Second Pass. Decrease Stencil Value In The Shadow
         glFrontFace(GL_CCW);
         glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
         drawAllShadows(objects, *l);
 
-        // Setup depth and stencil func
-        glDepthFunc(GL_LEQUAL);
-        glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
 
-        // Activate the current light only
+        // STEP 4: render the scene
+        // ========================
+
+        glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         glEnable(GL_BLEND);
         glEnable(GL_COLOR_MATERIAL);
 
-        // Place the light to the right position
         setupLight(*l);
 
-        // Enable writing on the color mask
-        glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+        glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
+        glBlendFunc(GL_ONE, GL_ONE);
+        glDepthFunc(GL_LEQUAL);
 
-        // Render the entire scene
         glFrontFace(GL_CW);
         glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
         drawAll(objects);
 
-        // Deactive the current light
+        glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
         glDisable(GL_LIGHTING);
         glDisable(GL_LIGHT0);
         glDisable(GL_BLEND);
         glDisable(GL_COLOR_MATERIAL);
-
-        // Disable writing to the color mask
-        glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     }
 
-    // Deactivate stencil buffer
     glDisable(GL_STENCIL_TEST);
-
-    // Disable cull facing
-    glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
 
-    // Enable writing on the color mask
+
+    // STEP 4: wireframe
+    // =================
+
     glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
     glEnable(GL_BLEND);
+
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // Draw wireframe
     outlineAll(objects);
 
-    // Disable writing to the color mask
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glDisable(GL_BLEND);
 

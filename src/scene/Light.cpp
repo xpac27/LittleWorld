@@ -6,7 +6,7 @@ Light::Light(float x, float y, float z, float r, float g, float b)
     green = g;
     blue  = b;
 
-    ca = 0.8f;
+    ca = 0.5f;
     la = 0.004f;
     qa = 0.00005f;
 

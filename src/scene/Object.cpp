@@ -80,11 +80,10 @@ void Object::drawOutline()
 
 void Object::updateShadows(Light *l)
 {
-    //if (l->getIntensityAtPosition(position) > 0.01f)
-    //{
-    //}
-
-    shape.updateShadows(l->getPosition() - position);
+    if (l->getIntensityAtPosition(position) > 0.01f)
+    {
+        shape.updateShadows(l->getPosition() - position);
+    }
 }
 
 void Object::drawShadow(Light *l)

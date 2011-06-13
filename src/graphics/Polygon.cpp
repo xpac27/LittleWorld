@@ -39,8 +39,8 @@ void Polygon::drawShadow(Vector3 lightPosition)
     // Draw the shadow volume's sides
     for (unsigned int p = 1; p < silhouette.size(); p += 2)
     {
-        p1 = (*silhouette[p - 1] - lightPosition) * 10000.f;
-        p2 = (*silhouette[p] - lightPosition) * 10000.f;
+        p1 = (*silhouette[p - 1] - lightPosition) * 100000.f;
+        p2 = (*silhouette[p] - lightPosition) * 100000.f;
 
         glBegin(GL_TRIANGLES);
             glVertex3f(silhouette[p - 1]->x, silhouette[p - 1]->y, silhouette[p - 1]->z);
@@ -72,7 +72,7 @@ void Polygon::drawShadow(Vector3 lightPosition)
         if (!triangles[t].lighted)
         {
             triangles[t].setTransformationMIN(lightPosition);
-            triangles[t].setTransformationMUL(10000.f);
+            triangles[t].setTransformationMUL(100000.f);
             triangles[t].draw();
             triangles[t].resetTransformation();
         }

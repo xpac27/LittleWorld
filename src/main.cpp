@@ -12,7 +12,7 @@
 
 using namespace sf;
 
-void onWindowResized(float width, float height)
+void setupWindow(float width, float height)
 {
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
@@ -51,6 +51,11 @@ void onWindowResized(float width, float height)
     glLoadIdentity();
 }
 
+void onWindowResized(float width, float height)
+{
+    setupWindow(width, height);
+}
+
 int main()
 {
     // Create main window
@@ -69,18 +74,20 @@ int main()
     //glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
+    // Default values
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDepthMask(GL_FALSE);
+    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+
+    // Clear values
     glClearDepth(GL_ONE);
     glClearStencil(GL_ZERO);
-    glDepthFunc(GL_LEQUAL);
     glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 
-    // Setup an ortho projection
-    glViewport(0.f, 0.f, Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(Conf::SCREEN_WIDTH / -2.f, Conf::SCREEN_WIDTH / 2.f, Conf::SCREEN_HEIGHT / -2.f, Conf::SCREEN_HEIGHT / 2.f, -1000.f, 1000.f);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    // Setup window
+    setupWindow(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
 
     // Gather a pointer to the input system
     const Input& input = application.GetInput();
