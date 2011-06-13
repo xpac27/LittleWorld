@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Enemy::Enemy(World *W) : DynamicObject(W, 32.f, false)
+Enemy::Enemy(World *W) : DynamicObject(W, 32.f, true)
 {
     speed = 120.f;
 

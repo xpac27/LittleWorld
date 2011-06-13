@@ -50,6 +50,10 @@ void Object::setSize(float s)
         // FACE BACK RIGHT
         shape.addTriangle(&p2, &p1, &p8);
         shape.addTriangle(&p8, &p7, &p2);
+
+        // FACE BOTTOM
+        shape.addTriangle(&p5, &p6, &p7);
+        shape.addTriangle(&p7, &p8, &p5);
     }
 
     shape.updateConnectivity();
@@ -69,7 +73,7 @@ void Object::draw()
 
 void Object::drawOutline()
 {
-    glColor4f(1.f, 1.f, 1.f, 0.2);
+    glColor4f(1.f, 1.f, 1.f, 0.02);
 
     shape.drawOutline();
 }

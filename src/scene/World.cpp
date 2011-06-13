@@ -19,9 +19,6 @@ void World::draw()
     {
         objectList.push_back(*i);
     }
-    // Looks light this is not useful
-    //objectList.sort(ObjectComparer());
-
     camera.draw(&objectList, &lightList);
 }
 

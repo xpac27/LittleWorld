@@ -6,9 +6,9 @@ Light::Light(float x, float y, float z, float r, float g, float b)
     green = g;
     blue  = b;
 
-    ca = 1.0f;
-    la = 0.005f;
-    qa = 0.00001f;
+    ca = 0.8f;
+    la = 0.004f;
+    qa = 0.00005f;
 
     setPosition(x, y, z);
 }
