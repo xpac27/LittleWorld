@@ -73,10 +73,8 @@ void Triangle::setCCW()
     cw = false;
 }
 
-void Triangle::draw()
+void Triangle::setNormal()
 {
-    glBegin(GL_TRIANGLES);
-
     if (cw)
     {
         glNormal3f(normalCW.x, normalCW.y, normalCW.z);
@@ -85,16 +83,6 @@ void Triangle::draw()
     {
         glNormal3f(normalCCW.x, normalCCW.y, normalCCW.z);
     }
-
-    setAllVertex();
-    glEnd();
-}
-
-void Triangle::drawOutline()
-{
-    glBegin(GL_LINE_LOOP);
-    setAllVertex();
-    glEnd();
 }
 
 void Triangle::setAllVertex()

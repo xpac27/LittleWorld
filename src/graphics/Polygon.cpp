@@ -18,23 +18,30 @@ void Polygon::clear()
 
 void Polygon::draw()
 {
+    glBegin(GL_TRIANGLES);
     for (unsigned int i = 0; i < triangles.size(); i ++)
     {
-        triangles[i].draw();
+        triangles[i].setNormal();
+        triangles[i].setAllVertex();
     }
+    glEnd();
 }
 
 void Polygon::drawOutline()
 {
+    glBegin(GL_LINE_LOOP);
     for (unsigned int i = 0; i < triangles.size(); i ++)
     {
-        triangles[i].drawOutline();
+        triangles[i].setAllVertex();
     }
+    glEnd();
 }
 
 void Polygon::drawShadow(Vector3 lightPosition)
 {
     Vector3 p1, p2;
+
+    glBegin(GL_TRIANGLES);
 
     // Draw the shadow volume's sides
     for (unsigned int p = 1; p < silhouette.size(); p += 2)
@@ -42,17 +49,13 @@ void Polygon::drawShadow(Vector3 lightPosition)
         p1 = (*silhouette[p - 1] - lightPosition) * 100000.f;
         p2 = (*silhouette[p] - lightPosition) * 100000.f;
 
-        glBegin(GL_TRIANGLES);
-            glVertex3f(silhouette[p - 1]->x, silhouette[p - 1]->y, silhouette[p - 1]->z);
-            glVertex3f(silhouette[p]->x, silhouette[p]->y, silhouette[p]->z);
-            glVertex3f(p1.x, p1.y, p1.z);
-        glEnd();
+        glVertex3f(silhouette[p - 1]->x, silhouette[p - 1]->y, silhouette[p - 1]->z);
+        glVertex3f(silhouette[p]->x, silhouette[p]->y, silhouette[p]->z);
+        glVertex3f(p1.x, p1.y, p1.z);
 
-        glBegin(GL_TRIANGLES);
-            glVertex3f(silhouette[p]->x, silhouette[p]->y, silhouette[p]->z);
-            glVertex3f(p2.x, p2.y, p2.z);
-            glVertex3f(p1.x, p1.y, p1.z);
-        glEnd();
+        glVertex3f(silhouette[p]->x, silhouette[p]->y, silhouette[p]->z);
+        glVertex3f(p2.x, p2.y, p2.z);
+        glVertex3f(p1.x, p1.y, p1.z);
     }
 
     // Cap near
@@ -61,7 +64,7 @@ void Polygon::drawShadow(Vector3 lightPosition)
         if (!triangles[t].lighted)
         {
             triangles[t].setCCW();
-            triangles[t].draw();
+            triangles[t].setAllVertex();
             triangles[t].setCW();
         }
     }
@@ -73,10 +76,12 @@ void Polygon::drawShadow(Vector3 lightPosition)
         {
             triangles[t].setTransformationMIN(lightPosition);
             triangles[t].setTransformationMUL(100000.f);
-            triangles[t].draw();
+            triangles[t].setAllVertex();
             triangles[t].resetTransformation();
         }
     }
+
+    glEnd();
 }
 
 void Polygon::updateConnectivity()

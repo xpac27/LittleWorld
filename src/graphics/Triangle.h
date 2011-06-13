@@ -15,8 +15,6 @@ class Triangle
 
         Triangle(Point *p1, Point *p2, Point *p3);
 
-        void draw();
-        void drawOutline();
         void setCW();
         void setCCW();
         void setTransformationMIN(Vector3 v);
@@ -24,6 +22,7 @@ class Triangle
         void setTransformationMUL(float n);
         void setTransformationDIV(float n);
         void resetTransformation();
+        void setNormal();
         void setAllVertex();
         void update();
 
