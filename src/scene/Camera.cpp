@@ -156,6 +156,8 @@ void Camera::update(float time)
 void Camera::setFocus(Object *o)
 {
     focus = o;
+    position.x = o->getX();
+    position.z = o->getZ();
 }
 
 float Camera::getX()

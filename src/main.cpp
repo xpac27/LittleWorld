@@ -12,6 +12,8 @@
 
 using namespace sf;
 
+float frameCount = 0.f;
+
 void setupWindow(float width, float height)
 {
     glViewport(0, 0, width, height);
@@ -64,7 +66,8 @@ int main()
     Settings.StencilBits = 8;
     RenderWindow application(VideoMode(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT), "Game", (Style::Close | Style::Resize), Settings);
     application.PreserveOpenGLStates(true);
-    application.UseVerticalSync(true);
+    application.UseVerticalSync(false);
+    application.SetFramerateLimit(0);
 
     // Setup rendering
     glShadeModel(GL_SMOOTH);
@@ -92,7 +95,8 @@ int main()
     // Gather a pointer to the input system
     const Input& input = application.GetInput();
 
-    // Create a clock for measuring the time elapsed
+    // Create a clocks for measuring the time elapsed
+    Clock gameClock;
     Clock clock;
 
     // Create the game object
@@ -159,8 +163,17 @@ int main()
         glScaled(sqrt(1/2.0), sqrt(1/3.0), sqrt(1/2.0));
 
         //Update
-        game.update(clock.GetElapsedTime());
-        clock.Reset();
+        game.update(gameClock.GetElapsedTime());
+        gameClock.Reset();
+
+        // Framerate
+        frameCount ++;
+        if (clock.GetElapsedTime() >= 1.f)
+        {
+            std::cout << "Framerate: " << (frameCount * clock.GetElapsedTime()) << " FPS" << std::endl;
+            frameCount = 0;
+            clock.Reset();
+        }
 
         // Draw...
         game.draw();
