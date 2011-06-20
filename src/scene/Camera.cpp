@@ -83,7 +83,7 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         glEnable(GL_BLEND);
-        glEnable(GL_COLOR_MATERIAL);
+        glEnable(GL_COLOR_MATERIAL); // TODO avoid
 
         setupLight(*l);
 

@@ -23,11 +23,12 @@ INSTALLING:
 
 VERSION HISTORY:
 ----------------
+* v0.3: real time lighting and shadows
 * v0.2: pathfinder
 * v0.1: basic rendering
 
 
 NOTES:
 ------
-* If the game do not compile because of some errors in the code reset the history to a stable revision (git reset --hard v0.2) then try again.
+* If the game do not compile because of some errors in the code reset the history to a stable revision (git reset --hard v0.3) then try again.
 
