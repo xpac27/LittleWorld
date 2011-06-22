@@ -83,12 +83,8 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
 
         #else
 
-        glFrontFace(GL_CW);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
-        drawAllShadows(objects, *l);
-
-        glFrontFace(GL_CCW);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
+        glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_INCR);
+        glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_DECR);
         drawAllShadows(objects, *l);
 
         #endif
