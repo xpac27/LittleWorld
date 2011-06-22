@@ -15,7 +15,7 @@ void Pathfinder::addStaticObject(StaticObject *o)
     {
         grid[x][y] = new Block(x, y, o->isWalkable());
     }
-    else if (o->isWalkable())
+    else if (!o->isWalkable())
     {
         grid[x][y]->walkable = false;
     }
