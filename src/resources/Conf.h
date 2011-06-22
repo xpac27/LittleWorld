@@ -5,13 +5,13 @@ class Conf
 {
     public:
 
-        static bool DEBUG;
+        static const bool DEBUG;
 
-        static int WORLD_WIDTH;
-        static int WORLD_HEIGHT;
+        static const int WORLD_WIDTH;
+        static const int WORLD_HEIGHT;
 
-        static float SCREEN_WIDTH;
-        static float SCREEN_HEIGHT;
+        static const float SCREEN_WIDTH;
+        static const float SCREEN_HEIGHT;
 };
 
 #endif

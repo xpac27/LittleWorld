@@ -31,8 +31,8 @@ void setupWindow(float width, float height)
             Conf::SCREEN_WIDTH / 2.f + space,
             Conf::SCREEN_HEIGHT / -2.f,
             Conf::SCREEN_HEIGHT / 2.f,
-            -1000.f,
-            1000.f
+            1.f,
+            Conf::SCREEN_HEIGHT * 2.f
         );
     }
     else
@@ -44,8 +44,8 @@ void setupWindow(float width, float height)
             Conf::SCREEN_WIDTH / 2.f,
             Conf::SCREEN_HEIGHT / -2.f - space,
             Conf::SCREEN_HEIGHT / 2.f + space,
-            -1000.f,
-            1000.f
+            1.f,
+            Conf::SCREEN_HEIGHT * 2.f
         );
     }
 
@@ -156,6 +156,7 @@ int main()
         glLoadIdentity();
 
         // Isometric angle
+        glTranslatef(0.f, 0.f, Conf::SCREEN_HEIGHT * -1.f);
         glRotatef(30.f, 1.f, 0.f, 0.f);
         glRotatef(-45.f, 0.f, 1.f, 0.f);
 
