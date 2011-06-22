@@ -67,6 +67,8 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
 
         updateAllShadows(objects, *l);
 
+        #ifdef GL_EXT_stencil_two_side && GL_EXT_stencil_wrap
+
         glEnable(GL_STENCIL_TEST_TWO_SIDE_EXT);
 
         glActiveStencilFaceEXT(GL_BACK);
@@ -78,6 +80,18 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
         drawAllShadows(objects, *l);
 
         glDisable(GL_STENCIL_TEST_TWO_SIDE_EXT);
+
+        #else
+
+        glFrontFace(GL_CW);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+        drawAllShadows(objects, *l);
+
+        glFrontFace(GL_CCW);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
+        drawAllShadows(objects, *l);
+
+        #endif
 
 
         // STEP 4: render the scene
