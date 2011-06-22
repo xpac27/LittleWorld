@@ -58,29 +58,6 @@ void Polygon::drawShadow(Vector3 lightPosition)
         glVertex3f(p1.x, p1.y, p1.z);
     }
 
-    // Cap near
-    for (unsigned int t = 0; t < triangles.size(); t ++)
-    {
-        if (!triangles[t].lighted)
-        {
-            triangles[t].setCCW();
-            triangles[t].setAllVertex();
-            triangles[t].setCW();
-        }
-    }
-
-    // Cap far
-    for (unsigned int t = 0; t < triangles.size(); t ++)
-    {
-        if (!triangles[t].lighted)
-        {
-            triangles[t].setTransformationMIN(lightPosition);
-            triangles[t].setTransformationMUL(100000.f);
-            triangles[t].setAllVertex();
-            triangles[t].resetTransformation();
-        }
-    }
-
     glEnd();
 }
 
