@@ -20,13 +20,13 @@ void Game::init()
     for (unsigned int i = 0; i < 20; i ++)
     {
         Enemy *e = new Enemy(&world);
-        e->setPosition(Randomizer::Random(0, Conf::WORLD_WIDTH), 0.f, Randomizer::Random(0, Conf::WORLD_HEIGHT));
+        e->setPosition(Randomizer::Random(0, WORLD_WIDTH), 0.f, Randomizer::Random(0, WORLD_HEIGHT));
         world.addDynamicObject(e);
     }
 
-    for (unsigned int x(0); x < Conf::WORLD_WIDTH / 128; x ++)
+    for (unsigned int x(0); x < WORLD_WIDTH / 128; x ++)
     {
-        for (unsigned int y(0); y < Conf::WORLD_HEIGHT / 128; y ++)
+        for (unsigned int y(0); y < WORLD_HEIGHT / 128; y ++)
         {
             world.addStaticObject(new Tile(&world, x * 128.f, 0.f, y * 128.f, 0.f));
         }
@@ -76,21 +76,21 @@ void Game::onEvent(Event *event)
     // RESIZE
     else if (event->Type == Event::Resized)
     {
-        if ((float)event->Size.Width / (float)event->Size.Height > Conf::SCREEN_WIDTH / Conf::SCREEN_HEIGHT)
+        if ((float)event->Size.Width / (float)event->Size.Height > SCREEN_WIDTH / SCREEN_HEIGHT)
         {
-            windowScale= Conf::SCREEN_HEIGHT / event->Size.Height;
+            windowScale= SCREEN_HEIGHT / event->Size.Height;
         }
         else
         {
-            windowScale= Conf::SCREEN_WIDTH / event->Size.Width;
+            windowScale= SCREEN_WIDTH / event->Size.Width;
         }
-        windowPaddingLeft = ((float)event->Size.Width - (Conf::SCREEN_WIDTH / windowScale)) / -2.f;
-        windowPaddingTop  = ((float)event->Size.Height - (Conf::SCREEN_HEIGHT / windowScale)) / -2.f;
+        windowPaddingLeft = ((float)event->Size.Width - (SCREEN_WIDTH / windowScale)) / -2.f;
+        windowPaddingTop  = ((float)event->Size.Height - (SCREEN_HEIGHT / windowScale)) / -2.f;
     }
 }
 
 void Game::setMousePosition(unsigned int x, unsigned int y)
 {
-    world.updateMousePosition((x + windowPaddingLeft) * windowScale - Conf::SCREEN_WIDTH / 2.f, (y + windowPaddingTop) * windowScale - Conf::SCREEN_HEIGHT / 2.f);
+    world.updateMousePosition((x + windowPaddingLeft) * windowScale - SCREEN_WIDTH / 2.f, (y + windowPaddingTop) * windowScale - SCREEN_HEIGHT / 2.f);
 }
 

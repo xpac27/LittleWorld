@@ -22,30 +22,30 @@ void setupWindow(float width, float height)
 
     float space;
 
-    if (width / height > Conf::SCREEN_WIDTH / Conf::SCREEN_HEIGHT)
+    if (width / height > SCREEN_WIDTH / SCREEN_HEIGHT)
     {
-        space = abs(((Conf::SCREEN_HEIGHT / (height / width)) - Conf::SCREEN_WIDTH) / 2.f);
+        space = abs(((SCREEN_HEIGHT / (height / width)) - SCREEN_WIDTH) / 2.f);
         glOrtho
         (
-            Conf::SCREEN_WIDTH / -2.f - space,
-            Conf::SCREEN_WIDTH / 2.f + space,
-            Conf::SCREEN_HEIGHT / -2.f,
-            Conf::SCREEN_HEIGHT / 2.f,
+            SCREEN_WIDTH / -2.f - space,
+            SCREEN_WIDTH / 2.f + space,
+            SCREEN_HEIGHT / -2.f,
+            SCREEN_HEIGHT / 2.f,
             1.f,
-            Conf::SCREEN_HEIGHT * 2.f
+            SCREEN_HEIGHT * 2.f
         );
     }
     else
     {
-        space = abs(((Conf::SCREEN_WIDTH / (width / height)) - Conf::SCREEN_HEIGHT) / 2.f);
+        space = abs(((SCREEN_WIDTH / (width / height)) - SCREEN_HEIGHT) / 2.f);
         glOrtho
         (
-            Conf::SCREEN_WIDTH / -2.f,
-            Conf::SCREEN_WIDTH / 2.f,
-            Conf::SCREEN_HEIGHT / -2.f - space,
-            Conf::SCREEN_HEIGHT / 2.f + space,
+            SCREEN_WIDTH / -2.f,
+            SCREEN_WIDTH / 2.f,
+            SCREEN_HEIGHT / -2.f - space,
+            SCREEN_HEIGHT / 2.f + space,
             1.f,
-            Conf::SCREEN_HEIGHT * 2.f
+            SCREEN_HEIGHT * 2.f
         );
     }
 
@@ -64,7 +64,7 @@ int main()
     WindowSettings Settings;
     Settings.AntialiasingLevel = 4;
     Settings.StencilBits = 8;
-    RenderWindow application(VideoMode(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT), "Game", (Style::Close | Style::Resize), Settings);
+    RenderWindow application(VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Game", (Style::Close | Style::Resize), Settings);
     application.PreserveOpenGLStates(true);
     application.UseVerticalSync(false);
     application.SetFramerateLimit(0);
@@ -90,7 +90,7 @@ int main()
     glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 
     // Setup window
-    setupWindow(Conf::SCREEN_WIDTH, Conf::SCREEN_HEIGHT);
+    setupWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     // Gather a pointer to the input system
     const Input& input = application.GetInput();
@@ -156,7 +156,7 @@ int main()
         glLoadIdentity();
 
         // Isometric angle
-        glTranslatef(0.f, 0.f, Conf::SCREEN_HEIGHT * -1.f);
+        glTranslatef(0.f, 0.f, SCREEN_HEIGHT * -1.f);
         glRotatef(30.f, 1.f, 0.f, 0.f);
         glRotatef(-45.f, 0.f, 1.f, 0.f);
 

@@ -1,18 +1,13 @@
 #ifndef DEF_UTIL_CONF
 #define DEF_UTIL_CONF
 
-class Conf
-{
-    public:
+#define DEBUG true
 
-        static const bool DEBUG;
+#define WORLD_WIDTH 2048
+#define WORLD_HEIGHT 2048
 
-        static const int WORLD_WIDTH;
-        static const int WORLD_HEIGHT;
-
-        static const float SCREEN_WIDTH;
-        static const float SCREEN_HEIGHT;
-};
+#define SCREEN_WIDTH 800.f
+#define SCREEN_HEIGHT 600.f
 
 #endif
 
