@@ -24,6 +24,7 @@ void setupWindow(float width, float height)
 
     if (width / height > SCREEN_WIDTH / SCREEN_HEIGHT)
     {
+        // TODO compute back and front clip plane better
         space = abs(((SCREEN_HEIGHT / (height / width)) - SCREEN_WIDTH) / 2.f);
         glOrtho
         (
@@ -31,8 +32,8 @@ void setupWindow(float width, float height)
             SCREEN_WIDTH / 2.f + space,
             SCREEN_HEIGHT / -2.f,
             SCREEN_HEIGHT / 2.f,
-            1.f,
-            SCREEN_HEIGHT * 2.f
+            SCREEN_HEIGHT * (SCREEN_HEIGHT / height) * -1,
+            SCREEN_HEIGHT
         );
     }
     else
@@ -44,8 +45,8 @@ void setupWindow(float width, float height)
             SCREEN_WIDTH / 2.f,
             SCREEN_HEIGHT / -2.f - space,
             SCREEN_HEIGHT / 2.f + space,
-            1.f,
-            SCREEN_HEIGHT * 2.f
+            SCREEN_HEIGHT * (SCREEN_WIDTH / width) * -1.f,
+            SCREEN_HEIGHT
         );
     }
 
@@ -156,7 +157,6 @@ int main()
         glLoadIdentity();
 
         // Isometric angle
-        glTranslatef(0.f, 0.f, SCREEN_HEIGHT * -1.f);
         glRotatef(30.f, 1.f, 0.f, 0.f);
         glRotatef(-45.f, 0.f, 1.f, 0.f);
 
@@ -178,18 +178,6 @@ int main()
 
         // Draw...
         game.draw();
-
-        glBegin(GL_LINES);
-        glColor3d(1.f, 0.f, 0.f);
-        glVertex3d(0.f, 0.f, 0.f);
-        glVertex3d(50.f, 0.f, 0.f);
-        glColor3d(0.f, 1.f, 0.f);
-        glVertex3d(0.f, 0.f, 0.f);
-        glVertex3d(0.f, 50.f, 0.f);
-        glColor3d(0.f, 0.f, 1.f);
-        glVertex3d(0.f, 0.f, 0.f);
-        glVertex3d(0.f, 0.f, 50.f);
-        glEnd();
 
         // Finally, display the rendered frame on screen
         application.Display();

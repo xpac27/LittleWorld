@@ -4,6 +4,8 @@ using namespace std;
 
 Object::Object(World *W, float h, bool s) : world(W), height(h), shadow(s)
 {
+    visible = true;
+
     setSize(32.f);
 }
 
@@ -91,6 +93,11 @@ void Object::drawShadow(Light *l)
     shape.drawShadow(l->getPosition() - position);
 }
 
+void Object::setVisibility(bool v)
+{
+    visible = v;
+}
+
 float Object::getX()
 {
     return position.x;
@@ -119,5 +126,15 @@ float Object::getSize()
 bool Object::shadowEnabled()
 {
     return shadow;
+}
+
+bool Object::isVisible()
+{
+    return visible;
+}
+
+Vector3 Object::getPosition()
+{
+    return position;
 }
 

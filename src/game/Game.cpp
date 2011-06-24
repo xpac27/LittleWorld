@@ -76,16 +76,19 @@ void Game::onEvent(Event *event)
     // RESIZE
     else if (event->Type == Event::Resized)
     {
+        world.dispatch(World::ON_WINDOW_RESIZED);
+
         if ((float)event->Size.Width / (float)event->Size.Height > SCREEN_WIDTH / SCREEN_HEIGHT)
         {
-            windowScale= SCREEN_HEIGHT / event->Size.Height;
+            windowScale = SCREEN_HEIGHT / event->Size.Height;
         }
         else
         {
-            windowScale= SCREEN_WIDTH / event->Size.Width;
+            windowScale = SCREEN_WIDTH / event->Size.Width;
         }
         windowPaddingLeft = ((float)event->Size.Width - (SCREEN_WIDTH / windowScale)) / -2.f;
         windowPaddingTop  = ((float)event->Size.Height - (SCREEN_HEIGHT / windowScale)) / -2.f;
+        cout << windowScale << endl;
     }
 }
 

@@ -3,6 +3,7 @@
 using namespace std;
 
 unsigned const int World::ON_MOUSE_LEFT_DOWN = 1;
+unsigned const int World::ON_WINDOW_RESIZED  = 2;
 
 World::World()
 {

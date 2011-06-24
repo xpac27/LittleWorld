@@ -19,6 +19,9 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
     glPushMatrix();
     glTranslatef(position.x * -1.f,  position.y * -1.f, position.z * -1.f);
 
+    updateViewFrustum();
+    updateObjectsVisibility(objects);
+
     // Use a black ambient color
     GLfloat ambientColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
@@ -57,6 +60,11 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
 
     for (list<Light*>::iterator l = lights->begin(); l != lights->end(); ++ l)
     {
+        // TODO perfome culling on shadow volumes against view frustum
+        // TODO test light range against objects
+        // TODO extrude shadow volume by the size of the light's radius
+        // http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html SEC-9.5
+
         // STEP 3: render shadow volumes
         // =============================
 
@@ -167,6 +175,17 @@ void Camera::update(float time)
     }
 }
 
+void Camera::updateViewFrustum()
+{
+    Matrix4x4f projMatrix;
+    Matrix4x4f viewMatrix;
+
+    glGetFloatv(GL_PROJECTION_MATRIX, projMatrix.m);
+    glGetFloatv(GL_MODELVIEW_MATRIX, viewMatrix.m);
+
+    viewFrustum.update(projMatrix * viewMatrix);
+}
+
 void Camera::setFocus(Object *o)
 {
     focus = o;
@@ -193,10 +212,13 @@ void Camera::drawAll(std::list<Object*> *objects)
 {
     for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
-        glPushMatrix();
-        translateObject(*o);
-        (*o)->draw();
-        glPopMatrix();
+        if ((*o)->isVisible())
+        {
+            glPushMatrix();
+            translateObject(*o);
+            (*o)->draw();
+            glPopMatrix();
+        }
     }
 }
 
@@ -204,12 +226,15 @@ void Camera::outlineAll(std::list<Object*> *objects)
 {
     for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
-        glPushMatrix();
-        glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
+        if ((*o)->isVisible())
+        {
+            glPushMatrix();
+            glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
 
-        (*o)->drawOutline();
+            (*o)->drawOutline();
 
-        glPopMatrix();
+            glPopMatrix();
+        }
     }
 }
 
@@ -217,6 +242,7 @@ void Camera::drawAllShadows(std::list<Object*> *objects, Light *l)
 {
     for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
+        // Remove this test by making a predefined list
         if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
         {
             glPushMatrix();
@@ -231,6 +257,7 @@ void Camera::updateAllShadows(std::list<Object*> *objects, Light *l)
 {
     for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
+        // Remove this test by making a predefined list
         if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
         {
             (*o)->updateShadows(l);
@@ -249,5 +276,13 @@ void Camera::setupLight(Light *l)
     glTranslatef(l->getX(), l->getY(), l->getZ());
     l->setup();
     glPopMatrix();
+}
+
+void Camera::updateObjectsVisibility(std::list<Object*> *objects)
+{
+    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        (*o)->setVisibility(viewFrustum.sphereInFrustum((*o)->getPosition(), (*o)->getSize()));
+    }
 }
 

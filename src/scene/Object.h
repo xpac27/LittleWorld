@@ -25,14 +25,18 @@ class Object
         void setPosition(float x, float y, float z);
         void updateShadows(Light *l);
         void drawShadow(Light *l);
+        void setVisibility(bool v);
 
         bool shadowEnabled();
+        bool isVisible();
 
         float getX();
         float getY();
         float getZ();
         float getHeight();
         float getSize();
+
+        Vector3 getPosition();
 
 
     protected:
@@ -45,6 +49,7 @@ class Object
     private:
 
         bool shadow;
+        bool visible;
 
         float height;
         float size;

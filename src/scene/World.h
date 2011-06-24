@@ -29,6 +29,7 @@ class World
         void dispatch(unsigned const int type);
 
         static unsigned const int ON_MOUSE_LEFT_DOWN;
+        static unsigned const int ON_WINDOW_RESIZED;
 
         float mouseX;
         float mouseY;

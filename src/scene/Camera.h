@@ -4,6 +4,8 @@
 #include "Light.h"
 #include "Object.h"
 #include "../math/Vector3.h"
+#include "../math/Matrix4x4f.h"
+#include "../math/Frustum.h"
 #include "../resources/Conf.h"
 
 #include <SFML/Graphics.hpp>
@@ -31,12 +33,16 @@ class Camera
         void outlineAll(std::list<Object*> *objects);
         void drawAllShadows(std::list<Object*> *objects, Light *l);
         void updateAllShadows(std::list<Object*> *objects, Light *l);
+        void updateObjectsVisibility(std::list<Object*> *objects);
+        void updateViewFrustum();
         void translateObject(Object *o);
         void setupLight(Light *l);
 
         Object* focus;
 
         Vector3 position;
+
+        Frustum viewFrustum;
 
         float speed;
         float tolerance;
