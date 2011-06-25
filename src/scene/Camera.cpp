@@ -61,12 +61,16 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
     for (list<Light*>::iterator l = lights->begin(); l != lights->end(); ++ l)
     {
         // TODO perfome culling on shadow volumes against view frustum
-        // TODO test light range against objects
         // TODO extrude shadow volume by the size of the light's radius
         // http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html SEC-9.5
 
+        // Skeep this light if it's too far
+        if ((*l)->getIntensityAtPosition(position) < 0.004f) continue;
+
         // STEP 3: render shadow volumes
         // =============================
+
+        updateObjectsLightning(objects, *l);
 
         glClear(GL_STENCIL_BUFFER_BIT);
 
@@ -215,7 +219,7 @@ void Camera::drawAll(std::list<Object*> *objects)
         if ((*o)->isVisible())
         {
             glPushMatrix();
-            translateObject(*o);
+            glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
             (*o)->draw();
             glPopMatrix();
         }
@@ -230,9 +234,21 @@ void Camera::outlineAll(std::list<Object*> *objects)
         {
             glPushMatrix();
             glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-
             (*o)->drawOutline();
+            glPopMatrix();
+        }
+    }
+}
 
+void Camera::drawAllLigthned(std::list<Object*> *objects)
+{
+    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        if ((*o)->isVisible() && (*o)->isLightned())
+        {
+            glPushMatrix();
+            glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
+            (*o)->draw();
             glPopMatrix();
         }
     }
@@ -242,11 +258,10 @@ void Camera::drawAllShadows(std::list<Object*> *objects, Light *l)
 {
     for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
-        // Remove this test by making a predefined list
-        if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
+        if ((*o)->isCastingShadow() && (*o)->isLightned())
         {
             glPushMatrix();
-            translateObject(*o);
+            glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
             (*o)->drawShadow(l);
             glPopMatrix();
         }
@@ -257,17 +272,11 @@ void Camera::updateAllShadows(std::list<Object*> *objects, Light *l)
 {
     for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
-        // Remove this test by making a predefined list
-        if ((*o)->shadowEnabled() && (*o)->getHeight() > 0.f)
+        if ((*o)->isCastingShadow() && (*o)->isLightned())
         {
             (*o)->updateShadows(l);
         }
     }
-}
-
-void Camera::translateObject(Object *o)
-{
-    glTranslatef(o->getX(), o->getY(), o->getZ());
 }
 
 void Camera::setupLight(Light *l)
@@ -283,6 +292,14 @@ void Camera::updateObjectsVisibility(std::list<Object*> *objects)
     for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
         (*o)->setVisibility(viewFrustum.sphereInFrustum((*o)->getPosition(), (*o)->getSize()));
+    }
+}
+
+void Camera::updateObjectsLightning(std::list<Object*> *objects, Light *l)
+{
+    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        (*o)->setLightned(l->getIntensityAtPosition((*o)->getPosition()) > 0.004f);
     }
 }
 

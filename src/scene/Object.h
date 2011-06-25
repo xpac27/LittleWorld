@@ -26,9 +26,11 @@ class Object
         void updateShadows(Light *l);
         void drawShadow(Light *l);
         void setVisibility(bool v);
+        void setLightned(bool v);
 
-        bool shadowEnabled();
+        bool isCastingShadow();
         bool isVisible();
+        bool isLightned();
 
         float getX();
         float getY();
@@ -50,6 +52,7 @@ class Object
 
         bool shadow;
         bool visible;
+        bool lightned;
 
         float height;
         float size;

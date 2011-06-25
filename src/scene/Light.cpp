@@ -35,6 +35,7 @@ void Light::setPosition(float x, float y, float z)
     position.z = z;
 }
 
+// TODO compress methods
 float Light::getX()
 {
     return position.x;

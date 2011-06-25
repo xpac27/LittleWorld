@@ -2,9 +2,11 @@
 
 using namespace std;
 
-Object::Object(World *W, float h, bool s) : world(W), height(h), shadow(s)
+Object::Object(World *W, float h, bool s) : world(W), height(h)
 {
-    visible = true;
+    shadow   = s && height > 0.f;
+    visible  = false;
+    lightned = false;
 
     setSize(32.f);
 }
@@ -75,7 +77,7 @@ void Object::draw()
 
 void Object::drawOutline()
 {
-    glColor4f(1.f, 1.f, 1.f, 0.02);
+    glColor4f(1.f, 1.f, 1.f, 0.03);
 
     shape.drawOutline();
 }
@@ -93,9 +95,15 @@ void Object::drawShadow(Light *l)
     shape.drawShadow(l->getPosition() - position);
 }
 
+// TODO compress methods
 void Object::setVisibility(bool v)
 {
     visible = v;
+}
+
+void Object::setLightned(bool v)
+{
+    lightned = v;
 }
 
 float Object::getX()
@@ -123,7 +131,7 @@ float Object::getSize()
     return size;
 }
 
-bool Object::shadowEnabled()
+bool Object::isCastingShadow()
 {
     return shadow;
 }
@@ -131,6 +139,11 @@ bool Object::shadowEnabled()
 bool Object::isVisible()
 {
     return visible;
+}
+
+bool Object::isLightned()
+{
+    return lightned;
 }
 
 Vector3 Object::getPosition()

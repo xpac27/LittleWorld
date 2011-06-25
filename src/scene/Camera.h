@@ -32,10 +32,11 @@ class Camera
         void drawAll(std::list<Object*> *objects);
         void outlineAll(std::list<Object*> *objects);
         void drawAllShadows(std::list<Object*> *objects, Light *l);
+        void drawAllLigthned(std::list<Object*> *objects);
         void updateAllShadows(std::list<Object*> *objects, Light *l);
         void updateObjectsVisibility(std::list<Object*> *objects);
+        void updateObjectsLightning(std::list<Object*> *objects, Light *l);
         void updateViewFrustum();
-        void translateObject(Object *o);
         void setupLight(Light *l);
 
         Object* focus;
