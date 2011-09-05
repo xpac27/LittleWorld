@@ -28,10 +28,10 @@ class World
         void updateMousePosition(float mouseScreenX, float mouseScreenY);
         void dispatch(unsigned const int type);
         void addPlayer(bool focus);
-        void addEnemy(float x, float y);
-        void addWallTile(float x, float y, float h);
-        void addFloorTile(float x, float y);
-        void addLight(float x, float y, float z, float r, float v, float b);
+        void addEnemy(float x, float z);
+        void addWallTile(float x, float z, float h);
+        void addFloorTile(float x, float z);
+        void addLight(float x, float z, float y, float r, float v, float b);
 
         static unsigned const int ON_MOUSE_LEFT_DOWN;
         static unsigned const int ON_WINDOW_RESIZED;

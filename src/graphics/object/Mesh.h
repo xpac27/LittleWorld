@@ -1,6 +1,21 @@
 #ifndef DEF_MESH
 #define DEF_MESH
 
+// Location/Normals
+#define X_POS 0
+#define Y_POS 1
+#define Z_POS 2
+
+// Texture Coordinates
+#define U_POS 0
+#define V_POS 1
+
+// Colours
+#define R_POS 0
+#define G_POS 1
+#define B_POS 2
+#define A_POS 3
+
 #include "../Object.h"
 #include "../../math/Vector3.h"
 
@@ -33,14 +48,13 @@ class Mesh : public Object
 
     private:
 
-        void draw(GLenum type);
         //void loadData();
 
         unsigned int totalVertex;
         unsigned int totalIndex;
 
         Vertex vertexes[24];
-        GLubyte index[36];
+        int index[36];
 
         //GLuint vboID;
         //GLuint indexVBOID;

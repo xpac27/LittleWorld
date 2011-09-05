@@ -10,7 +10,7 @@ class Tile : public Static
 {
     public:
 
-        Tile(World *W, float x, float y, float z, float s, bool w);
+        Tile(World *W, float x, float z, float s, bool w);
 
         bool isWalkable();
 

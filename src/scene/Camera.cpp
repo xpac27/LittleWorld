@@ -23,8 +23,8 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
     //updateObjectsVisibility(objects);
 
     // Use a black ambient color
-    GLfloat ambientColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+    //GLfloat ambientColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    //glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
 
 
     // STEP 0: setup
@@ -136,15 +136,15 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
     // STEP 4: wireframe
     // =================
 
-    //glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-    //glEnable(GL_BLEND);
+    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+    glEnable(GL_BLEND);
 
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    //outlineAll(objects);
+    outlineAllMeshes(meshes);
 
-    //glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
-    //glDisable(GL_BLEND);
+    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+    glDisable(GL_BLEND);
 
     glPopMatrix();
 }
@@ -226,19 +226,19 @@ void Camera::drawAllMeshes(std::list<Mesh*> *objects)
     }
 }
 
-//void Camera::outlineAll(std::list<Object*> *objects)
-//{
-    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    //{
+void Camera::outlineAllMeshes(std::list<Mesh*> *objects)
+{
+    for (list<Mesh*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
         //if ((*o)->isVisible())
         //{
-            //glPushMatrix();
-            //glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-            //(*o)->drawOutline();
-            //glPopMatrix();
+            glPushMatrix();
+            glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
+            (*o)->drawOutline();
+            glPopMatrix();
         //}
-    //}
-//}
+    }
+}
 
 void Camera::setupLight(Light *l)
 {

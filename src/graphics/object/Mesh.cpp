@@ -9,176 +9,126 @@ Mesh::Mesh(Entity *e, float size, float height, float red, float green, float bl
 
     float alfSize = size / 2.f;
 
+    // Top
+    vertexes[0].location[X_POS]  = alfSize;  vertexes[0].location[Y_POS]  = height; vertexes[0].location[Z_POS]  = -alfSize;
+    vertexes[0].normal[X_POS]    = 0.f;      vertexes[0].normal[Y_POS]    = height; vertexes[0].normal[Z_POS]    = 0.f;
+    vertexes[0].tex[U_POS]       = 0.f;      vertexes[0].tex[V_POS]       = 0.f;
 
-    // FACE TOP
+    vertexes[1].location[X_POS]  = -alfSize; vertexes[1].location[Y_POS]  = height; vertexes[1].location[Z_POS]  = -alfSize;
+    vertexes[1].normal[X_POS]    = 0.f;      vertexes[1].normal[Y_POS]    = height; vertexes[1].normal[Z_POS]    = 0.f;
+    vertexes[1].tex[U_POS]       = 0.f;      vertexes[1].tex[V_POS]       = height;
 
-    vertexes[0].location[0] = -alfSize;
-    vertexes[0].location[1] = height;
-    vertexes[0].location[2] = -alfSize;
+    vertexes[2].location[X_POS]  = -alfSize; vertexes[2].location[Y_POS]  = height; vertexes[2].location[Z_POS]  = alfSize;
+    vertexes[2].normal[X_POS]    = 0.f;      vertexes[2].normal[Y_POS]    = height; vertexes[2].normal[Z_POS]    = 0.f;
+    vertexes[2].tex[U_POS]       = alfSize;  vertexes[2].tex[V_POS]       = height;
 
-    vertexes[1].location[0] = alfSize;
-    vertexes[1].location[1] = height;
-    vertexes[1].location[2] = -alfSize;
+    vertexes[3].location[X_POS]  = alfSize;  vertexes[3].location[Y_POS]  = height; vertexes[3].location[Z_POS]  = alfSize;
+    vertexes[3].normal[X_POS]    = 0.f;      vertexes[3].normal[Y_POS]    = height; vertexes[3].normal[Z_POS]    = 0.f;
+    vertexes[3].tex[U_POS]       = alfSize;  vertexes[3].tex[V_POS]       = 0.f;
 
-    vertexes[2].location[0] = alfSize;
-    vertexes[2].location[1] = height;
-    vertexes[2].location[2] = alfSize;
+    // Bottom
+    vertexes[4].location[X_POS]  = alfSize;  vertexes[4].location[Y_POS]  = 0.f;    vertexes[4].location[Z_POS]  = alfSize;
+    vertexes[4].normal[X_POS]    = 0.f;      vertexes[4].normal[Y_POS]    = 0.f;    vertexes[4].normal[Z_POS]    = 0.f;
+    vertexes[4].tex[U_POS]       = 0.f;      vertexes[4].tex[V_POS]       = 0.f;
 
-    vertexes[3].location[0] = -alfSize;
-    vertexes[3].location[1] = height;
-    vertexes[3].location[2] = alfSize;
+    vertexes[5].location[X_POS]  = -alfSize; vertexes[5].location[Y_POS]  = 0.f;    vertexes[5].location[Z_POS]  = alfSize;
+    vertexes[5].normal[X_POS]    = 0.f;      vertexes[5].normal[Y_POS]    = 0.f;    vertexes[5].normal[Z_POS]    = 0.f;
+    vertexes[5].tex[U_POS]       = 0.f;      vertexes[5].tex[V_POS]       = height;
 
-    index[0] = 0;
-    index[1] = 1;
-    index[2] = 2;
-    index[3] = 2;
-    index[4] = 3;
-    index[5] = 0;
+    vertexes[6].location[X_POS]  = -alfSize; vertexes[6].location[Y_POS]  = 0.f;    vertexes[6].location[Z_POS]  = -alfSize;
+    vertexes[6].normal[X_POS]    = 0.f;      vertexes[6].normal[Y_POS]    = 0.f;    vertexes[6].normal[Z_POS]    = 0.f;
+    vertexes[6].tex[U_POS]       = alfSize;  vertexes[6].tex[V_POS]       = height;
 
+    vertexes[7].location[X_POS]  = alfSize;  vertexes[7].location[Y_POS]  = 0.f;    vertexes[7].location[Z_POS]  = -alfSize;
+    vertexes[7].normal[X_POS]    = 0.f;      vertexes[7].normal[Y_POS]    = 0.f;    vertexes[7].normal[Z_POS]    = 0.f;
+    vertexes[7].tex[U_POS]       = alfSize;  vertexes[7].tex[V_POS]       = 0.f;
 
-    // FACE FRONT LEFT
+    // Front
+    vertexes[8].location[X_POS]  = alfSize;  vertexes[8].location[Y_POS]  = height; vertexes[8].location[Z_POS]  = alfSize;
+    vertexes[8].normal[X_POS]    = 0.f;      vertexes[8].normal[Y_POS]    = 0.f;    vertexes[8].normal[Z_POS]    = alfSize;
+    vertexes[8].tex[U_POS]       = 0.f;      vertexes[8].tex[V_POS]       = 0.f;
 
-    vertexes[4].location[0] = -alfSize;
-    vertexes[4].location[1] = 0.f;
-    vertexes[4].location[2] = alfSize;
+    vertexes[9].location[X_POS]  = -alfSize; vertexes[9].location[Y_POS]  = height; vertexes[9].location[Z_POS]  = alfSize;
+    vertexes[9].normal[X_POS]    = 0.f;      vertexes[9].normal[Y_POS]    = 0.f;    vertexes[9].normal[Z_POS]    = alfSize;
+    vertexes[9].tex[U_POS]       = 0.f;      vertexes[9].tex[V_POS]       = height;
 
-    vertexes[5].location[0] = -alfSize;
-    vertexes[5].location[1] = height;
-    vertexes[5].location[2] = alfSize;
+    vertexes[10].location[X_POS] = -alfSize; vertexes[10].location[Y_POS] = 0.f;    vertexes[10].location[Z_POS] = alfSize;
+    vertexes[10].normal[X_POS]   = 0.f;      vertexes[10].normal[Y_POS]   = 0.f;    vertexes[10].normal[Z_POS]   = alfSize;
+    vertexes[10].tex[U_POS]      = alfSize;  vertexes[10].tex[V_POS]      = height;
 
-    vertexes[6].location[0] = alfSize;
-    vertexes[6].location[1] = height;
-    vertexes[6].location[2] = alfSize;
+    vertexes[11].location[X_POS] = alfSize;  vertexes[11].location[Y_POS] = 0.f;    vertexes[11].location[Z_POS] = alfSize;
+    vertexes[11].normal[X_POS]   = 0.f;      vertexes[11].normal[Y_POS]   = 0.f;    vertexes[11].normal[Z_POS]   = alfSize;
+    vertexes[11].tex[U_POS]      = alfSize;  vertexes[11].tex[V_POS]      = 0.f;
 
-    vertexes[8].location[0] = alfSize;
-    vertexes[8].location[1] = 0.f;
-    vertexes[8].location[2] = alfSize;
+    // Back
+    vertexes[12].location[X_POS] = alfSize;  vertexes[12].location[Y_POS] = 0.f;    vertexes[12].location[Z_POS] = -alfSize;
+    vertexes[12].normal[X_POS]   = 0.f;      vertexes[12].normal[Y_POS]   = 0.f;    vertexes[12].normal[Z_POS]   = -alfSize;
+    vertexes[12].tex[U_POS]      = 0.f;      vertexes[12].tex[V_POS]      = 0.f;
 
-    index[6] = 4;
-    index[7] = 5;
-    index[8] = 6;
-    index[9] = 6;
-    index[10] = 7;
-    index[11] = 4;
+    vertexes[13].location[X_POS] = -alfSize; vertexes[13].location[Y_POS] = 0.f;    vertexes[13].location[Z_POS] = -alfSize;
+    vertexes[13].normal[X_POS]   = 0.f;      vertexes[13].normal[Y_POS]   = 0.f;    vertexes[13].normal[Z_POS]   = -alfSize;
+    vertexes[13].tex[U_POS]      = 0.f;      vertexes[13].tex[V_POS]      = height;
 
+    vertexes[14].location[X_POS] = -alfSize; vertexes[14].location[Y_POS] = height; vertexes[14].location[Z_POS] = -alfSize;
+    vertexes[14].normal[X_POS]   = 0.f;      vertexes[14].normal[Y_POS]   = 0.f;    vertexes[14].normal[Z_POS]   = -alfSize;
+    vertexes[14].tex[U_POS]      = alfSize;  vertexes[14].tex[V_POS]      = height;
 
-    // FACE FRONT RIGHT
+    vertexes[15].location[X_POS] = alfSize;  vertexes[15].location[Y_POS] = height; vertexes[15].location[Z_POS] = -alfSize;
+    vertexes[15].normal[X_POS]   = 0.f;      vertexes[15].normal[Y_POS]   = 0.f;    vertexes[15].normal[Z_POS]   = -alfSize;
+    vertexes[15].tex[U_POS]      = alfSize;  vertexes[15].tex[V_POS]      = 0.f;
 
-    vertexes[8].location[0] = alfSize;
-    vertexes[8].location[1] = 0.f;
-    vertexes[8].location[2] = alfSize;
+    // Left
+    vertexes[16].location[X_POS] = -alfSize; vertexes[16].location[Y_POS] = height; vertexes[16].location[Z_POS] = alfSize;
+    vertexes[16].normal[X_POS]   = -alfSize; vertexes[16].normal[Y_POS]   = 0.f;    vertexes[16].normal[Z_POS]   = 0.f;
+    vertexes[16].tex[U_POS]      = 0.f;      vertexes[16].tex[V_POS]      = 0.f;
 
-    vertexes[9].location[0] = alfSize;
-    vertexes[9].location[1] = height;
-    vertexes[9].location[2] = alfSize;
+    vertexes[17].location[X_POS] = -alfSize; vertexes[17].location[Y_POS] = height; vertexes[17].location[Z_POS] = -alfSize;
+    vertexes[17].normal[X_POS]   = -alfSize; vertexes[17].normal[Y_POS]   = 0.f;    vertexes[17].normal[Z_POS]   = 0.f;
+    vertexes[17].tex[U_POS]      = 0.f;      vertexes[17].tex[V_POS]      = height;
 
-    vertexes[10].location[0] = alfSize;
-    vertexes[10].location[1] = height;
-    vertexes[10].location[2] = -alfSize;
+    vertexes[18].location[X_POS] = -alfSize; vertexes[18].location[Y_POS] = 0.f;    vertexes[18].location[Z_POS] = -alfSize;
+    vertexes[18].normal[X_POS]   = -alfSize; vertexes[18].normal[Y_POS]   = 0.f;    vertexes[18].normal[Z_POS]   = 0.f;
+    vertexes[18].tex[U_POS]      = alfSize;  vertexes[18].tex[V_POS]      = height;
 
-    vertexes[11].location[0] = alfSize;
-    vertexes[11].location[1] = 0.f;
-    vertexes[11].location[2] = -alfSize;
+    vertexes[19].location[X_POS] = -alfSize; vertexes[19].location[Y_POS] = 0.f;    vertexes[19].location[Z_POS] = alfSize;
+    vertexes[19].normal[X_POS]   = -alfSize; vertexes[19].normal[Y_POS]   = 0.f;    vertexes[19].normal[Z_POS]   = 0.f;
+    vertexes[19].tex[U_POS]      = alfSize;  vertexes[19].tex[V_POS]      = 0.f;
 
-    index[12] = 8;
-    index[13] = 9;
-    index[14] = 10;
-    index[15] = 10;
-    index[16] = 11;
-    index[17] = 8;
+    // Right
+    vertexes[20].location[X_POS] = alfSize;  vertexes[20].location[Y_POS] = height; vertexes[20].location[Z_POS] = -alfSize;
+    vertexes[20].normal[X_POS]   = alfSize;  vertexes[20].normal[Y_POS]   = 0.f;    vertexes[20].normal[Z_POS]   = 0.f;
+    vertexes[20].tex[U_POS]      = 0.f;      vertexes[20].tex[V_POS]      = 0.f;
 
+    vertexes[21].location[X_POS] = alfSize;  vertexes[21].location[Y_POS] = height; vertexes[21].location[Z_POS] = alfSize;
+    vertexes[21].normal[X_POS]   = alfSize;  vertexes[21].normal[Y_POS]   = 0.f;    vertexes[21].normal[Z_POS]   = 0.f;
+    vertexes[21].tex[U_POS]      = 0.f;      vertexes[21].tex[V_POS]      = height;
 
-    // FACE BACK LEFT
+    vertexes[22].location[X_POS] = alfSize;  vertexes[22].location[Y_POS] = 0.f;    vertexes[22].location[Z_POS] = alfSize;
+    vertexes[22].normal[X_POS]   = alfSize;  vertexes[22].normal[Y_POS]   = 0.f;    vertexes[22].normal[Z_POS]   = 0.f;
+    vertexes[22].tex[U_POS]      = alfSize;  vertexes[22].tex[V_POS]      = height;
 
-    vertexes[12].location[0] = -alfSize;
-    vertexes[12].location[1] = height;
-    vertexes[12].location[2] = -alfSize;
+    vertexes[23].location[X_POS] = alfSize;  vertexes[23].location[Y_POS] = 0.f;    vertexes[23].location[Z_POS] = -alfSize;
+    vertexes[23].normal[X_POS]   = alfSize;  vertexes[23].normal[Y_POS]   = 0.f;    vertexes[23].normal[Z_POS]   = 0.f;
+    vertexes[23].tex[U_POS]      = alfSize;  vertexes[23].tex[V_POS]      = 0.f;
 
-    vertexes[13].location[0] = -alfSize;
-    vertexes[13].location[1] = height;
-    vertexes[13].location[2] = alfSize;
+    // Index Array (define our triangles)
+    index[0] = 0;   index[1] = 1;   index[2] = 2;
+    index[3] = 2;   index[4] = 3;   index[5] = 0;
 
-    vertexes[14].location[0] = -alfSize;
-    vertexes[14].location[1] = 0.f;
-    vertexes[14].location[2] = alfSize;
+    index[6] = 4;   index[7] = 5;   index[8] = 6;
+    index[9] = 6;   index[10] = 7;  index[11] = 4;
 
-    vertexes[15].location[0] = -alfSize;
-    vertexes[15].location[1] = 0.f;
-    vertexes[15].location[2] = -alfSize;
+    index[12] = 8;  index[13] = 9;  index[14] = 10;
+    index[15] = 10; index[16] = 11; index[17] = 8;
 
-    index[18] = 12;
-    index[19] = 13;
-    index[20] = 14;
-    index[21] = 14;
-    index[22] = 15;
-    index[23] = 12;
+    index[18] = 12; index[19] = 13; index[20] = 14;
+    index[21] = 14; index[22] = 15; index[23] = 12;
 
+    index[24] = 16; index[25] = 17; index[26] = 18;
+    index[27] = 18; index[28] = 19; index[29] = 16;
 
-    // FACE BACK RIGHT
-
-    vertexes[16].location[0] = alfSize;
-    vertexes[16].location[1] = height;
-    vertexes[16].location[2] = -alfSize;
-
-    vertexes[17].location[0] = -alfSize;
-    vertexes[17].location[1] = height;
-    vertexes[17].location[2] = -alfSize;
-
-    vertexes[18].location[0] = -alfSize;
-    vertexes[18].location[1] = 0.f;
-    vertexes[18].location[2] = -alfSize;
-
-    vertexes[19].location[0] = alfSize;
-    vertexes[19].location[1] = 0.f;
-    vertexes[19].location[2] = -alfSize;
-
-    index[24] = 16;
-    index[25] = 17;
-    index[26] = 18;
-    index[27] = 18;
-    index[28] = 19;
-    index[29] = 16;
-
-
-    // FACE B0TTOM
-
-    vertexes[20].location[0] = -alfSize;
-    vertexes[20].location[1] = 0.f;
-    vertexes[20].location[2] = alfSize;
-
-    vertexes[21].location[0] = alfSize;
-    vertexes[21].location[1] = 0.f;
-    vertexes[21].location[2] = alfSize;
-
-    vertexes[22].location[0] = alfSize;
-    vertexes[22].location[1] = 0.f;
-    vertexes[22].location[2] = -alfSize;
-
-    vertexes[23].location[0] = -alfSize;
-    vertexes[23].location[1] = 0.f;
-    vertexes[23].location[2] = -alfSize;
-
-    index[30] = 20;
-    index[31] = 21;
-    index[32] = 22;
-    index[33] = 22;
-    index[34] = 23;
-    index[35] = 20;
-
-
-    // Normals
-    for (int i = 0; i < 24; i+=3)
-    {
-        vertexes[i].normal[0]    = (vertexes[i+1].location[1] - vertexes[i].location[1]) * (vertexes[i+2].location[2] - vertexes[i].location[2]);
-        vertexes[i].normal[0]   -= (vertexes[i+1].location[2] - vertexes[i].location[2]) * (vertexes[i+2].location[1] - vertexes[i].location[1]);
-
-        vertexes[i+1].normal[1]  = (vertexes[i+1].location[2] - vertexes[i].location[2]) * (vertexes[i+2].location[0] - vertexes[i].location[0]);
-        vertexes[i+1].normal[1] -= (vertexes[i+1].location[0] - vertexes[i].location[0]) * (vertexes[i+2].location[2] - vertexes[i].location[2]);
-
-        vertexes[i+2].normal[2]  = (vertexes[i+1].location[0] - vertexes[i].location[0]) * (vertexes[i+2].location[1] - vertexes[i].location[1]);
-        vertexes[i+2].normal[2] -= (vertexes[i+1].location[1] - vertexes[i].location[1]) * (vertexes[i+2].location[0] - vertexes[i].location[0]);
-    }
-
+    index[30] = 20; index[31] = 21; index[32] = 22;
+    index[33] = 22; index[34] = 23; index[35] = 20;
 
     // Colors
     for (int i = 0; i < 24; i++)
@@ -189,27 +139,34 @@ Mesh::Mesh(Entity *e, float size, float height, float red, float green, float bl
         vertexes[i].color[3] = alpha;
     }
 
-    // TODO fill the textures coordinates
-
     //loadData();
     //updateConnectivity();
 }
 
 void Mesh::draw()
 {
-    draw(GL_TRIANGLES);
+    glBegin(GL_TRIANGLES);
+    for (unsigned int i = 0; i < totalIndex; i ++)
+    {
+        glColor4f(vertexes[index[i]].color[0], vertexes[index[i]].color[1], vertexes[index[i]].color[2], vertexes[index[i]].color[3]);
+        glNormal3f(vertexes[index[i]].normal[0], vertexes[index[i]].normal[1], vertexes[index[i]].normal[2]);
+        glVertex3f(vertexes[index[i]].location[0], vertexes[index[i]].location[1], vertexes[index[i]].location[2]);
+    }
+    glEnd();
 }
 
 void Mesh::drawOutline()
 {
-    draw(GL_LINE_LOOP);
-}
-
-void Mesh::draw(GLenum type)
-{
-    glBegin(type);
     for (unsigned int i = 0; i < totalIndex; i ++)
     {
+        if (i%3 == 0)
+        {
+            if (i != 0)
+            {
+                glEnd();
+            }
+            glBegin(GL_LINE_LOOP);
+        }
         glColor4f(vertexes[index[i]].color[0], vertexes[index[i]].color[1], vertexes[index[i]].color[2], vertexes[index[i]].color[3]);
         glNormal3f(vertexes[index[i]].normal[0], vertexes[index[i]].normal[1], vertexes[index[i]].normal[2]);
         glVertex3f(vertexes[index[i]].location[0], vertexes[index[i]].location[1], vertexes[index[i]].location[2]);

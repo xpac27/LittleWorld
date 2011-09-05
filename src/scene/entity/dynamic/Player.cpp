@@ -7,6 +7,7 @@ Player::Player(World *W, float s) : Dynamic(W, s)
     speed = 200.f;
 
     position.x = 512.f;
+    position.y = 0.f;
     position.z = 512.f;
 }
 

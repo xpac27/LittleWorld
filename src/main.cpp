@@ -176,7 +176,7 @@ int main()
             clock.Reset();
         }
 
-        // Draw...
+        //Draw...
         game.draw();
 
         // Finally, display the rendered frame on screen
