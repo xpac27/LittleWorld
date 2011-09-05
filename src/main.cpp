@@ -101,7 +101,7 @@ int main()
     Clock clock;
 
     // Create the game object
-    Game game(input);
+    Game game;
     game.init();
 
     // Start game loop

@@ -2,18 +2,9 @@
 
 using namespace std;
 
-Enemy::Enemy(World *W) : DynamicObject(W, 32.f, true)
+Enemy::Enemy(World *W, float s) : Dynamic(W, s)
 {
     speed = 120.f;
-
-    setSize(32.f);
-}
-
-void Enemy::draw()
-{
-    glColor4f(1.f, 0.f, 0.f, 1.f);
-
-    Object::draw();
 }
 
 void Enemy::update(float time)

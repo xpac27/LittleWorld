@@ -1,30 +1,21 @@
-#include "DynamicObject.h"
+#include "Dynamic.h"
 
 using namespace std;
 
-DynamicObject::DynamicObject(World *W, float h, bool s) : Object(W, h, s)
+Dynamic::Dynamic(World *W, float s) : Entity(W, s)
 {
     canMove = false;
 }
 
-void DynamicObject::init(Pathfinder *p)
-{
-    pathfinder = p;
-}
-
-void DynamicObject::update(float time)
+void Dynamic::update(float time)
 {
 }
 
-void DynamicObject::remove()
+void Dynamic::onNotify(unsigned const int type)
 {
 }
 
-void DynamicObject::onNotify(unsigned const int type)
-{
-}
-
-void DynamicObject::move(float time)
+void Dynamic::move(float time)
 {
     if (canMove == true)
     {
@@ -44,12 +35,12 @@ void DynamicObject::move(float time)
     }
 }
 
-void DynamicObject::resetDestination()
+void Dynamic::resetDestination()
 {
     destination = position;
 }
 
-void DynamicObject::setDestination(Vector3 *d)
+void Dynamic::setDestination(Vector3 *d)
 {
     destination = *d;
     direction = destination - position;
@@ -57,14 +48,17 @@ void DynamicObject::setDestination(Vector3 *d)
     canMove = true;
 }
 
-void DynamicObject::setPath(float x, float z)
+void Dynamic::setPath(float x, float z)
 {
     resetDestination();
-    path = pathfinder->getPath(position.x, position.z, x, z, getSize());
+    // TODO:
+    //path = pathfinder->getPath(position.x, position.z, x, z, getSize());
+    path.clear();
+    path.push_back(new Vector3(x, 0.f, z));
     canMove = true;
 }
 
-bool DynamicObject::isCanMove()
+bool Dynamic::isCanMove()
 {
     return canMove;
 }

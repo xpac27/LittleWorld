@@ -1,12 +1,8 @@
 #ifndef DEF_GAME
 #define DEF_GAME
 
-#include "../scene/World.h"
-#include "../scene/Light.h"
-#include "../scene/object/dynamicObject/Player.h"
-#include "../scene/object/dynamicObject/Enemy.h"
-#include "../scene/object/staticObject/Tile.h"
 #include "../resources/Conf.h"
+#include "../scene/World.h"
 
 #include <SFML/System/Randomizer.hpp>
 #include <iostream>
@@ -15,7 +11,7 @@ class Game
 {
     public:
 
-        Game(const sf::Input &i);
+        Game();
 
         void init();
         void draw();
@@ -25,8 +21,6 @@ class Game
 
 
     private:
-
-        const sf::Input &input;
 
         World world;
 

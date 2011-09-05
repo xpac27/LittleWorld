@@ -1,12 +1,18 @@
 #ifndef DEF_CAMERA
 #define DEF_CAMERA
 
-#include "Light.h"
-#include "Object.h"
+#include "../resources/Conf.h"
+
 #include "../math/Vector3.h"
 #include "../math/Matrix4x4f.h"
 #include "../math/Frustum.h"
-#include "../resources/Conf.h"
+
+#include "../graphics/Object.h"
+#include "../graphics/object/Mesh.h"
+#include "../graphics/object/Light.h"
+#include "../graphics/object/Sprite.h"
+
+#include "Entity.h"
 
 #include <SFML/Graphics.hpp>
 #include <list>
@@ -19,8 +25,8 @@ class Camera
         Camera();
 
         void update(float time);
-        void draw(std::list<Object*> *objects, std::list<Light*> *lights);
-        void setFocus(Object *o);
+        void draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::list<Light*> *lights);
+        void setFocus(Entity *o);
 
         float getX();
         float getY();
@@ -29,17 +35,17 @@ class Camera
 
     private:
 
-        void drawAll(std::list<Object*> *objects);
-        void outlineAll(std::list<Object*> *objects);
-        void drawAllShadows(std::list<Object*> *objects, Light *l);
-        void drawAllLigthned(std::list<Object*> *objects);
-        void updateAllShadows(std::list<Object*> *objects, Light *l);
-        void updateObjectsVisibility(std::list<Object*> *objects);
-        void updateObjectsLightning(std::list<Object*> *objects, Light *l);
+        void drawAllMeshes(std::list<Mesh*> *objects);
+        //void outlineAll(std::list<Object*> *objects);
+        //void drawAllShadows(std::list<Object*> *objects, Light *l);
+        //void drawAllLigthned(std::list<Object*> *objects);
+        //void updateAllShadows(std::list<Object*> *objects, Light *l);
+        //void updateObjectsVisibility(std::list<Object*> *objects);
+        //void updateObjectsLightning(std::list<Object*> *objects, Light *l);
         void updateViewFrustum();
         void setupLight(Light *l);
 
-        Object* focus;
+        Entity* focus;
 
         Vector3 position;
 

@@ -1,7 +1,7 @@
 #ifndef PATHFINDER
 #define PATHFINDER
 
-#include "../scene/object/StaticObject.h"
+//#include "../scene/object/StaticObject.h"
 #include "../math/Vector3.h"
 #include "Block.h"
 
@@ -16,7 +16,7 @@ class Pathfinder
 
         Pathfinder();
 
-        void addStaticObject(StaticObject *o);
+        void addStaticObject(/*StaticObject *o*/);
 
         std::vector<Vector3*> getPath(float fromX, float fromY, float toX, float toY, float s);
 

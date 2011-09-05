@@ -2,14 +2,12 @@
 
 using namespace std;
 
-Player::Player(World *W) : DynamicObject(W, 64.f, true)
+Player::Player(World *W, float s) : Dynamic(W, s)
 {
     speed = 200.f;
 
     position.x = 512.f;
     position.z = 512.f;
-
-    setSize(64.f);
 }
 
 void Player::onNotify(unsigned const int type)
@@ -18,13 +16,6 @@ void Player::onNotify(unsigned const int type)
     {
         setPath(world->mouseX, world->mouseY);
     }
-}
-
-void Player::draw()
-{
-    glColor4f(1.f, 0.8f, 0.f, 1.f);
-
-    Object::draw();
 }
 
 void Player::update(float time)

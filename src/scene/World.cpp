@@ -11,49 +11,17 @@ World::World()
 
 void World::draw()
 {
-    list<Object*> objectList;
-    for (list<StaticObject*>::iterator i = staticObjectList.begin(); i != staticObjectList.end(); ++ i)
-    {
-        objectList.push_back(*i);
-    }
-    for (list<DynamicObject*>::iterator i = dynamicObjectList.begin(); i != dynamicObjectList.end(); ++ i)
-    {
-        objectList.push_back(*i);
-    }
-    camera.draw(&objectList, &lightList);
+    camera.draw(&meshList, &spriteList, &lightList);
 }
 
 void World::update(float time)
 {
-    for (list<DynamicObject*>::iterator i = dynamicObjectList.begin(); i != dynamicObjectList.end(); ++ i)
+    for (list<Dynamic*>::iterator i = dynamicList.begin(); i != dynamicList.end(); ++ i)
     {
         (*i)->update(time);
     }
 
     camera.update(time);
-}
-
-void World::addDynamicObject(DynamicObject *o)
-{
-    o->init(&pathfinder);
-    dynamicObjectList.push_back(o);
-}
-
-void World::addStaticObject(StaticObject *o)
-{
-    o->init();
-    staticObjectList.push_back(o);
-    pathfinder.addStaticObject(o);
-}
-
-void World::addLight(Light *o)
-{
-    lightList.push_back(o);
-}
-
-void World::setFocus(Object *o)
-{
-    camera.setFocus(o);
 }
 
 void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
@@ -73,9 +41,29 @@ void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
 
 void World::dispatch(unsigned const int type)
 {
-    for (list<DynamicObject*>::iterator i = dynamicObjectList.begin(); i != dynamicObjectList.end(); ++ i)
+    for (list<Dynamic*>::iterator i = dynamicList.begin(); i != dynamicList.end(); ++ i)
     {
         (*i)->onNotify(type);
     }
+}
+
+void World::addPlayer(bool focus)
+{
+}
+
+void World::addEnemy(float x, float y)
+{
+}
+
+void World::addWallTile(float x, float y, float h)
+{
+}
+
+void World::addFloorTile(float x, float y)
+{
+}
+
+void World::addLight(float x, float y, float z, float r, float v, float b)
+{
 }
 

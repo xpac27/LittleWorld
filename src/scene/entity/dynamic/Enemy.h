@@ -1,19 +1,18 @@
 #ifndef DEF_ENEMY
 #define DEF_ENEMY
 
-#include "../DynamicObject.h"
+#include "../Dynamic.h"
 #include "../../World.h"
 
 #include <SFML/System/Randomizer.hpp>
 #include <iostream>
 
-class Enemy : public DynamicObject
+class Enemy : public Dynamic
 {
     public:
 
-        Enemy(World *W);
+        Enemy(World *W, float s);
 
-        virtual void draw();
         virtual void update(float time);
 };
 

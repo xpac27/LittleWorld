@@ -3,7 +3,7 @@
 using namespace std;
 using namespace sf;
 
-Game::Game(const Input &i) : input(i)
+Game::Game()
 {
     windowScale       = 1.f;
     windowPaddingLeft = 0.f;
@@ -12,45 +12,39 @@ Game::Game(const Input &i) : input(i)
 
 void Game::init()
 {
-    Player *p = new Player(&world);
-
-    world.addDynamicObject(p);
-    world.setFocus(p);
+    world.addPlayer(true);
 
     for (unsigned int i = 0; i < 20; i ++)
     {
-        Enemy *e = new Enemy(&world);
-        e->setPosition(Randomizer::Random(0, WORLD_WIDTH), 0.f, Randomizer::Random(0, WORLD_HEIGHT));
-        world.addDynamicObject(e);
+        world.addEnemy(float(Randomizer::Random(0, WORLD_WIDTH)), float(Randomizer::Random(0, WORLD_HEIGHT)));
     }
 
+    world.addWallTile(1.f * 128.f, 4.f * 128.f, 64.f);
+    world.addWallTile(2.f * 128.f, 10.f * 128.f, 24.f);
+    world.addWallTile(4.f * 128.f, 1.f * 128.f, 128.f);
+    world.addWallTile(8.f * 128.f, 7.f * 128.f, 32.f);
+    world.addWallTile(6.f * 128.f, 6.f * 128.f, 48.f);
+    world.addWallTile(5.f * 128.f, 6.f * 128.f, 96.f);
+    world.addWallTile(5.f * 128.f, 5.f * 128.f, 64.f);
+    world.addWallTile(5.f * 128.f, 8.f * 128.f, 64.f);
+    world.addWallTile(4.f * 128.f, 8.f * 128.f, 64.f);
+    world.addWallTile(12.f * 128.f, 8.f * 128.f, 24.f);
+    world.addWallTile(11.f * 128.f, 5.f * 128.f, 48.f);
+    world.addWallTile(15.f * 128.f, 10.f * 128.f, 32.f);
+    world.addWallTile(10.f * 128.f, 13.f * 128.f, 64.f);
+    world.addWallTile(8.f * 128.f, 16.f * 128.f, 32.f);
     for (unsigned int x(0); x < WORLD_WIDTH / 128; x ++)
     {
         for (unsigned int y(0); y < WORLD_HEIGHT / 128; y ++)
         {
-            world.addStaticObject(new Tile(&world, x * 128.f, 0.f, y * 128.f, 0.f));
+            world.addFloorTile(x * 128.f, y * 128.f);
         }
     }
 
-    world.addStaticObject(new Tile(&world, 1.f * 128.f, 0.f, 4.f * 128.f, 64.f));
-    world.addStaticObject(new Tile(&world, 2.f * 128.f, 0.f, 10.f * 128.f, 24.f));
-    world.addStaticObject(new Tile(&world, 4.f * 128.f, 0.f, 1.f * 128.f, 128.f));
-    world.addStaticObject(new Tile(&world, 8.f * 128.f, 0.f, 7.f * 128.f, 32.f));
-    world.addStaticObject(new Tile(&world, 6.f * 128.f, 0.f, 6.f * 128.f, 48.f));
-    world.addStaticObject(new Tile(&world, 5.f * 128.f, 0.f, 6.f * 128.f, 96.f));
-    world.addStaticObject(new Tile(&world, 5.f * 128.f, 0.f, 5.f * 128.f, 64.f));
-    world.addStaticObject(new Tile(&world, 5.f * 128.f, 0.f, 8.f * 128.f, 64.f));
-    world.addStaticObject(new Tile(&world, 4.f * 128.f, 0.f, 8.f * 128.f, 64.f));
-    world.addStaticObject(new Tile(&world, 12.f * 128.f, 0.f, 8.f * 128.f, 24.f));
-    world.addStaticObject(new Tile(&world, 11.f * 128.f, 0.f, 5.f * 128.f, 48.f));
-    world.addStaticObject(new Tile(&world, 15.f * 128.f, 0.f, 10.f * 128.f, 32.f));
-    world.addStaticObject(new Tile(&world, 10.f * 128.f, 0.f, 13.f * 128.f, 64.f));
-    world.addStaticObject(new Tile(&world, 8.f * 128.f, 0.f, 16.f * 128.f, 32.f));
-
-    world.addLight(new Light(256.f, 128.f, 256.f, 1.f, 0.f, 0.f));    // 2x2
-    world.addLight(new Light(1024.f, 120.f, 1024.f, 0.f, 1.f, 0.f));  // 8x8
-    world.addLight(new Light(1280.f, 120.f, 512.f, 0.f, 0.f, 1.f));   // 10x4
-    world.addLight(new Light(640.f, 120.f, 512.f, 1.f, 1.f, 1.f));    // 5x4
+    world.addLight(256.f, 128.f, 256.f, 1.f, 0.f, 0.f);    // 2x2
+    world.addLight(1024.f, 120.f, 1024.f, 0.f, 1.f, 0.f);  // 8x8
+    world.addLight(1280.f, 120.f, 512.f, 0.f, 0.f, 1.f);   // 10x4
+    world.addLight(640.f, 120.f, 512.f, 1.f, 1.f, 1.f);    // 5x4
 }
 
 void Game::draw()

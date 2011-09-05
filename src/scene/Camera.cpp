@@ -13,14 +13,14 @@ Camera::Camera()
     position.z = 0.f;
 }
 
-void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
+void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::list<Light*> *lights)
 {
     // Translate to camera's position
     glPushMatrix();
     glTranslatef(position.x * -1.f,  position.y * -1.f, position.z * -1.f);
 
     updateViewFrustum();
-    updateObjectsVisibility(objects);
+    //updateObjectsVisibility(objects);
 
     // Use a black ambient color
     GLfloat ambientColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
@@ -48,7 +48,7 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
     glClear(GL_DEPTH_BUFFER_BIT);
 
     glFrontFace(GL_CW);
-    drawAll(objects);
+    drawAllMeshes(meshes);
 
     glDepthMask(GL_FALSE);
 
@@ -65,41 +65,41 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
         // http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html SEC-9.5
 
         // Skeep this light if it's too far
-        if ((*l)->getIntensityAtPosition(position) < 0.004f) continue;
+        //if ((*l)->getIntensityAtPosition(position) < 0.004f) continue;
 
         // STEP 3: render shadow volumes
         // =============================
 
-        updateObjectsLightning(objects, *l);
+        //updateObjectsLightning(objects, *l);
 
-        glClear(GL_STENCIL_BUFFER_BIT);
+        //glClear(GL_STENCIL_BUFFER_BIT);
 
-        glDepthFunc(GL_LESS);
-        glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFFFL);
+        //glDepthFunc(GL_LESS);
+        //glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFFFL);
 
-        updateAllShadows(objects, *l);
+        //updateAllShadows(objects, *l);
 
-        #ifdef GL_EXT_stencil_two_side && GL_EXT_stencil_wrap
+        //#ifdef GL_EXT_stencil_two_side && GL_EXT_stencil_wrap
 
-        glEnable(GL_STENCIL_TEST_TWO_SIDE_EXT);
+        //glEnable(GL_STENCIL_TEST_TWO_SIDE_EXT);
 
-        glActiveStencilFaceEXT(GL_BACK);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_INCR_WRAP_EXT);
+        //glActiveStencilFaceEXT(GL_BACK);
+        //glStencilOp(GL_KEEP, GL_KEEP, GL_INCR_WRAP_EXT);
 
-        glActiveStencilFaceEXT(GL_FRONT);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_DECR_WRAP_EXT);
+        //glActiveStencilFaceEXT(GL_FRONT);
+        //glStencilOp(GL_KEEP, GL_KEEP, GL_DECR_WRAP_EXT);
 
-        drawAllShadows(objects, *l);
+        //drawAllShadows(objects, *l);
 
-        glDisable(GL_STENCIL_TEST_TWO_SIDE_EXT);
+        //glDisable(GL_STENCIL_TEST_TWO_SIDE_EXT);
 
-        #else
+        //#else
 
-        glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_INCR);
-        glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_DECR);
-        drawAllShadows(objects, *l);
+        //glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_INCR);
+        //glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_DECR);
+        //drawAllShadows(objects, *l);
 
-        #endif
+        //#endif
 
 
         // STEP 4: render the scene
@@ -119,7 +119,7 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
 
         glFrontFace(GL_CW);
         glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-        drawAll(objects);
+        drawAllMeshes(meshes);
 
         glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
         glDisable(GL_LIGHTING);
@@ -136,15 +136,15 @@ void Camera::draw(std::list<Object*> *objects, std::list<Light*> *lights)
     // STEP 4: wireframe
     // =================
 
-    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-    glEnable(GL_BLEND);
+    //glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+    //glEnable(GL_BLEND);
 
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    outlineAll(objects);
+    //outlineAll(objects);
 
-    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
-    glDisable(GL_BLEND);
+    //glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+    //glDisable(GL_BLEND);
 
     glPopMatrix();
 }
@@ -190,11 +190,11 @@ void Camera::updateViewFrustum()
     viewFrustum.update(projMatrix * viewMatrix);
 }
 
-void Camera::setFocus(Object *o)
+void Camera::setFocus(Entity *e)
 {
-    focus = o;
-    position.x = o->getX();
-    position.z = o->getZ();
+    focus = e;
+    position.x = e->getX();
+    position.z = e->getZ();
 }
 
 float Camera::getX()
@@ -212,72 +212,33 @@ float Camera::getZ()
     return position.z;
 }
 
-void Camera::drawAll(std::list<Object*> *objects)
+void Camera::drawAllMeshes(std::list<Mesh*> *objects)
 {
-    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    for (list<Mesh*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
-        if ((*o)->isVisible())
-        {
+        //if ((*o)->isVisible())
+        //{
             glPushMatrix();
             glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
             (*o)->draw();
             glPopMatrix();
-        }
+        //}
     }
 }
 
-void Camera::outlineAll(std::list<Object*> *objects)
-{
-    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    {
-        if ((*o)->isVisible())
-        {
-            glPushMatrix();
-            glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-            (*o)->drawOutline();
-            glPopMatrix();
-        }
-    }
-}
-
-void Camera::drawAllLigthned(std::list<Object*> *objects)
-{
-    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    {
-        if ((*o)->isVisible() && (*o)->isLightned())
-        {
-            glPushMatrix();
-            glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-            (*o)->draw();
-            glPopMatrix();
-        }
-    }
-}
-
-void Camera::drawAllShadows(std::list<Object*> *objects, Light *l)
-{
-    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    {
-        if ((*o)->isCastingShadow() && (*o)->isLightned())
-        {
-            glPushMatrix();
-            glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-            (*o)->drawShadow(l);
-            glPopMatrix();
-        }
-    }
-}
-
-void Camera::updateAllShadows(std::list<Object*> *objects, Light *l)
-{
-    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    {
-        if ((*o)->isCastingShadow() && (*o)->isLightned())
-        {
-            (*o)->updateShadows(l);
-        }
-    }
-}
+//void Camera::outlineAll(std::list<Object*> *objects)
+//{
+    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    //{
+        //if ((*o)->isVisible())
+        //{
+            //glPushMatrix();
+            //glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
+            //(*o)->drawOutline();
+            //glPopMatrix();
+        //}
+    //}
+//}
 
 void Camera::setupLight(Light *l)
 {
@@ -287,19 +248,65 @@ void Camera::setupLight(Light *l)
     glPopMatrix();
 }
 
-void Camera::updateObjectsVisibility(std::list<Object*> *objects)
-{
-    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    {
-        (*o)->setVisibility(viewFrustum.sphereInFrustum((*o)->getPosition(), (*o)->getSize()));
-    }
-}
+//void Camera::drawAllLigthned(std::list<Object*> *objects)
+//{
+    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    //{
+        //if ((*o)->isVisible() && (*o)->isLightned())
+        //{
+            //glPushMatrix();
+            //glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
+            //(*o)->draw();
+            //glPopMatrix();
+        //}
+    //}
+//}
 
-void Camera::updateObjectsLightning(std::list<Object*> *objects, Light *l)
-{
-    for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    {
-        (*o)->setLightned(l->getIntensityAtPosition((*o)->getPosition()) > 0.004f);
-    }
-}
+//void Camera::drawAllShadows(std::list<Object*> *objects, Light *l)
+//{
+    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    //{
+        //if ((*o)->isCastingShadow() && (*o)->isLightned())
+        //{
+            //glPushMatrix();
+            //glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
+            //// TODO:
+            ////shape.drawShadow(l->getPosition() - position, false);
+            //(*o)->drawShadow(l);
+            //glPopMatrix();
+        //}
+    //}
+//}
+
+//void Camera::updateAllShadows(std::list<Object*> *objects, Light *l)
+//{
+    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    //{
+        //if ((*o)->isCastingShadow() && (*o)->isLightned())
+        //{
+            //// TODO:
+            ////if (l->getIntensityAtPosition(position) > 0.01f)
+            ////{
+                ////shape.updateShadows(l->getPosition() - position);
+            ////}
+            //(*o)->updateShadows(l);
+        //}
+    //}
+//}
+
+//void Camera::updateObjectsVisibility(std::list<Object*> *objects)
+//{
+    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    //{
+        //(*o)->setVisibility(viewFrustum.sphereInFrustum((*o)->getPosition(), (*o)->getSize()));
+    //}
+//}
+
+//void Camera::updateObjectsLightning(std::list<Object*> *objects, Light *l)
+//{
+    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    //{
+        //(*o)->setLightned(l->getIntensityAtPosition((*o)->getPosition()) > 0.004f);
+    //}
+//}
 

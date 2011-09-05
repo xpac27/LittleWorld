@@ -1,18 +1,17 @@
 #ifndef DEF_PLAYER
 #define DEF_PLAYER
 
-#include "../DynamicObject.h"
+#include "../Dynamic.h"
 #include "../../World.h"
 
 #include <iostream>
 
-class Player : public DynamicObject
+class Player : public Dynamic
 {
     public:
 
-        Player(World *W);
+        Player(World *W, float s);
 
-        virtual void draw();
         virtual void update(float time);
         virtual void onNotify(unsigned const int type);
 

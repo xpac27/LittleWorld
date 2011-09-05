@@ -1,26 +1,24 @@
-#ifndef DEF_DYNAMICOBJECT
-#define DEF_DYNAMICOBJECT
+#ifndef DEF_DYNAMIC
+#define DEF_DYNAMIC
 
-#include "../Object.h"
+#include "../Entity.h"
 #include "../../math/Vector3.h"
 #include "../../math/Vector3Util.h"
-#include "../../ai/Pathfinder.h"
 
 #include <iostream>
+#include <vector>
 
 class World;
 
-class DynamicObject : public Object
+class Dynamic : public Entity
 {
     public:
 
-        DynamicObject(World *W, float h, bool s);
+        Dynamic(World *W, float s);
 
         virtual void update(float time);
-        virtual void remove();
         virtual void onNotify(unsigned const int type);
 
-        void init(Pathfinder *p);
         void move(float time);
         void setDestination(Vector3 *d);
         void setPath(float x, float z);
@@ -37,8 +35,6 @@ class DynamicObject : public Object
     private:
 
         std::vector<Vector3*> path;
-
-        Pathfinder *pathfinder;
 
         Vector3 destination;
         Vector3 direction;

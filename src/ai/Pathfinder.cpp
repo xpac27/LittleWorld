@@ -6,19 +6,19 @@ Pathfinder::Pathfinder()
 {
 }
 
-void Pathfinder::addStaticObject(StaticObject *o)
+void Pathfinder::addStaticObject(/*StaticObject *o*/)
 {
-    int x = o->getGridX();
-    int y = o->getGridZ();
+    //int x = o->getGridX();
+    //int y = o->getGridZ();
 
-    if (!blockExists(x, y))
-    {
-        grid[x][y] = new Block(x, y, o->isWalkable());
-    }
-    else if (!o->isWalkable())
-    {
-        grid[x][y]->walkable = false;
-    }
+    //if (!blockExists(x, y))
+    //{
+        //grid[x][y] = new Block(x, y, o->isWalkable());
+    //}
+    //else if (!o->isWalkable())
+    //{
+        //grid[x][y]->walkable = false;
+    //}
 }
 
 vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float toY, float s)

@@ -1,6 +1,6 @@
 #include "Light.h"
 
-Light::Light(float x, float y, float z, float r, float g, float b)
+Light::Light(Entity *e, float r, float g, float b) : Object(e)
 {
     red   = r;
     green = g;
@@ -9,13 +9,11 @@ Light::Light(float x, float y, float z, float r, float g, float b)
     ca = 0.5f;
     la = 0.004f;
     qa = 0.00005f;
-
-    setPosition(x, y, z);
 }
 
 void Light::setup()
 {
-    GLfloat LightPos[] = {0.f, 0.f, position.y, 1.f};
+    GLfloat LightPos[] = {0.f, 0.f, 100.f, 1.f}; // TODO 100.f was the y position ...
     GLfloat LightAmb[] = {red, green, blue, 0.f};
     GLfloat LightDif[] = {red, green, blue, 1.f};
 
@@ -28,41 +26,8 @@ void Light::setup()
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, qa);
 }
 
-void Light::setPosition(float x, float y, float z)
-{
-    position.x = x;
-    position.y = y;
-    position.z = z;
-}
-
-// TODO compress methods
-float Light::getX()
-{
-    return position.x;
-}
-
-float Light::getY()
-{
-    return position.y;
-}
-
-float Light::getZ()
-{
-    return position.z;
-}
-
 float Light::getIntensityFromDistance(float distance)
 {
     return 1 / (ca + la * distance + qa * pow(distance, 2));
-}
-
-float Light::getIntensityAtPosition(Vector3 p)
-{
-    return getIntensityFromDistance(Vector3Util::dist(position, p));
-}
-
-Vector3 Light::getPosition()
-{
-    return position;
 }
 
