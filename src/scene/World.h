@@ -31,7 +31,7 @@ class World
         void addEnemy(float x, float z);
         void addWallTile(float x, float z, float h);
         void addFloorTile(float x, float z);
-        void addLight(float x, float z, float y, float r, float v, float b);
+        void addLight(float x, float z, float y, float r, float g, float b);
 
         static unsigned const int ON_MOUSE_LEFT_DOWN;
         static unsigned const int ON_WINDOW_RESIZED;

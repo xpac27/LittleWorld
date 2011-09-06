@@ -61,17 +61,19 @@ void World::addEnemy(float x, float z)
 
 void World::addWallTile(float x, float z, float h)
 {
-    staticList.push_back(new Tile(this, x, z, 128.f, true));
+    staticList.push_back(new Tile(this, x, z, 128.f, false));
     meshList.push_back(new Mesh(staticList.back(), 128.f, h, 1.f, 1.f, 1.f, 1.f));
 }
 
 void World::addFloorTile(float x, float z)
 {
     staticList.push_back(new Tile(this, x, z, 128.f, true));
-    meshList.push_back(new Mesh(staticList.back(), 128.f, 8.f, 1.f, 1.f, 1.f, 1.f));
+    spriteList.push_back(new Sprite(staticList.back(), 128.f, 0.f, 1.f, 1.f, 1.f, 1.f));
 }
 
-void World::addLight(float x, float z, float y, float r, float v, float b)
+void World::addLight(float x, float y, float z, float r, float g, float b)
 {
+    staticList.push_back(new Emitter(this, x, y, z));
+    lightList.push_back(new Light(staticList.back(), r, g, b));
 }
 

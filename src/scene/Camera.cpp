@@ -49,6 +49,8 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
 
     glFrontFace(GL_CW);
     drawAllMeshes(meshes);
+    drawAllSprites(sprites);
+    drawAllLights(lights);
 
     glDepthMask(GL_FALSE);
 
@@ -105,27 +107,29 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
         // STEP 4: render the scene
         // ========================
 
-        glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-        glEnable(GL_LIGHTING);
-        glEnable(GL_LIGHT0);
-        glEnable(GL_BLEND);
-        glEnable(GL_COLOR_MATERIAL); // TODO avoid
+        //glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+        //glEnable(GL_LIGHTING);
+        //glEnable(GL_LIGHT0);
+        //glEnable(GL_BLEND);
+        //glEnable(GL_COLOR_MATERIAL); // TODO avoid
 
-        setupLight(*l);
+        //setupLight(*l);
 
-        glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glDepthFunc(GL_LEQUAL);
+        //glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
+        //glBlendFunc(GL_ONE, GL_ONE);
+        //glDepthFunc(GL_LEQUAL);
 
-        glFrontFace(GL_CW);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-        drawAllMeshes(meshes);
+        //glFrontFace(GL_CW);
+        //glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+        //drawAllMeshes(meshes);
+        //drawAllSprites(sprites);
+        //drawAllLights(lights);
 
-        glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
-        glDisable(GL_LIGHTING);
-        glDisable(GL_LIGHT0);
-        glDisable(GL_BLEND);
-        glDisable(GL_COLOR_MATERIAL);
+        //glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+        //glDisable(GL_LIGHTING);
+        //glDisable(GL_LIGHT0);
+        //glDisable(GL_BLEND);
+        //glDisable(GL_COLOR_MATERIAL);
     }
 
     glDisable(GL_STENCIL_TEST);
@@ -142,6 +146,8 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     outlineAllMeshes(meshes);
+    outlineAllSprites(sprites);
+    outlineAllLights(lights);
 
     glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
     glDisable(GL_BLEND);
@@ -212,17 +218,33 @@ float Camera::getZ()
     return position.z;
 }
 
+void Camera::drawObject(Object *o)
+{
+    //if (o->isVisible())
+    //{
+        glPushMatrix();
+        glTranslatef(o->getX(), o->getY(), o->getZ());
+        o->draw();
+        glPopMatrix();
+    //}
+}
+
+void Camera::outlineObject(Object *o)
+{
+    //if (o->isVisible())
+    //{
+        glPushMatrix();
+        glTranslatef(o->getX(), o->getY(), o->getZ());
+        o->outline();
+        glPopMatrix();
+    //}
+}
+
 void Camera::drawAllMeshes(std::list<Mesh*> *objects)
 {
     for (list<Mesh*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
-        //if ((*o)->isVisible())
-        //{
-            glPushMatrix();
-            glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-            (*o)->draw();
-            glPopMatrix();
-        //}
+        drawObject(*o);
     }
 }
 
@@ -230,13 +252,39 @@ void Camera::outlineAllMeshes(std::list<Mesh*> *objects)
 {
     for (list<Mesh*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     {
-        //if ((*o)->isVisible())
-        //{
-            glPushMatrix();
-            glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-            (*o)->drawOutline();
-            glPopMatrix();
-        //}
+        outlineObject(*o);
+    }
+}
+
+void Camera::drawAllSprites(std::list<Sprite*> *objects)
+{
+    for (list<Sprite*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        drawObject(*o);
+    }
+}
+
+void Camera::outlineAllSprites(std::list<Sprite*> *objects)
+{
+    for (list<Sprite*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        outlineObject(*o);
+    }
+}
+
+void Camera::drawAllLights(std::list<Light*> *objects)
+{
+    for (list<Light*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        outlineObject(*o);
+    }
+}
+
+void Camera::outlineAllLights(std::list<Light*> *objects)
+{
+    for (list<Light*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        outlineObject(*o);
     }
 }
 

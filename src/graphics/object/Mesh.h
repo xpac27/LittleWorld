@@ -1,29 +1,28 @@
 #ifndef DEF_MESH
 #define DEF_MESH
 
-// Location/Normals
 #define X_POS 0
 #define Y_POS 1
 #define Z_POS 2
 
-// Texture Coordinates
 #define U_POS 0
 #define V_POS 1
 
-// Colours
 #define R_POS 0
 #define G_POS 1
 #define B_POS 2
 #define A_POS 3
 
 #include "../Object.h"
-#include "../../math/Vector3.h"
+//#include "../../math/Vector3.h"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
 //#define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+#ifndef DEF_VERTEX
+#define DEF_VERTEX
 typedef struct
 {
         GLfloat location[3];
@@ -32,7 +31,9 @@ typedef struct
         GLfloat color[4];
         GLubyte padding[16]; // Pads the struct out to 64 bytes for performance increase
 } Vertex;
+#endif
 
+// TODO Have an instance of obj instead of the struct and the long constructor
 
 class Mesh : public Object
 {
@@ -41,7 +42,7 @@ class Mesh : public Object
         Mesh(Entity *e, float size, float height, float red, float green, float blue, float alpha);
 
         virtual void draw();
-        virtual void drawOutline();
+        virtual void outline();
         //void drawShadow(Vector3 lightPosition, bool cap);
         //void updateShadows(Vector3 lightPosition);
         //void updateConnectivity();

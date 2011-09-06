@@ -1,5 +1,7 @@
 #include "Light.h"
 
+using namespace std;
+
 Light::Light(Entity *e, float r, float g, float b) : Object(e)
 {
     red   = r;
@@ -9,6 +11,64 @@ Light::Light(Entity *e, float r, float g, float b) : Object(e)
     ca = 0.5f;
     la = 0.004f;
     qa = 0.00005f;
+}
+
+void Light::draw()
+{
+    glColor4f(red, green, blue, 1.f);
+
+    glBegin(GL_TRIANGLES);
+    glVertex3f( 0.f,  32.f,  0.f);
+    glVertex3f( 16.f,  0.f,  16.f);
+    glVertex3f(-16.f,  0.f,  16.f);
+
+    glVertex3f( 0.f,  32.f,  0.f);
+    glVertex3f(-16.f,  0.f,  16.f);
+    glVertex3f(-16.f,  0.f, -16.f);
+
+    glVertex3f( 0.f,  32.f,  0.f);
+    glVertex3f(-16.f,  0.f, -16.f);
+    glVertex3f( 16.f,  0.f, -16.f);
+
+    glVertex3f( 0.f,  32.f,  0.f);
+    glVertex3f( 16.f,  0.f, -16.f);
+    glVertex3f( 16.f,  0.f,  16.f);
+
+    glVertex3f( 0.f, -32.f,  0.f);
+    glVertex3f(-16.f,  0.f,  16.f);
+    glVertex3f( 16.f,  0.f,  16.f);
+
+    glVertex3f( 0.f, -32.f,  0.f);
+    glVertex3f(-16.f,  0.f, -16.f);
+    glVertex3f(-16.f,  0.f,  16.f);
+
+    glVertex3f( 0.f, -32.f,  0.f);
+    glVertex3f( 16.f,  0.f, -16.f);
+    glVertex3f(-16.f,  0.f, -16.f);
+
+    glVertex3f( 0.f, -32.f,  0.f);
+    glVertex3f( 16.f,  0.f,  16.f);
+    glVertex3f( 16.f,  0.f, -16.f);
+    glEnd();
+}
+
+void Light::outline()
+{
+    glColor4f(red, green, blue, 1.f);
+
+    glBegin(GL_LINES);
+    glVertex3f( 16.f,  16.f, -16.f);
+    glVertex3f(-16.f, -16.f,  16.f);
+
+    glVertex3f(-16.f, -16.f, -16.f);
+    glVertex3f( 16.f,  16.f,  16.f);
+
+    glVertex3f( 16.f, -16.f, -16.f);
+    glVertex3f(-16.f,  16.f,  16.f);
+
+    glVertex3f(-16.f,  16.f, -16.f);
+    glVertex3f( 16.f, -16.f,  16.f);
+    glEnd();
 }
 
 void Light::setup()

@@ -35,8 +35,14 @@ class Camera
 
     private:
 
+        void drawObject(Object *o);
+        void outlineObject(Object *o);
         void drawAllMeshes(std::list<Mesh*> *objects);
         void outlineAllMeshes(std::list<Mesh*> *objects);
+        void drawAllSprites(std::list<Sprite*> *objects);
+        void outlineAllSprites(std::list<Sprite*> *objects);
+        void drawAllLights(std::list<Light*> *objects);
+        void outlineAllLights(std::list<Light*> *objects);
         //void drawAllShadows(std::list<Object*> *objects, Light *l);
         //void drawAllLigthned(std::list<Object*> *objects);
         //void updateAllShadows(std::list<Object*> *objects, Light *l);
