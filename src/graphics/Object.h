@@ -1,6 +1,7 @@
 #ifndef DEF_OBJECT
 #define DEF_OBJECT
 
+#include "../math/Vector3.h"
 #include "../scene/Entity.h"
 
 #include <iostream>
@@ -17,6 +18,9 @@ class Object
         float getX();
         float getY();
         float getZ();
+        float getSize();
+
+        Vector3 getPosition();
 
 
     private:

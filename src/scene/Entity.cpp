@@ -15,7 +15,6 @@ void Entity::setPosition(float x, float y, float z)
     position.z = z;
 }
 
-void Entity::setVisibility(bool v) { visible = v; }
 void Entity::setLightned(bool v)   { lightned = v; }
 
 float Entity::getX()               { return position.x; }

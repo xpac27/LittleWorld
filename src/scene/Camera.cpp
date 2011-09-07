@@ -20,11 +20,10 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
     glTranslatef(position.x * -1.f,  position.y * -1.f, position.z * -1.f);
 
     updateViewFrustum();
-    //updateObjectsVisibility(objects);
 
     // Use a black ambient color
-    //GLfloat ambientColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
-    //glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+    GLfloat ambientColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
 
 
     // STEP 0: setup
@@ -50,7 +49,6 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
     glFrontFace(GL_CW);
     drawAllMeshes(meshes);
     drawAllSprites(sprites);
-    drawAllLights(lights);
 
     glDepthMask(GL_FALSE);
 
@@ -74,9 +72,9 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
 
         //updateObjectsLightning(objects, *l);
 
-        //glClear(GL_STENCIL_BUFFER_BIT);
+        glClear(GL_STENCIL_BUFFER_BIT);
 
-        //glDepthFunc(GL_LESS);
+        glDepthFunc(GL_LESS);
         //glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFFFL);
 
         //updateAllShadows(objects, *l);
@@ -107,29 +105,28 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
         // STEP 4: render the scene
         // ========================
 
-        //glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-        //glEnable(GL_LIGHTING);
-        //glEnable(GL_LIGHT0);
-        //glEnable(GL_BLEND);
-        //glEnable(GL_COLOR_MATERIAL); // TODO avoid
+        glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_BLEND);
+        glEnable(GL_COLOR_MATERIAL); // TODO avoid
 
-        //setupLight(*l);
+        setupLight(*l);
 
-        //glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
-        //glBlendFunc(GL_ONE, GL_ONE);
-        //glDepthFunc(GL_LEQUAL);
+        glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFFL);
+        glBlendFunc(GL_ONE, GL_ONE);
+        glDepthFunc(GL_LEQUAL);
 
-        //glFrontFace(GL_CW);
-        //glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-        //drawAllMeshes(meshes);
-        //drawAllSprites(sprites);
-        //drawAllLights(lights);
+        glFrontFace(GL_CW);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+        drawAllMeshes(meshes);
+        drawAllSprites(sprites);
 
-        //glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
-        //glDisable(GL_LIGHTING);
-        //glDisable(GL_LIGHT0);
-        //glDisable(GL_BLEND);
-        //glDisable(GL_COLOR_MATERIAL);
+        glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+        glDisable(GL_LIGHTING);
+        glDisable(GL_LIGHT0);
+        glDisable(GL_BLEND);
+        glDisable(GL_COLOR_MATERIAL);
     }
 
     glDisable(GL_STENCIL_TEST);
@@ -220,24 +217,24 @@ float Camera::getZ()
 
 void Camera::drawObject(Object *o)
 {
-    //if (o->isVisible())
-    //{
+    if (viewFrustum.sphereInFrustum(o->getPosition(), o->getSize()))
+    {
         glPushMatrix();
         glTranslatef(o->getX(), o->getY(), o->getZ());
         o->draw();
         glPopMatrix();
-    //}
+    }
 }
 
 void Camera::outlineObject(Object *o)
 {
-    //if (o->isVisible())
-    //{
+    if (viewFrustum.sphereInFrustum(o->getPosition(), o->getSize()))
+    {
         glPushMatrix();
         glTranslatef(o->getX(), o->getY(), o->getZ());
         o->outline();
         glPopMatrix();
-    //}
+    }
 }
 
 void Camera::drawAllMeshes(std::list<Mesh*> *objects)

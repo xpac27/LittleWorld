@@ -72,6 +72,7 @@ int main()
 
     // Setup rendering
     glShadeModel(GL_SMOOTH);
+    glCullFace(GL_FRONT);
     //glEnable(GL_POINT_SMOOTH);
     //glEnable(GL_LINE_SMOOTH);
     //glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);

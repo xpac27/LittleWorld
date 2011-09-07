@@ -14,7 +14,6 @@ class Entity
         Entity(World *W, float s);
 
         void setPosition(float x, float y, float z);
-        void setVisibility(bool v);
         void setLightned(bool v);
 
         bool isVisible();
