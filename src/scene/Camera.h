@@ -43,11 +43,8 @@ class Camera
         void outlineAllSprites(std::list<Sprite*> *objects);
         void drawAllLights(std::list<Light*> *objects);
         void outlineAllLights(std::list<Light*> *objects);
-        //void drawAllShadows(std::list<Object*> *objects, Light *l);
-        //void drawAllLigthned(std::list<Object*> *objects);
-        //void updateAllShadows(std::list<Object*> *objects, Light *l);
+        void drawAllShadows(std::list<Mesh*> *objects, Light *l);
         //void updateObjectsVisibility(std::list<Object*> *objects);
-        //void updateObjectsLightning(std::list<Object*> *objects, Light *l);
         void updateViewFrustum();
         void setupLight(Light *l);
 

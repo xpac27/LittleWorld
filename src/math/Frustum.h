@@ -3,16 +3,9 @@
 
 #include "Vector3.h"
 #include "Matrix4x4f.h"
+#include "../resources/Structs.h"
 
 #include <iostream>
-
-typedef struct
-{
-    float x;
-    float y;
-    float z;
-    float d;
-} Plane;
 
 class Frustum
 {

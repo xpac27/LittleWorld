@@ -17,7 +17,6 @@ class Entity
         void setLightned(bool v);
 
         bool isVisible();
-        bool isLightned();
 
         float getX();
         float getY();

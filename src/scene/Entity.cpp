@@ -23,7 +23,6 @@ float Entity::getZ()               { return position.z; }
 float Entity::getSize()            { return size; }
 
 bool Entity::isVisible()           { return visible; }
-bool Entity::isLightned()          { return lightned; }
 
 Vector3 Entity::getPosition()      { return position; }
 

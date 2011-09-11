@@ -42,6 +42,7 @@ class World
 
     private:
 
+        // TODO use static Arrays
         std::list<Dynamic*> dynamicList;
         std::list<Static*>  staticList;
         std::list<Mesh*>    meshList;

@@ -70,36 +70,35 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
         // STEP 3: render shadow volumes
         // =============================
 
-        //updateObjectsLightning(objects, *l);
+        // TODO skeep this object if it's not lit
+        //l->getIntensityAtPosition((*o)->getPosition()) > 0.004f
 
         glClear(GL_STENCIL_BUFFER_BIT);
 
         glDepthFunc(GL_LESS);
-        //glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFFFL);
+        glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFFFL);
 
-        //updateAllShadows(objects, *l);
+        #ifdef GL_EXT_stencil_two_side && GL_EXT_stencil_wrap
 
-        //#ifdef GL_EXT_stencil_two_side && GL_EXT_stencil_wrap
+        glEnable(GL_STENCIL_TEST_TWO_SIDE_EXT);
 
-        //glEnable(GL_STENCIL_TEST_TWO_SIDE_EXT);
+        glActiveStencilFaceEXT(GL_BACK);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_INCR_WRAP_EXT);
 
-        //glActiveStencilFaceEXT(GL_BACK);
-        //glStencilOp(GL_KEEP, GL_KEEP, GL_INCR_WRAP_EXT);
+        glActiveStencilFaceEXT(GL_FRONT);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_DECR_WRAP_EXT);
 
-        //glActiveStencilFaceEXT(GL_FRONT);
-        //glStencilOp(GL_KEEP, GL_KEEP, GL_DECR_WRAP_EXT);
+        drawAllShadows(meshes, *l);
 
-        //drawAllShadows(objects, *l);
+        glDisable(GL_STENCIL_TEST_TWO_SIDE_EXT);
 
-        //glDisable(GL_STENCIL_TEST_TWO_SIDE_EXT);
+        #else
 
-        //#else
+        glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_INCR);
+        glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_DECR);
+        drawAllShadows(meshes, *l);
 
-        //glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_INCR);
-        //glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_DECR);
-        //drawAllShadows(objects, *l);
-
-        //#endif
+        #endif
 
 
         // STEP 4: render the scene
@@ -293,65 +292,22 @@ void Camera::setupLight(Light *l)
     glPopMatrix();
 }
 
-//void Camera::drawAllLigthned(std::list<Object*> *objects)
-//{
-    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    //{
-        //if ((*o)->isVisible() && (*o)->isLightned())
-        //{
-            //glPushMatrix();
-            //glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-            //(*o)->draw();
-            //glPopMatrix();
-        //}
-    //}
-//}
-
-//void Camera::drawAllShadows(std::list<Object*> *objects, Light *l)
-//{
-    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    //{
-        //if ((*o)->isCastingShadow() && (*o)->isLightned())
-        //{
-            //glPushMatrix();
-            //glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-            //// TODO:
-            ////shape.drawShadow(l->getPosition() - position, false);
-            //(*o)->drawShadow(l);
-            //glPopMatrix();
-        //}
-    //}
-//}
-
-//void Camera::updateAllShadows(std::list<Object*> *objects, Light *l)
-//{
-    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    //{
-        //if ((*o)->isCastingShadow() && (*o)->isLightned())
-        //{
-            //// TODO:
-            ////if (l->getIntensityAtPosition(position) > 0.01f)
-            ////{
-                ////shape.updateShadows(l->getPosition() - position);
-            ////}
-            //(*o)->updateShadows(l);
-        //}
-    //}
-//}
+void Camera::drawAllShadows(std::list<Mesh*> *objects, Light *l)
+{
+    for (list<Mesh*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        glPushMatrix();
+        glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
+        (*o)->drawShadow(l, false);
+        glPopMatrix();
+    }
+}
 
 //void Camera::updateObjectsVisibility(std::list<Object*> *objects)
 //{
     //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
     //{
         //(*o)->setVisibility(viewFrustum.sphereInFrustum((*o)->getPosition(), (*o)->getSize()));
-    //}
-//}
-
-//void Camera::updateObjectsLightning(std::list<Object*> *objects, Light *l)
-//{
-    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    //{
-        //(*o)->setLightned(l->getIntensityAtPosition((*o)->getPosition()) > 0.004f);
     //}
 //}
 
