@@ -23,7 +23,7 @@ class Object
         Vector3 getPosition();
 
 
-    private:
+    protected:
 
         Entity *entity;
 };
