@@ -298,11 +298,12 @@ void Camera::drawAllShadows(std::list<Mesh*> *objects, Light *l)
     {
         glPushMatrix();
         glTranslatef((*o)->getX(), (*o)->getY(), (*o)->getZ());
-        (*o)->drawShadow(l, false);
+        (*o)->drawShadow(l);
         glPopMatrix();
     }
 }
 
+// TODO
 //void Camera::updateObjectsVisibility(std::list<Object*> *objects)
 //{
     //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)

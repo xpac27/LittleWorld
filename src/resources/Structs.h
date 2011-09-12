@@ -15,6 +15,8 @@
 #define B_POS 2
 #define A_POS 3
 
+#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+
 struct Plane
 {
     float a;

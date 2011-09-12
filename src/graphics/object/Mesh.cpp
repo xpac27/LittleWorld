@@ -6,6 +6,7 @@ Mesh::Mesh(Entity *e, float size, float height, float red, float green, float bl
 {
     totalVertex = 24;
     totalTriangles = 12;
+    totalIndexes = 36;
 
     float alfSize = size / 2.f;
 
@@ -232,56 +233,56 @@ Mesh::Mesh(Entity *e, float size, float height, float red, float green, float bl
     vertices[23].tex[V_POS]      = 0.f;
 
     // Index Array (define our triangles)
-    triangles[0].vertexIndices[0] = 0;
-    triangles[0].vertexIndices[1] = 1;
-    triangles[0].vertexIndices[2] = 2;
+    triangles[0].vertexIndices[0] = indexes[0] = 0;
+    triangles[0].vertexIndices[1] = indexes[1] = 1;
+    triangles[0].vertexIndices[2] = indexes[2] = 2;
 
-    triangles[1].vertexIndices[0] = 2;
-    triangles[1].vertexIndices[1] = 3;
-    triangles[1].vertexIndices[2] = 0;
+    triangles[1].vertexIndices[0] = indexes[3] = 2;
+    triangles[1].vertexIndices[1] = indexes[4] = 3;
+    triangles[1].vertexIndices[2] = indexes[5] = 0;
 
-    triangles[2].vertexIndices[0] = 4;
-    triangles[2].vertexIndices[1] = 5;
-    triangles[2].vertexIndices[2] = 6;
+    triangles[2].vertexIndices[0] = indexes[6] = 4;
+    triangles[2].vertexIndices[1] = indexes[7] = 5;
+    triangles[2].vertexIndices[2] = indexes[8] = 6;
 
-    triangles[3].vertexIndices[0] = 6;
-    triangles[3].vertexIndices[1] = 7;
-    triangles[3].vertexIndices[2] = 4;
+    triangles[3].vertexIndices[0] = indexes[9] = 6;
+    triangles[3].vertexIndices[1] = indexes[10] = 7;
+    triangles[3].vertexIndices[2] = indexes[11] = 4;
 
-    triangles[4].vertexIndices[0] = 8;
-    triangles[4].vertexIndices[1] = 9;
-    triangles[4].vertexIndices[2] = 10;
+    triangles[4].vertexIndices[0] = indexes[12] = 8;
+    triangles[4].vertexIndices[1] = indexes[13] = 9;
+    triangles[4].vertexIndices[2] = indexes[14] = 10;
 
-    triangles[5].vertexIndices[0] = 10;
-    triangles[5].vertexIndices[1] = 11;
-    triangles[5].vertexIndices[2] = 8;
+    triangles[5].vertexIndices[0] = indexes[15] = 10;
+    triangles[5].vertexIndices[1] = indexes[16] = 11;
+    triangles[5].vertexIndices[2] = indexes[17] = 8;
 
-    triangles[6].vertexIndices[0] = 12;
-    triangles[6].vertexIndices[1] = 13;
-    triangles[6].vertexIndices[2] = 14;
+    triangles[6].vertexIndices[0] = indexes[18] = 12;
+    triangles[6].vertexIndices[1] = indexes[19] = 13;
+    triangles[6].vertexIndices[2] = indexes[20] = 14;
 
-    triangles[7].vertexIndices[0] = 14;
-    triangles[7].vertexIndices[1] = 15;
-    triangles[7].vertexIndices[2] = 12;
+    triangles[7].vertexIndices[0] = indexes[21] = 14;
+    triangles[7].vertexIndices[1] = indexes[22] = 15;
+    triangles[7].vertexIndices[2] = indexes[23] = 12;
 
-    triangles[8].vertexIndices[0] = 16;
-    triangles[8].vertexIndices[1] = 17;
-    triangles[8].vertexIndices[2] = 18;
+    triangles[8].vertexIndices[0] = indexes[24] = 16;
+    triangles[8].vertexIndices[1] = indexes[25] = 17;
+    triangles[8].vertexIndices[2] = indexes[26] = 18;
 
-    triangles[9].vertexIndices[0] = 18;
-    triangles[9].vertexIndices[1] = 19;
-    triangles[9].vertexIndices[2] = 16;
+    triangles[9].vertexIndices[0] = indexes[27] = 18;
+    triangles[9].vertexIndices[1] = indexes[28] = 19;
+    triangles[9].vertexIndices[2] = indexes[29] = 16;
 
-    triangles[10].vertexIndices[0] = 20;
-    triangles[10].vertexIndices[1] = 21;
-    triangles[10].vertexIndices[2] = 22;
+    triangles[10].vertexIndices[0] = indexes[30] = 20;
+    triangles[10].vertexIndices[1] = indexes[31] = 21;
+    triangles[10].vertexIndices[2] = indexes[32] = 22;
 
-    triangles[11].vertexIndices[0] = 22;
-    triangles[11].vertexIndices[1] = 23;
-    triangles[11].vertexIndices[2] = 20;
+    triangles[11].vertexIndices[0] = indexes[33] = 22;
+    triangles[11].vertexIndices[1] = indexes[34] = 23;
+    triangles[11].vertexIndices[2] = indexes[35] = 20;
 
     // Colors
-    for (int i = 0; i < 24; i++)
+    for (int i = 0; i < totalVertex; i++)
     {
         vertices[i].color[0] = red;
         vertices[i].color[1] = green;
@@ -289,7 +290,17 @@ Mesh::Mesh(Entity *e, float size, float height, float red, float green, float bl
         vertices[i].color[3] = alpha;
     }
 
-    // Plane equations
+    updatePlaneEquations();
+    updateConnectivity();
+
+    #if USE_VBO
+    vertexBufferObject = new VBO(totalVertex, totalIndexes);
+    vertexBufferObject->uploadVertices(vertices, indexes);
+    #endif
+}
+
+void Mesh::updatePlaneEquations()
+{
     for (unsigned int i = 0; i < totalTriangles; i ++)
     {
         const Vertex& v1 = vertices[triangles[i].vertexIndices[0]];
@@ -309,8 +320,10 @@ Mesh::Mesh(Entity *e, float size, float height, float red, float green, float bl
                                        + v2.location[0]*(v3.location[1]*v1.location[2] - v1.location[1]*v3.location[2])
                                        + v3.location[0]*(v1.location[1]*v2.location[2] - v2.location[1]*v1.location[2]));
     }
+}
 
-    // Update connectivity
+void Mesh::updateConnectivity()
+{
     unsigned int p1i, p2i, p1j, p2j;
     unsigned int i, j, ki, kj;
 
@@ -347,12 +360,13 @@ Mesh::Mesh(Entity *e, float size, float height, float red, float green, float bl
             }
         }
     }
-
-    //loadData();
 }
 
 void Mesh::draw()
 {
+    #if USE_VBO
+    vertexBufferObject->draw();
+    #else
     glBegin(GL_TRIANGLES);
     for (unsigned int i = 0; i < totalTriangles; i ++)
     {
@@ -366,6 +380,7 @@ void Mesh::draw()
         }
     }
     glEnd();
+    #endif
 }
 
 void Mesh::outline()
@@ -385,8 +400,10 @@ void Mesh::outline()
     }
 }
 
-void Mesh::drawShadow(Light *pLight, bool cap)
+void Mesh::drawShadow(Light *pLight)
 {
+    // TODO save shadow if light and mesh are linked to static entities
+
     unsigned int i, j, neighbourIndex;
 
     GLfloat lightPosition[3] =
@@ -453,191 +470,4 @@ void Mesh::drawShadow(Light *pLight, bool cap)
         }
     }
 }
-
-
-// TODO:
-
-// DRAW
-//glBindBuffer(GL_ARRAY_BUFFER, vboID);
-//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBOID);
-
-//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-//glEnableClientState(GL_COLOR_ARRAY);
-//glEnableClientState(GL_NORMAL_ARRAY);
-//glEnableClientState(GL_VERTEX_ARRAY);
-
-//glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(12));
-//glNormalPointer(GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(20));
-//glColorPointer(4, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(32));
-//glVertexPointer(3, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(0));
-
-//glDrawElements(type, totalIndex, GL_UNSIGNED_BYTE, BUFFER_OFFSET(0));
-
-//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-//glDisableClientState(GL_COLOR_ARRAY);
-//glDisableClientState(GL_NORMAL_ARRAY);
-//glDisableClientState(GL_VERTEX_ARRAY);
-
-//void Mesh::loadData()
-//{
-    //glGenBuffers(1, &vboID);
-    //glBindBuffer(GL_ARRAY_BUFFER, vboID);
-
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * totalVertex, NULL, GL_STATIC_DRAW);
-    //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * totalVertex, vertices);
-
-    //glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(12));
-    //glNormalPointer(GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(20));
-    //glColorPointer(4, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(32));
-    //glVertexPointer(3, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(0));
-
-    //glGenBuffers(1, &indexVBOID);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBOID);
-
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * totalIndex, index, GL_STATIC_DRAW);
-//}
-
-//void Mesh::drawShadow(Light *pLight, bool cap)
-//{
-    //Vector3 p1, p2;
-
-    //glBegin(GL_TRIANGLES);
-
-    //// Draw the shadow volume's sides
-    //for (unsigned int p = 1; p < silhouette.size(); p += 2)
-    //{
-        //p1 = (*silhouette[p - 1] - lightPosition) * 100000.f;
-        //p2 = (*silhouette[p] - lightPosition) * 100000.f;
-
-        //glVertex3f(silhouette[p - 1]->x, silhouette[p - 1]->y, silhouette[p - 1]->z);
-        //glVertex3f(silhouette[p]->x, silhouette[p]->y, silhouette[p]->z);
-        //glVertex3f(p1.x, p1.y, p1.z);
-
-        //glVertex3f(silhouette[p]->x, silhouette[p]->y, silhouette[p]->z);
-        //glVertex3f(p2.x, p2.y, p2.z);
-        //glVertex3f(p1.x, p1.y, p1.z);
-    //}
-
-    //if (cap)
-    //{
-        //// Cap near
-        //for (unsigned int t = 0; t < triangles.size(); t ++)
-        //{
-            //if (!triangles[t].lighted)
-            //{
-                //triangles[t].setCCW();
-                //triangles[t].setAllVertex();
-                //triangles[t].setCW();
-            //}
-        //}
-
-        //// Cap far
-        //for (unsigned int t = 0; t < triangles.size(); t ++)
-        //{
-            //if (!triangles[t].lighted)
-            //{
-                //triangles[t].setTransformationMIN(lightPosition);
-                //triangles[t].setTransformationMUL(100000.f);
-                //triangles[t].setAllVertex();
-                //triangles[t].resetTransformation();
-            //}
-        //}
-    //}
-
-    //glEnd();
-//}
-
-//void Mesh::updateConnectivity()
-//{
-    //vector<Point*> pointList;
-
-    //bool found;
-
-    //// Make a list of all unic points
-    //for (unsigned int t = 0; t < triangles.size(); t ++)
-    //{
-        //for (unsigned int p1 = 0; p1 < 3; p1 ++)
-        //{
-            //found = false;
-            //for (unsigned int p2 = 0; p2 < pointList.size(); p2 ++)
-            //{
-                //if (triangles[t].points[p1] == pointList[p2])
-                //{
-                    //found = true;
-                    //break;
-                //}
-            //}
-            //if (!found)
-            //{
-                //pointList.push_back(triangles[t].points[p1]);
-            //}
-        //}
-    //}
-
-    //// Complet the points sharedTriangles list
-    //for (unsigned int p1 = 0; p1 < pointList.size(); p1 ++)
-    //{
-        //pointList[p1]->sharedTriangles.clear();
-
-        //for (unsigned int t = 0; t < triangles.size(); t ++)
-        //{
-            //for (unsigned int p2 = 0; p2 < 3; p2 ++)
-            //{
-                //if (pointList[p1] == triangles[t].points[p2])
-                //{
-                    //pointList[p1]->sharedTriangles.push_back(&triangles[t]);
-                //}
-            //}
-        //}
-    //}
-//}
-
-//void Mesh::updateShadows(Vector3 lightPosition)
-//{
-    //silhouette.clear();
-
-    //// Compute which triangles are casting shadows
-    //for (unsigned int t = 0; t < triangles.size(); t ++)
-    //{
-        //triangles[t].lighted = Vector3Util::Dot(lightPosition, triangles[t].getNormal()) < 0;
-    //}
-
-    //bool silhouettePoints[3];
-
-    //// For each triangle
-    //for (unsigned int t = 0; t < triangles.size(); t ++)
-    //{
-        //// If it casts shadows
-        //if (!triangles[t].lighted)
-        //{
-            //silhouettePoints[0] = false;
-            //silhouettePoints[1] = false;
-            //silhouettePoints[2] = false;
-
-            //// For each one of its point
-            //for (unsigned int p = 0; p < 3; p ++)
-            //{
-                //for (unsigned int s = 0; s < triangles[t].points[p]->sharedTriangles.size(); s ++)
-                //{
-                    //if (triangles[t].points[p]->sharedTriangles[s]->lighted)
-                    //{
-                        //silhouettePoints[p] = true;
-                    //}
-                //}
-            //}
-
-            //if (silhouettePoints[0] && silhouettePoints[1])
-            //{
-                //silhouette.push_back(triangles[t].points[0]);
-                //silhouette.push_back(triangles[t].points[1]);
-            //}
-
-            //if (silhouettePoints[1] && silhouettePoints[2])
-            //{
-                //silhouette.push_back(triangles[t].points[1]);
-                //silhouette.push_back(triangles[t].points[2]);
-            //}
-        //}
-    //}
-//}
 

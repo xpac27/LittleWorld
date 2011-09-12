@@ -3,15 +3,12 @@
 
 #include "Light.h"
 #include "../Object.h"
+#include "../VBO.h"
 #include "../../resources/Structs.h"
-//#include "../../math/Vector3.h"
+#include "../../resources/Conf.h"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-
-//#define BUFFER_OFFSET(i) ((char *)NULL + (i))
-
-// TODO Have an instance of obj instead of the struct and the long constructor
 
 class Mesh : public Object
 {
@@ -24,22 +21,22 @@ class Mesh : public Object
 
         //bool readObject(const char filename); // TODO
 
-        void drawShadow(Light *pLight, bool cap);
-
-        //void updateShadows(Vector3 lightPosition);
+        void drawShadow(Light *pLight);
 
     private:
 
-        //void loadData();
+        void updatePlaneEquations();
+        void updateConnectivity();
 
         unsigned int totalVertex;
         unsigned int totalTriangles;
+        unsigned int totalIndexes;
 
         Vertex vertices[24];
         Triangle triangles[12];
+        GLubyte indexes[36];
 
-        //GLuint vboID;
-        //GLuint indexVBOID;
+        VBO *vertexBufferObject;
 };
 
 #endif

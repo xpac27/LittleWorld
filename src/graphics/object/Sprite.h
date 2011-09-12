@@ -2,7 +2,9 @@
 #define DEF_SPRITE
 
 #include "../Object.h"
+#include "../VBO.h"
 #include "../../resources/Structs.h"
+#include "../../resources/Conf.h"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -22,10 +24,12 @@ class Sprite : public Object
     private:
 
         unsigned int totalVertex;
-        unsigned int totalIndex;
+        unsigned int totalIndexes;
 
-        Vertex vertexes[4];
-        int index[6];
+        Vertex vertices[4];
+        GLubyte indexes[6];
+
+        VBO *vertexBufferObject;
 };
 
 #endif
