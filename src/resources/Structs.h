@@ -16,6 +16,7 @@
 #define A_POS 3
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
+#define TO_GRID(i) ((int)((i - 0.999999999999 + GRID_UNIT / 2.f) / GRID_UNIT))
 
 struct Plane
 {
@@ -49,15 +50,23 @@ struct Triangle
     bool visible;               // Is The Face Visible By The Light?
 };
 
+struct Tile
+{
+    bool busy;
+};
+
+// TODO
 struct Edge
 {
     int vertexIndices[2];       // Index Of Each Vertex Within the edge
     Point3f projections[2];     // Points representing each vertex projected from light's position
 };
 
+// TODO
 struct Shadow
 {
     Edge *pEdges;               // Will Be Dynamically Allocated
 };
+
 #endif
 

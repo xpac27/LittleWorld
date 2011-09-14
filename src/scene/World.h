@@ -2,7 +2,7 @@
 #define DEF_WORLD
 
 #include "../resources/Conf.h"
-//#include "../ai/Pathfinder.h"
+#include "../ai/Pathfinder.h"
 
 #include "entity/Dynamic.h"
 #include "entity/dynamic/Enemy.h"
@@ -50,7 +50,7 @@ class World
         std::list<Light*>   lightList;
 
         Camera camera;
-        //Pathfinder pathfinder;
+        Pathfinder pathfinder;
 };
 
 #endif
