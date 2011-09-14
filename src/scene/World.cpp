@@ -59,15 +59,15 @@ void World::addEnemy(float x, float z)
 {
 }
 
-void World::addWallTile(float x, float z, float h)
+void World::addWallDecor(float x, float z, float h)
 {
-    staticList.push_back(new Tile(this, x, z, 128.f, false));
+    staticList.push_back(new Decor(this, x, z, 128.f, false));
     meshList.push_back(new Mesh(staticList.back(), 128.f, h, 0.4f, 0.4f, 0.4f, 1.f));
 }
 
-void World::addFloorTile(float x, float z)
+void World::addFloorDecor(float x, float z)
 {
-    staticList.push_back(new Tile(this, x, z, 128.f, true));
+    staticList.push_back(new Decor(this, x, z, 128.f, true));
     spriteList.push_back(new Sprite(staticList.back(), 128.f, 0.f, 0.9f, 0.9f, 0.9f, 1.f));
 }
 

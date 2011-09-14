@@ -79,6 +79,13 @@ int main()
     //glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
+    // Vertex buffer objects
+    #if USE_VBO
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    #endif
+
     // Default values
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);

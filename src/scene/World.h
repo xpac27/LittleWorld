@@ -10,7 +10,7 @@
 
 #include "entity/Static.h"
 #include "entity/static/Emitter.h"
-#include "entity/static/Tile.h"
+#include "entity/static/Decor.h"
 
 #include "Camera.h"
 
@@ -29,8 +29,8 @@ class World
         void dispatch(unsigned const int type);
         void addPlayer(bool focus);
         void addEnemy(float x, float z);
-        void addWallTile(float x, float z, float h);
-        void addFloorTile(float x, float z);
+        void addWallDecor(float x, float z, float h);
+        void addFloorDecor(float x, float z);
         void addLight(float x, float z, float y, float r, float g, float b);
 
         static unsigned const int ON_MOUSE_LEFT_DOWN;

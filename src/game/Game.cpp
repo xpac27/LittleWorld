@@ -19,25 +19,25 @@ void Game::init()
         world.addEnemy(float(Randomizer::Random(0, WORLD_WIDTH)), float(Randomizer::Random(0, WORLD_HEIGHT)));
     }
 
-    world.addWallTile(1.f * 128.f, 4.f * 128.f, 64.f);
-    world.addWallTile(2.f * 128.f, 10.f * 128.f, 24.f);
-    world.addWallTile(4.f * 128.f, 1.f * 128.f, 128.f);
-    world.addWallTile(8.f * 128.f, 7.f * 128.f, 32.f);
-    world.addWallTile(6.f * 128.f, 6.f * 128.f, 48.f);
-    world.addWallTile(5.f * 128.f, 6.f * 128.f, 96.f);
-    world.addWallTile(5.f * 128.f, 5.f * 128.f, 64.f);
-    world.addWallTile(5.f * 128.f, 8.f * 128.f, 64.f);
-    world.addWallTile(4.f * 128.f, 8.f * 128.f, 64.f);
-    world.addWallTile(12.f * 128.f, 8.f * 128.f, 24.f);
-    world.addWallTile(11.f * 128.f, 5.f * 128.f, 48.f);
-    world.addWallTile(15.f * 128.f, 10.f * 128.f, 32.f);
-    world.addWallTile(10.f * 128.f, 13.f * 128.f, 64.f);
-    world.addWallTile(8.f * 128.f, 16.f * 128.f, 32.f);
+    world.addWallDecor(1.f * 128.f, 4.f * 128.f, 64.f);
+    world.addWallDecor(2.f * 128.f, 10.f * 128.f, 24.f);
+    world.addWallDecor(4.f * 128.f, 1.f * 128.f, 128.f);
+    world.addWallDecor(8.f * 128.f, 7.f * 128.f, 32.f);
+    world.addWallDecor(6.f * 128.f, 6.f * 128.f, 48.f);
+    world.addWallDecor(5.f * 128.f, 6.f * 128.f, 96.f);
+    world.addWallDecor(5.f * 128.f, 5.f * 128.f, 64.f);
+    world.addWallDecor(5.f * 128.f, 8.f * 128.f, 64.f);
+    world.addWallDecor(4.f * 128.f, 8.f * 128.f, 64.f);
+    world.addWallDecor(12.f * 128.f, 8.f * 128.f, 24.f);
+    world.addWallDecor(11.f * 128.f, 5.f * 128.f, 48.f);
+    world.addWallDecor(15.f * 128.f, 10.f * 128.f, 32.f);
+    world.addWallDecor(10.f * 128.f, 13.f * 128.f, 64.f);
+    world.addWallDecor(8.f * 128.f, 16.f * 128.f, 32.f);
     for (unsigned int x(0); x < WORLD_WIDTH / 128; x ++)
     {
         for (unsigned int y(0); y < WORLD_HEIGHT / 128; y ++)
         {
-            world.addFloorTile(x * 128.f, y * 128.f);
+            world.addFloorDecor(x * 128.f, y * 128.f);
         }
     }
 
