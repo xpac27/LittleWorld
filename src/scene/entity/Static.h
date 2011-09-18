@@ -3,13 +3,11 @@
 
 #include "../Entity.h"
 
-class World;
-
 class Static : public Entity
 {
     public:
 
-        Static(World *W, float s);
+        Static(float s);
 
         int getGridX();
         int getGridY();

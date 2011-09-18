@@ -3,6 +3,7 @@
 
 #include "../Dynamic.h"
 #include "../../World.h"
+#include "../../../resources/Notifications.h"
 
 #include <iostream>
 
@@ -10,7 +11,7 @@ class Player : public Dynamic
 {
     public:
 
-        Player(World *W, float s);
+        Player(World *w, float s);
 
         virtual void update(float time);
         virtual void onNotify(unsigned const int type);

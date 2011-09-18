@@ -52,6 +52,8 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
 
     glDepthMask(GL_FALSE);
 
+    // TODO update object's visibility again view frustum once for all
+
 
     // STEP 2: loop through lights
     // ===========================

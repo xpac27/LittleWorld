@@ -1,6 +1,6 @@
 #include "Decor.h"
 
-Decor::Decor(World *W, float x, float z, float s, bool w) : Static(W, s)
+Decor::Decor(float x, float z, float s, bool w) : Static(s)
 {
     position.x = x;
     position.y = 0.f;

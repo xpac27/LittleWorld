@@ -4,12 +4,6 @@ using namespace std;
 
 Pathfinder::Pathfinder()
 {
-    grid = new Tile*[TO_GRID(WORLD_WIDTH)];
-    for (int i = 0; i < TO_GRID(WORLD_WIDTH); i ++)
-    {
-        grid[i] = new Tile[TO_GRID(WORLD_HEIGHT)];
-    }
-
     for (int x = 0; x < TO_GRID(WORLD_WIDTH); x ++)
     {
         for (int y = 0; y < TO_GRID(WORLD_WIDTH); y ++)
@@ -19,21 +13,36 @@ Pathfinder::Pathfinder()
     }
 }
 
-//vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float toY, float s)
-//{
-    //vector<Vector3*> path;
+void Pathfinder::registerEntity(Entity *entity)
+{
+    float x = entity->getX();
+    float y = entity->getY();
+    float s = entity->getSize();
 
-    //if (blockIsWalkable(coordToGrid(toX), coordToGrid(toY)))
-    //{
-        //// Calculate line direction
-        //int const dx = (fromX < toX) ? 1 : -1;
-        //int const dy = (fromY < toY) ? 1 : -1;
+    for (int i = TO_GRID(x - s / 2.f); i < TO_GRID(x + s / 2.f); i ++)
+    {
+        for (int j = TO_GRID(y - s / 2.f); j < TO_GRID(y + s / 2.f); j ++)
+        {
+            grid[i][j].busy = true;
+        }
+    }
+}
 
-        //bool pathIsWalkable = true;
+vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float toY, float s)
+{
+    vector<Vector3*> path;
 
-        //s /= 2.f;
+    if (isEmpty(toX, toY, s))
+    {
+        // Calculate line direction
+        int const dx = (fromX < toX) ? 1 : -1;
+        int const dy = (fromY < toY) ? 1 : -1;
 
-        //// Get traversing blocks
+        bool pathIsWalkable = true;
+
+        s /= 2.f;
+
+        // Get traversing blocks
         //list<Block*> blocks1;
         //list<Block*> blocks2;
         //list<Block*>::iterator i;
@@ -55,10 +64,10 @@ Pathfinder::Pathfinder()
         //{
             //path = aStar(fromX, fromY, toX, toY);
         //}
-    //}
+    }
 
-    //return path;
-//}
+    return path;
+}
 
 //// TODO handle height of Vector3 positions
 //list<Block*> Pathfinder::getTraversingBlocks(float x1, float y1, float x2, float y2)
@@ -180,12 +189,12 @@ Pathfinder::Pathfinder()
                 //if (x != 0 && y != 0)
                 //{
                     //// if the next horizontal block is not walkable or in the closed list then pass
-                    //if (!blockIsWalkable(current->getX(), current->getY() + y) || getBlock(current->getX(), current->getY() + y)->closed)
+                    //if (!isEmpty(current->getX(), current->getY() + y) || getBlock(current->getX(), current->getY() + y)->closed)
                     //{
                         //continue;
                     //}
                     //// if the next vertical block is not walkable or in the closed list then pass
-                    //if (!blockIsWalkable(current->getX() + x, current->getY()) || getBlock(current->getX() + x, current->getY())->closed)
+                    //if (!isEmpty(current->getX() + x, current->getY()) || getBlock(current->getX() + x, current->getY())->closed)
                     //{
                         //continue;
                     //}
@@ -266,11 +275,17 @@ Pathfinder::Pathfinder()
     //return (grid.count(x) != 0 && grid[x].count(y) != 0);
 //}
 
-//// TODO not needed
-//bool Pathfinder::blockIsWalkable(int x, int y)
-//{
-    //return (blockExists(x, y) && grid[x][y]->walkable);
-//}
+bool Pathfinder::isEmpty(float x, float y, float s)
+{
+    for (int i = TO_GRID(x - s / 2.f); i < TO_GRID(x + s / 2.f); i ++)
+    {
+        for (int j = TO_GRID(y - s / 2.f); j < TO_GRID(y + s / 2.f); j ++)
+        {
+            if (grid[i][j].busy) return false;
+        }
+    }
+    return true;
+}
 
 //// TODO use definition instead
 //int Pathfinder::coordToGrid(float v)

@@ -4,6 +4,7 @@
 #include "../Entity.h"
 #include "../../math/Vector3.h"
 #include "../../math/Vector3Util.h"
+#include "../../ai/Pathfinder.h"
 
 #include <iostream>
 #include <vector>
@@ -14,14 +15,14 @@ class Dynamic : public Entity
 {
     public:
 
-        Dynamic(World *W, float s);
+        Dynamic(World *w, float s);
 
         virtual void update(float time);
         virtual void onNotify(unsigned const int type);
 
         void move(float time);
         void setDestination(Vector3 *d);
-        void setPath(float x, float z);
+        void setPath(std::vector<Vector3*> p);
         void resetDestination();
 
 
@@ -30,6 +31,8 @@ class Dynamic : public Entity
         bool isCanMove();
 
         float speed;
+
+        World *world;
 
 
     private:

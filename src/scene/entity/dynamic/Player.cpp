@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Player::Player(World *W, float s) : Dynamic(W, s)
+Player::Player(World *w, float s) : Dynamic(w, s)
 {
     speed = 200.f;
 
@@ -13,9 +13,9 @@ Player::Player(World *W, float s) : Dynamic(W, s)
 
 void Player::onNotify(unsigned const int type)
 {
-    if (type == World::ON_MOUSE_LEFT_DOWN)
+    if (type == Notifications::ON_MOUSE_LEFT_DOWN)
     {
-        setPath(world->mouseX, world->mouseY);
+        setPath(world->getPath(&position, world->getMouseX(), world->getMouseY(), getSize()));
     }
 }
 

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Enemy::Enemy(World *W, float s) : Dynamic(W, s)
+Enemy::Enemy(World *w, float s) : Dynamic(w, s)
 {
     speed = 120.f;
 }
@@ -11,11 +11,12 @@ void Enemy::update(float time)
 {
     if (!isCanMove() && sf::Randomizer::Random(0, 50) == 0)
     {
-        setPath
-        (
-            sf::Randomizer::Random(position.x - 600, position.x + 600),
-            sf::Randomizer::Random(position.z - 600, position.z + 600)
-        );
+        // TODO
+        //setPath
+        //(
+            //sf::Randomizer::Random(position.x - 600, position.x + 600),
+            //sf::Randomizer::Random(position.z - 600, position.z + 600)
+        //);
     }
     move(time);
 }

@@ -2,8 +2,9 @@
 
 using namespace std;
 
-Dynamic::Dynamic(World *W, float s) : Entity(W, s)
+Dynamic::Dynamic(World *w, float s) : Entity(s)
 {
+    world = w;
     canMove = false;
 }
 
@@ -48,13 +49,13 @@ void Dynamic::setDestination(Vector3 *d)
     canMove = true;
 }
 
-void Dynamic::setPath(float x, float z)
+void Dynamic::setPath(vector<Vector3*> p)
 {
     resetDestination();
-    // TODO:
-    //path = pathfinder->getPath(position.x, position.z, x, z, getSize());
     path.clear();
-    path.push_back(new Vector3(x, 0.f, z));
+    path = p;
+    //path = world->getPathfinder()->getPath(position.x, position.z, x, z, getSize());
+    //path.push_back(new Vector3(x, 0.f, z));
     canMove = true;
 }
 

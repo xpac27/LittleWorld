@@ -5,13 +5,11 @@
 
 #include <iostream>
 
-class World;
-
 class Entity
 {
     public:
 
-        Entity(World *W, float s);
+        Entity(float s);
 
         void setPosition(float x, float y, float z);
         void setLightned(bool v);
@@ -28,8 +26,6 @@ class Entity
 
 
     protected:
-
-        World *world;
 
         float size;
 

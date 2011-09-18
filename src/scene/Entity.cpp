@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Entity::Entity(World *W, float s) : world(W), size(s)
+Entity::Entity(float s) : size(s)
 {
     visible  = false;
     lightned = false;

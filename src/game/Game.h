@@ -2,6 +2,7 @@
 #define DEF_GAME
 
 #include "../resources/Conf.h"
+#include "../resources/Notifications.h"
 #include "../scene/World.h"
 
 #include <SFML/System/Randomizer.hpp>

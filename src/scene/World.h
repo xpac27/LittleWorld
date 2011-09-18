@@ -3,6 +3,7 @@
 
 #include "../resources/Conf.h"
 #include "../ai/Pathfinder.h"
+#include "../math/Vector3.h"
 
 #include "entity/Dynamic.h"
 #include "entity/dynamic/Enemy.h"
@@ -33,14 +34,16 @@ class World
         void addFloorDecor(float x, float z);
         void addLight(float x, float z, float y, float r, float g, float b);
 
-        static unsigned const int ON_MOUSE_LEFT_DOWN;
-        static unsigned const int ON_WINDOW_RESIZED;
+        std::vector<Vector3*> getPath(Vector3 *position, float toX, float toY, float s);
 
-        float mouseX;
-        float mouseY;
+        float getMouseX();
+        float getMouseY();
 
 
     private:
+
+        float mouseX;
+        float mouseY;
 
         // TODO use static Arrays
         std::list<Dynamic*> dynamicList;

@@ -1,6 +1,6 @@
 #include "Static.h"
 
-Static::Static(World *W, float s) : Entity(W, s)
+Static::Static(float s) : Entity(s)
 {
 }
 

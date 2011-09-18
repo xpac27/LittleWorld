@@ -64,13 +64,13 @@ void Game::onEvent(Event *event)
     {
         if (event->MouseButton.Button == Mouse::Left)
         {
-            world.dispatch(World::ON_MOUSE_LEFT_DOWN);
+            world.dispatch(Notifications::ON_MOUSE_LEFT_DOWN);
         }
     }
     // RESIZE
     else if (event->Type == Event::Resized)
     {
-        world.dispatch(World::ON_WINDOW_RESIZED);
+        world.dispatch(Notifications::ON_WINDOW_RESIZED);
 
         if ((float)event->Size.Width / (float)event->Size.Height > SCREEN_WIDTH / SCREEN_HEIGHT)
         {

@@ -2,9 +2,6 @@
 
 using namespace std;
 
-unsigned const int World::ON_MOUSE_LEFT_DOWN = 1;
-unsigned const int World::ON_WINDOW_RESIZED  = 2;
-
 World::World()
 {
 }
@@ -61,19 +58,28 @@ void World::addEnemy(float x, float z)
 
 void World::addWallDecor(float x, float z, float h)
 {
-    staticList.push_back(new Decor(this, x, z, 128.f, false));
+    staticList.push_back(new Decor( x, z, 128.f, false));
     meshList.push_back(new Mesh(staticList.back(), 128.f, h, 0.4f, 0.4f, 0.4f, 1.f));
+    pathfinder.registerEntity(staticList.back());
 }
 
 void World::addFloorDecor(float x, float z)
 {
-    staticList.push_back(new Decor(this, x, z, 128.f, true));
+    staticList.push_back(new Decor(x, z, 128.f, true));
     spriteList.push_back(new Sprite(staticList.back(), 128.f, 0.f, 0.9f, 0.9f, 0.9f, 1.f));
 }
 
 void World::addLight(float x, float y, float z, float r, float g, float b)
 {
-    staticList.push_back(new Emitter(this, x, y, z));
+    staticList.push_back(new Emitter(x, y, z));
     lightList.push_back(new Light(staticList.back(), r, g, b));
+}
+
+float World::getMouseX() { return mouseX; }
+float World::getMouseY() { return mouseY; }
+
+vector<Vector3*> World::getPath(Vector3 *position, float toX, float toY, float s)
+{
+    return pathfinder.getPath(position->x, position->z, toX, toY, s);
 }
 
