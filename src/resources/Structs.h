@@ -52,9 +52,14 @@ struct Triangle
 
 struct Tile
 {
-    bool busy;
     bool checked;
-    unsigned int x, y;
+
+    Tile *parent;
+    bool busy;
+    bool opened;
+    bool closed;
+    unsigned int f, g, h;
+    int x, y;
 };
 
 // TODO

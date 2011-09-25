@@ -4,14 +4,22 @@ using namespace std;
 
 Pathfinder::Pathfinder()
 {
+    Tile *tile;
+
     for (int x = 0; x < TO_GRID(WORLD_WIDTH); x ++)
     {
         for (int y = 0; y < TO_GRID(WORLD_WIDTH); y ++)
         {
-            grid[x][y].busy = false;
-            grid[x][y].checked = false;
-            grid[x][y].x = x;
-            grid[x][y].y = y;
+            tile = &grid[x][y];
+
+            tile->checked = false;
+
+            tile->parent = NULL;
+            tile->busy = false;
+            tile->opened = false;
+            tile->closed = false;
+            tile->x = x;
+            tile->y = y;
         }
     }
 }
@@ -97,10 +105,10 @@ vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float 
         {
             path.push_back(new Vector3(toX, 0.f, toY));
         }
-        //else
-        //{
-            //path = aStar(fromX, fromY, toX, toY);
-        //}
+        else
+        {
+            path = aStar(fromX, fromY, toX, toY);
+        }
     }
 
     return path;
@@ -124,19 +132,11 @@ bool Pathfinder::isPathWalkable(float x1, float y1, float x2, float y2, float s)
     for (list<Tile*>::iterator t = tiles.begin(); t != tiles.end(); ++ t)
     {
         gy = (*t)->y + (dy > 0 ? size - 1 : -size);
-        for (int i = -size; i < size; i ++)
-        {
-            gx = (*t)->x + i;
-            grid[gx][gy].checked = true;
-            if (grid[gx][gy].busy) return false;
-        }
-
         gx = (*t)->x + (dx > 0 ? size - 1 : -size);
+
         for (int i = -size; i < size; i ++)
         {
-            gy = (*t)->y + i;
-            grid[gx][gy].checked = true;
-            if (grid[gx][gy].busy) return false;
+            if ((grid[(*t)->x + i][gy].busy) || (grid[gx][gy = (*t)->y + i].busy)) return false;
         }
     }
     return true;
@@ -196,136 +196,140 @@ list<Tile*> Pathfinder::getTraversingTiles(float x1, float y1, float x2, float y
     return tiles;
 }
 
-//// TODO handle height of Vector3 positions
-//vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
-//{
-    //vector<Vector3*> path;
+vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
+{
+    vector<Vector3*> path;
 
-    //// Define blocks to work with
-    //Block *start = getBlockFromCoord(x1, y1);
-    //Block *end = getBlockFromCoord(x2, y2);
-    //Block *current;
-    //Block *child;
+    // Define blocks to work with
+    Tile *start = &grid[TO_GRID(x1)][TO_GRID(y1)];
+    Tile *end = &grid[TO_GRID(x2)][TO_GRID(y2)];
+    Tile *current;
+    Tile *child;
 
-    //// Define the open and the close list
-    //list<Block*> openList;
-    //list<Block*> closedList;
-    //list<Block*>::iterator i;
+    // Define the open and the close list
+    list<Tile*> openList;
+    list<Tile*> closedList;
 
-    //unsigned int n = 0;
+    list<Tile*>::iterator i;
 
-    //// Add the start block to the openList
-    //openList.push_back(start);
-    //start->opened = true;
+    unsigned int n = 0;
 
-    //while (n == 0 || (current != end && n < 50))
-    //{
-        //// Look for the smallest F value in the openList and make it the current block
-        //for (i = openList.begin(); i != openList.end(); ++ i)
-        //{
-            //if (i == openList.begin() || (*i)->getFScore() <= current->getFScore())
-            //{
-                //current = (*i);
-            //}
-        //}
+    // Add the start block to the openList
+    openList.push_back(start);
+    start->opened = true;
 
-        //// Stop if we reached the end
-        //if (current == end)
-        //{
-            //break;
-        //}
+    while (n == 0 || (current != end && n < 100))
+    {
+        // Look for the smallest F value in the openList and make it the current block
+        for (i = openList.begin(); i != openList.end(); ++ i)
+        {
+            if (i == openList.begin() || (*i)->f <= current->f)
+            {
+                current = (*i);
+            }
+        }
 
-        //// Remove the current block from the openList
-        //openList.remove(current);
-        //current->opened = false;
+        // Stop if we reached the end
+        if (current == end)
+        {
+            break;
+        }
 
-        //// Add the current block to the closedList
-        //closedList.push_back(current);
-        //current->closed = true;
+        // Remove the current block from the openList
+        openList.remove(current);
+        current->opened = false;
 
-        //// Get all current's adjacent walkable blocks
-        //for (int x = -1; x < 2; x ++)
-        //{
-            //for (int y = -1; y < 2; y ++)
-            //{
-                //// If it's current block then pass
-                //if (x == 0 && y == 0)
-                //{
-                    //continue;
-                //}
+        // Add the current block to the closedList
+        closedList.push_back(current);
+        current->closed = true;
 
-                //// Get this block
-                //child = getBlock(current->getX() + x, current->getY() + y);
+        // Get all current's adjacent walkable blocks
+        for (int x = -1; x < 2; x ++)
+        {
+            for (int y = -1; y < 2; y ++)
+            {
+                // If it's current block then pass
+                if (x == 0 && y == 0
+                // or out of bounds
+                || current->y + y < 0 || current->y + y >= TO_GRID(WORLD_HEIGHT)
+                || current->x + x < 0 || current->x + x >= TO_GRID(WORLD_WIDTH))
+                {
+                    continue;
+                }
 
-                //// If it's closed or not walkable then pass
-                //if (child->closed || !child->walkable)
-                //{
-                    //continue;
-                //}
+                // Get this block
+                child = &grid[current->x + x][current->y + y];
 
-                //// If we are at a corner
-                //if (x != 0 && y != 0)
-                //{
-                    //// if the next horizontal block is not walkable or in the closed list then pass
-                    //if (!isEmpty(current->getX(), current->getY() + y) || getBlock(current->getX(), current->getY() + y)->closed)
-                    //{
-                        //continue;
-                    //}
-                    //// if the next vertical block is not walkable or in the closed list then pass
-                    //if (!isEmpty(current->getX() + x, current->getY()) || getBlock(current->getX() + x, current->getY())->closed)
-                    //{
-                        //continue;
-                    //}
-                //}
+                // If it's closed or not walkable then pass
+                if (child->closed || child->busy)
+                {
+                    continue;
+                }
 
-                //// If it's already in the openList
-                //if (child->opened)
-                //{
-                    //// If it has a wroste g score than the one that pass through the current block
-                    //// then its path is improved when it's parent is the current block
-                    //if (child->getGScore() > child->getGScore(current))
-                    //{
-                        //// Change its parent and g score
-                        //child->setParent(current);
-                        //child->computeScores(end);
-                    //}
-                //}
-                //else
-                //{
-                    //// Add it to the openList with current block as parent
-                    //openList.push_back(child);
-                    //child->opened = true;
+                // If we are at a corner
+                if (x != 0 && y != 0)
+                {
+                    // if the next horizontal block is not walkable or in the closed list then pass
+                    if (grid[current->x][current->y + y].busy || grid[current->x][current->y + y].closed)
+                    {
+                        continue;
+                    }
+                    // if the next vertical block is not walkable or in the closed list then pass
+                    if (grid[current->x + x][current->y].busy || grid[current->x + x][current->y].closed)
+                    {
+                        continue;
+                    }
+                }
 
-                    //// Compute it's g, h and f score
-                    //child->setParent(current);
-                    //child->computeScores(end);
-                //}
-            //}
-        //}
+                // If it's already in the openList
+                if (child->opened)
+                {
+                    // If it has a wroste g score than the one that pass through the current block
+                    // then its path is improved when it's parent is the current block
+                    if (child->g > getGScore(child, current))
+                    {
+                        // Change its parent and g score
+                        child->parent = current;
+                        computeScores(child, end);
+                    }
+                }
+                else
+                {
+                    // Add it to the openList with current block as parent
+                    openList.push_back(child);
+                    child->opened = true;
 
-        //n ++;
-    //}
+                    // Compute it's g, h and f score
+                    child->parent = current;
+                    computeScores(child, end);
+                }
+            }
+        }
 
-    //// Reset
-    //for (i = openList.begin(); i != openList.end(); ++ i)
-    //{
-        //(*i)->opened = false;
-    //}
-    //for (i = closedList.begin(); i != closedList.end(); ++ i)
-    //{
-        //(*i)->closed = false;
-    //}
+        n ++;
+    }
 
-    //// Resolve the path starting from the end block
-    //while (current->hasParent() && current != start)
-    //{
-        //path.push_back(current->getPosition());
-        //current = current->getParent();
-        //n ++;
-    //}
+    // Reset
+    for (i = openList.begin(); i != openList.end(); ++ i)
+    {
+        (*i)->opened = false;
+    }
+    for (i = closedList.begin(); i != closedList.end(); ++ i)
+    {
+        (*i)->closed = false;
+    }
 
-    //return path;
-//}
+    // Resolve the path starting from the end block
+    while (current->parent != NULL && current != start)
+    {
+        current->checked = true;
+        path.push_back(new Vector3(current->x * GRID_UNIT, 0.f, current->y * GRID_UNIT));
+        current = current->parent;
+        n ++;
+    }
+
+    return path;
+}
 
 //// TODO not needed
 //Block* Pathfinder::getBlock(int x, int y)
@@ -373,9 +377,20 @@ bool Pathfinder::isEmpty(float x, float y, float s)
     return true;
 }
 
-//// TODO use definition instead
-//int Pathfinder::coordToGrid(float v)
-//{
-    //return (int)floor((v + 64.f) / 128.f);
-//}
+int Pathfinder::getGScore(Tile *t1, Tile *t2)
+{
+    return t2->g + ((t1->x == t2->x || t1->y == t2->y) ? 10 : 14);
+}
+
+int Pathfinder::getHScore(Tile *t1, Tile *t2)
+{
+    return (abs(t2->x - t1->x) + abs(t2->y - t1->y)) * 10;
+}
+
+void Pathfinder::computeScores(Tile *t1, Tile *t2)
+{
+    t1->g = getGScore(t1, t1->parent);
+    t1->h = getHScore(t1, t2);
+    t1->f = t1->g + t1->h;
+}
 
