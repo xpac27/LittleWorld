@@ -12,8 +12,6 @@ Pathfinder::Pathfinder()
         {
             tile = &grid[x][y];
 
-            tile->checked = false;
-
             tile->parent = NULL;
             tile->busy = false;
             tile->opened = false;
@@ -22,50 +20,6 @@ Pathfinder::Pathfinder()
             tile->y = y;
         }
     }
-}
-
-void Pathfinder::draw(float cameraX, float cameraY)
-{
-    glPushMatrix();
-    glTranslatef(cameraX * -1.f,  0.f, cameraY * -1.f);
-
-    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-    glEnable(GL_COLOR_MATERIAL); // TODO avoid
-    glEnable(GL_BLEND);
-
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    for (int x = 0; x < TO_GRID(WORLD_WIDTH); x ++)
-    {
-        for (int y = 0; y < TO_GRID(WORLD_WIDTH); y ++)
-        {
-            if (grid[x][y].checked == true)
-            {
-                glColor4f(1.f, 1.f, 1.f, 0.5f);
-            }
-            else if (grid[x][y].busy == true)
-            {
-                glColor4f(1.f, 0.f, 0.f, 0.8f);
-            }
-            else
-            {
-                continue;
-            }
-
-            glBegin(GL_QUADS);
-            glVertex3f(x * GRID_UNIT, 0.f, y * GRID_UNIT);
-            glVertex3f(x * GRID_UNIT + GRID_UNIT, 0.f, y * GRID_UNIT);
-            glVertex3f(x * GRID_UNIT + GRID_UNIT, 0.f, y * GRID_UNIT + GRID_UNIT);
-            glVertex3f(x * GRID_UNIT, 0.f, y * GRID_UNIT + GRID_UNIT);
-            glEnd();
-        }
-    }
-
-    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
-    glDisable(GL_COLOR_MATERIAL);
-    glDisable(GL_BLEND);
-
-    glPopMatrix();
 }
 
 void Pathfinder::registerEntity(Entity *entity)
@@ -91,14 +45,6 @@ vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float 
 {
     vector<Vector3*> path;
 
-    for (int x = 0; x < TO_GRID(WORLD_WIDTH); x ++)
-    {
-        for (int y = 0; y < TO_GRID(WORLD_WIDTH); y ++)
-        {
-            grid[x][y].checked = false;
-        }
-    }
-
     if (isEmpty(TO_GRID(toX), TO_GRID(toY), s))
     {
         if (isPathWalkable(fromX, fromY, toX, toY, s))
@@ -110,7 +56,6 @@ vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float 
             path = aStar(fromX, fromY, toX, toY, s);
         }
     }
-
     return path;
 }
 
@@ -327,7 +272,6 @@ vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2, float
     // Resolve the path starting from the end block
     while (current->parent != NULL && current != start)
     {
-        current->checked = true;
         path.push_back(new Vector3(current->x * GRID_UNIT, 0.f, current->y * GRID_UNIT));
         current = current->parent;
         n ++;
@@ -335,32 +279,6 @@ vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2, float
 
     return path;
 }
-
-//// TODO not needed
-//Block* Pathfinder::getBlock(int x, int y)
-//{
-    //if (blockExists(x, y))
-    //{
-        //return grid[x][y];
-    //}
-    //else
-    //{
-        //// !! We should not fall here
-        //return new Block(0, 0, false);
-    //}
-//}
-
-//// TODO why not
-//Block* Pathfinder::getBlockFromCoord(float x, float y)
-//{
-    //return getBlock(coordToGrid(x), coordToGrid(y));
-//}
-
-//// TODO remove
-//bool Pathfinder::blockExists(int x, int y)
-//{
-    //return (grid.count(x) != 0 && grid[x].count(y) != 0);
-//}
 
 bool Pathfinder::isEmpty(int x, int y, float s)
 {

@@ -5,7 +5,6 @@
 #include "../resources/Structs.h"
 #include "../scene/Entity.h"
 #include "../math/Vector3.h"
-//#include "../scene/object/StaticObject.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -39,10 +38,6 @@ class Pathfinder
 
         std::vector<Vector3*> aStar(float x1, float y1, float x2, float y2, float s);
         std::list<Tile*> getTraversingTiles(float x1, float y1, float x2, float y2);
-
-        //Block* getBlock(int x, int y);
-        //Block* getBlockFromCoord(float x, float y);
-        //bool blockExists(int x, int y);
 };
 
 #endif

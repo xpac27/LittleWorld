@@ -52,8 +52,6 @@ struct Triangle
 
 struct Tile
 {
-    bool checked;
-
     Tile *parent;
     bool busy;
     bool opened;

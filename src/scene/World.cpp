@@ -9,7 +9,6 @@ World::World()
 void World::draw()
 {
     camera.draw(&meshList, &spriteList, &lightList);
-    pathfinder.draw(camera.getX(), camera.getZ());
 }
 
 void World::update(float time)
