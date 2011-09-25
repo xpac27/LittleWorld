@@ -9,7 +9,7 @@
 #define SCREEN_WIDTH 800.f
 #define SCREEN_HEIGHT 600.f
 
-#define GRID_UNIT 16.f
+#define GRID_UNIT 32.f
 
 #define USE_VBO false
 #define DRAW_OUTLINE false

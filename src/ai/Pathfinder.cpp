@@ -41,15 +41,15 @@ void Pathfinder::draw(float cameraX, float cameraY)
         {
             if (grid[x][y].checked == true)
             {
-                glColor4f(0.f, 1.f, 0.f, 0.6f);
+                glColor4f(1.f, 1.f, 1.f, 0.5f);
             }
             else if (grid[x][y].busy == true)
             {
-                glColor4f(1.f, 0.f, 0.f, 0.25f);
+                glColor4f(1.f, 0.f, 0.f, 0.8f);
             }
             else
             {
-                glColor4f(1.f, 1.f, 1.f, 0.25f);
+                continue;
             }
 
             glBegin(GL_QUADS);
@@ -99,7 +99,7 @@ vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float 
         }
     }
 
-    if (isEmpty(toX, toY, s))
+    if (isEmpty(TO_GRID(toX), TO_GRID(toY), s))
     {
         if (isPathWalkable(fromX, fromY, toX, toY, s))
         {
@@ -107,7 +107,7 @@ vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float 
         }
         else
         {
-            path = aStar(fromX, fromY, toX, toY);
+            path = aStar(fromX, fromY, toX, toY, s);
         }
     }
 
@@ -196,9 +196,12 @@ list<Tile*> Pathfinder::getTraversingTiles(float x1, float y1, float x2, float y
     return tiles;
 }
 
-vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
+vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2, float s)
 {
     vector<Vector3*> path;
+
+    // Convert size
+    int const size = TO_GRID(s) / 2;
 
     // Define blocks to work with
     Tile *start = &grid[TO_GRID(x1)][TO_GRID(y1)];
@@ -244,9 +247,9 @@ vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
         current->closed = true;
 
         // Get all current's adjacent walkable blocks
-        for (int x = -1; x < 2; x ++)
+        for (int x = -size; x < size + 1; x += size)
         {
-            for (int y = -1; y < 2; y ++)
+            for (int y = -size; y < size + 1; y += size)
             {
                 // If it's current block then pass
                 if (x == 0 && y == 0
@@ -261,7 +264,7 @@ vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
                 child = &grid[current->x + x][current->y + y];
 
                 // If it's closed or not walkable then pass
-                if (child->closed || child->busy)
+                if (child->closed || !isEmpty(child->x, child->y, s))
                 {
                     continue;
                 }
@@ -270,12 +273,14 @@ vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
                 if (x != 0 && y != 0)
                 {
                     // if the next horizontal block is not walkable or in the closed list then pass
-                    if (grid[current->x][current->y + y].busy || grid[current->x][current->y + y].closed)
+                    //if (grid[current->x][current->y + y].busy || grid[current->x][current->y + y].closed)
+                    if (!isEmpty(current->x, current->y + y, s) || grid[current->x][current->y + y].closed)
                     {
                         continue;
                     }
                     // if the next vertical block is not walkable or in the closed list then pass
-                    if (grid[current->x + x][current->y].busy || grid[current->x + x][current->y].closed)
+                    //if (grid[current->x + x][current->y].busy || grid[current->x + x][current->y].closed)
+                    if (!isEmpty(current->x + x, current->y, s) || grid[current->x + x][current->y].closed)
                     {
                         continue;
                     }
@@ -357,16 +362,19 @@ vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
     //return (grid.count(x) != 0 && grid[x].count(y) != 0);
 //}
 
-bool Pathfinder::isEmpty(float x, float y, float s)
+bool Pathfinder::isEmpty(int x, int y, float s)
 {
-    if (TO_GRID(x) < 0 || TO_GRID(y) < 0 || TO_GRID(x) > TO_GRID(WORLD_WIDTH) || TO_GRID(y) > TO_GRID(WORLD_HEIGHT))
+    // Convert size
+    int const size = TO_GRID(s) / 2;
+
+    if (x < 0 || y < 0 || x > TO_GRID(WORLD_WIDTH) || y > TO_GRID(WORLD_HEIGHT))
     {
         return false;
     }
 
-    for (int i = TO_GRID(x - s / 2.f); i < TO_GRID(x + s / 2.f); i ++)
+    for (int i = x - size; i < x + size; i ++)
     {
-        for (int j = TO_GRID(y - s / 2.f); j < TO_GRID(y + s / 2.f); j ++)
+        for (int j = y - size; j < y + size; j ++)
         {
             if (grid[i][j].busy)
             {

@@ -34,10 +34,10 @@ class Pathfinder
 
         void computeScores(Tile *t1, Tile *t2);
 
-        bool isEmpty(float x, float y, float s);
+        bool isEmpty(int x, int y, float s);
         bool isPathWalkable(float x1, float y1, float x2, float y2, float s);
 
-        std::vector<Vector3*> aStar(float x1, float y1, float x2, float y2);
+        std::vector<Vector3*> aStar(float x1, float y1, float x2, float y2, float s);
         std::list<Tile*> getTraversingTiles(float x1, float y1, float x2, float y2);
 
         //Block* getBlock(int x, int y);
