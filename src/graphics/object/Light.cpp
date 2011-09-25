@@ -91,3 +91,8 @@ float Light::getIntensityFromDistance(float distance)
     return 1 / (ca + la * distance + qa * pow(distance, 2));
 }
 
+float Light::getIntensityAtPosition(Vector3 p)
+{
+    return getIntensityFromDistance(Vector3Util::dist(getPosition(), p));
+}
+

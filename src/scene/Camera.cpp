@@ -20,6 +20,8 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
     glTranslatef(position.x * -1.f,  position.y * -1.f, position.z * -1.f);
 
     updateViewFrustum();
+    updateMeshesVisibility(meshes);
+    updateSpritesVisibility(sprites);
 
     // Use a black ambient color
     GLfloat ambientColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
@@ -52,8 +54,6 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
 
     glDepthMask(GL_FALSE);
 
-    // TODO update object's visibility again view frustum once for all
-
 
     // STEP 2: loop through lights
     // ===========================
@@ -67,13 +67,10 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
         // http://http.developer.nvidia.com/GPUGems/gpugems_ch09.html SEC-9.5
 
         // Skeep this light if it's too far
-        //if ((*l)->getIntensityAtPosition(position) < 0.004f) continue;
+        if ((*l)->getIntensityAtPosition(position) < 0.004f) continue;
 
         // STEP 3: render shadow volumes
         // =============================
-
-        // TODO skeep this object if it's not lit
-        //l->getIntensityAtPosition((*o)->getPosition()) > 0.004f
 
         glClear(GL_STENCIL_BUFFER_BIT);
 
@@ -220,7 +217,7 @@ float Camera::getZ()
 
 void Camera::drawObject(Object *o)
 {
-    if (viewFrustum.sphereInFrustum(o->getPosition(), o->getSize()))
+    if (o->isVisible())
     {
         glPushMatrix();
         glTranslatef(o->getX(), o->getY(), o->getZ());
@@ -231,7 +228,7 @@ void Camera::drawObject(Object *o)
 
 void Camera::outlineObject(Object *o)
 {
-    if (viewFrustum.sphereInFrustum(o->getPosition(), o->getSize()))
+    if (o->isVisible())
     {
         glPushMatrix();
         glTranslatef(o->getX(), o->getY(), o->getZ());
@@ -307,12 +304,19 @@ void Camera::drawAllShadows(std::list<Mesh*> *objects, Light *l)
     }
 }
 
-// TODO
-//void Camera::updateObjectsVisibility(std::list<Object*> *objects)
-//{
-    //for (list<Object*>::iterator o = objects->begin(); o != objects->end(); ++ o)
-    //{
-        //(*o)->setVisibility(viewFrustum.sphereInFrustum((*o)->getPosition(), (*o)->getSize()));
-    //}
-//}
+void Camera::updateMeshesVisibility(std::list<Mesh*> *objects)
+{
+    for (list<Mesh*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        (*o)->setVisibility(viewFrustum.sphereInFrustum((*o)->getPosition(), (*o)->getSize()));
+    }
+}
+
+void Camera::updateSpritesVisibility(std::list<Sprite*> *objects)
+{
+    for (list<Sprite*>::iterator o = objects->begin(); o != objects->end(); ++ o)
+    {
+        (*o)->setVisibility(viewFrustum.sphereInFrustum((*o)->getPosition(), (*o)->getSize()));
+    }
+}
 

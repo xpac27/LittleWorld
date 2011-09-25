@@ -15,10 +15,14 @@ class Object
         virtual void draw();
         virtual void outline();
 
+        void setVisibility(bool v);
+
         float getX();
         float getY();
         float getZ();
         float getSize();
+
+        bool isVisible();
 
         Vector3 getPosition();
 
@@ -26,6 +30,8 @@ class Object
     protected:
 
         Entity *entity;
+
+        bool visible;
 };
 
 #endif

@@ -2,6 +2,8 @@
 #define DEF_LIGHT
 
 #include "../Object.h"
+#include "../../math/Vector3.h"
+#include "../../math/Vector3Util.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -17,6 +19,7 @@ class Light : public Object
         void setup();
 
         float getIntensityFromDistance(float d);
+        float getIntensityAtPosition(Vector3 p);
 
 
     private:
