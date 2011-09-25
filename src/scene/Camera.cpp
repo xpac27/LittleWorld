@@ -138,17 +138,19 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
     // STEP 4: wireframe
     // =================
 
-    //glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-    //glEnable(GL_BLEND);
+    #if DRAW_OUTLINE
+    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+    glEnable(GL_BLEND);
 
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    //outlineAllMeshes(meshes);
-    //outlineAllSprites(sprites);
-    //outlineAllLights(lights);
+    outlineAllMeshes(meshes);
+    outlineAllSprites(sprites);
+    outlineAllLights(lights);
 
-    //glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
-    //glDisable(GL_BLEND);
+    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+    glDisable(GL_BLEND);
+    #endif
 
     glPopMatrix();
 }

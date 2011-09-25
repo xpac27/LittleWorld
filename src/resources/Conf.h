@@ -12,6 +12,7 @@
 #define GRID_UNIT 16.f
 
 #define USE_VBO false
+#define DRAW_OUTLINE true
 
 #endif
 

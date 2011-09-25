@@ -53,6 +53,8 @@ struct Triangle
 struct Tile
 {
     bool busy;
+    bool checked;
+    unsigned int x, y;
 };
 
 // TODO

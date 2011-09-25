@@ -9,20 +9,71 @@ Pathfinder::Pathfinder()
         for (int y = 0; y < TO_GRID(WORLD_WIDTH); y ++)
         {
             grid[x][y].busy = false;
+            grid[x][y].checked = false;
+            grid[x][y].x = x;
+            grid[x][y].y = y;
         }
     }
+}
+
+void Pathfinder::draw(float cameraX, float cameraY)
+{
+    glPushMatrix();
+    glTranslatef(cameraX * -1.f,  0.f, cameraY * -1.f);
+
+    glColorMask(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+    glEnable(GL_COLOR_MATERIAL); // TODO avoid
+    glEnable(GL_BLEND);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    for (int x = 0; x < TO_GRID(WORLD_WIDTH); x ++)
+    {
+        for (int y = 0; y < TO_GRID(WORLD_WIDTH); y ++)
+        {
+            if (grid[x][y].checked == true)
+            {
+                glColor4f(0.f, 1.f, 0.f, 0.6f);
+            }
+            else if (grid[x][y].busy == true)
+            {
+                glColor4f(1.f, 0.f, 0.f, 0.25f);
+            }
+            else
+            {
+                glColor4f(1.f, 1.f, 1.f, 0.25f);
+            }
+
+            glBegin(GL_QUADS);
+            glVertex3f(x * GRID_UNIT, 0.f, y * GRID_UNIT);
+            glVertex3f(x * GRID_UNIT + GRID_UNIT, 0.f, y * GRID_UNIT);
+            glVertex3f(x * GRID_UNIT + GRID_UNIT, 0.f, y * GRID_UNIT + GRID_UNIT);
+            glVertex3f(x * GRID_UNIT, 0.f, y * GRID_UNIT + GRID_UNIT);
+            glEnd();
+        }
+    }
+
+    glColorMask(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
+    glDisable(GL_COLOR_MATERIAL);
+    glDisable(GL_BLEND);
+
+    glPopMatrix();
 }
 
 void Pathfinder::registerEntity(Entity *entity)
 {
     float x = entity->getX();
-    float y = entity->getY();
+    float z = entity->getZ();
     float s = entity->getSize();
 
     for (int i = TO_GRID(x - s / 2.f); i < TO_GRID(x + s / 2.f); i ++)
     {
-        for (int j = TO_GRID(y - s / 2.f); j < TO_GRID(y + s / 2.f); j ++)
+        for (int j = TO_GRID(z - s / 2.f); j < TO_GRID(z + s / 2.f); j ++)
         {
+            if (i < 0 || j < 0 || i > TO_GRID(WORLD_WIDTH) || j > TO_GRID(WORLD_HEIGHT))
+            {
+                continue;
+            }
             grid[i][j].busy = true;
         }
     }
@@ -32,34 +83,20 @@ vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float 
 {
     vector<Vector3*> path;
 
+    for (int x = 0; x < TO_GRID(WORLD_WIDTH); x ++)
+    {
+        for (int y = 0; y < TO_GRID(WORLD_WIDTH); y ++)
+        {
+            grid[x][y].checked = false;
+        }
+    }
+
     if (isEmpty(toX, toY, s))
     {
-        // Calculate line direction
-        int const dx = (fromX < toX) ? 1 : -1;
-        int const dy = (fromY < toY) ? 1 : -1;
-
-        bool pathIsWalkable = true;
-
-        s /= 2.f;
-
-        // Get traversing blocks
-        //list<Block*> blocks1;
-        //list<Block*> blocks2;
-        //list<Block*>::iterator i;
-        //blocks1 = getTraversingBlocks(fromX + (s * dx), fromY - (s * dy), toX + (s * dx), toY - (s * dy));
-        //blocks2 = getTraversingBlocks(fromX - (s * dx), fromY + (s * dy), toX - (s * dx), toY + (s * dy));
-        //blocks1.merge(blocks2);
-
-        //// Check if the direct path is safe
-        //for (i = blocks1.begin(); i != blocks1.end() && pathIsWalkable; ++ i)
-        //{
-            //pathIsWalkable = (*i)->walkable;
-        //}
-
-        //if (pathIsWalkable)
-        //{
-            //path.push_back(new Vector3(toX, 0.f, toY));
-        //}
+        if (isPathWalkable(fromX, fromY, toX, toY, s))
+        {
+            path.push_back(new Vector3(toX, 0.f, toY));
+        }
         //else
         //{
             //path = aStar(fromX, fromY, toX, toY);
@@ -69,54 +106,95 @@ vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float 
     return path;
 }
 
-//// TODO handle height of Vector3 positions
-//list<Block*> Pathfinder::getTraversingBlocks(float x1, float y1, float x2, float y2)
-//{
-    //list<Block*> blocks;
+bool Pathfinder::isPathWalkable(float x1, float y1, float x2, float y2, float s)
+{
+    // Get traversing tiles
+    list<Tile*> tiles = getTraversingTiles(x1, y1, x2, y2);
 
-    //// Calculate m and b for the line equation:
-    //float const m = ((x1 == x2) ? 0.f : ((y2 - y1) / (x2 - x1)));
-    //float const b = ((y1 + 64.f) / 128.f) - (m * ((x1 + 64.f) / 128.f));
+    // Convert size
+    int const size = TO_GRID(s) / 2;
 
-    //// Calculate line direction
-    //float const dx = (x1 < x2) ? 1.f : -1.f;
-    //float const dy = (y1 < y2) ? 1.f : -1.f;
+    // Calculate direction
+    int const dx = (x1 < x2) ? 1 : -1;
+    int const dy = (y1 < y2) ? 1 : -1;
 
-    //// Gather blocks
-    //Block *current = getBlockFromCoord(x1, y1);
-    //Block *end = getBlockFromCoord(x2, y2);
+    int gx, gy;
 
-    //blocks.push_back(current);
+    // Check if direct path is clear
+    for (list<Tile*>::iterator t = tiles.begin(); t != tiles.end(); ++ t)
+    {
+        gy = (*t)->y + (dy > 0 ? size - 1 : -size);
+        for (int i = -size; i < size; i ++)
+        {
+            gx = (*t)->x + i;
+            grid[gx][gy].checked = true;
+            if (grid[gx][gy].busy) return false;
+        }
 
-    //unsigned int n = 0;
+        gx = (*t)->x + (dx > 0 ? size - 1 : -size);
+        for (int i = -size; i < size; i ++)
+        {
+            gy = (*t)->y + i;
+            grid[gx][gy].checked = true;
+            if (grid[gx][gy].busy) return false;
+        }
+    }
+    return true;
+}
 
-    //// While we do not reach the end position
-    //while (current != end && n < 10)
-    //{
-        //// Get x next's value and check if it changes
-        //if (m == 0.f || floor(((((dy == 1) ? current->getYf() + dy : current->getYf()) - b) / m)) == current->getX())
-        //{
-            //if (!blockExists(current->getX(), current->getY() + (int)dy))
-            //{
-                //return blocks;
-            //}
-            //current = getBlock(current->getX(), current->getY() + (int)dy);
-        //}
-        //else
-        //{
-            //if (!blockExists(current->getXf() + (int)dx, current->getY()))
-            //{
-                //return blocks;
-            //}
-            //current = getBlock(current->getXf() + (int)dx, current->getY());
-        //}
-        //n ++;
+list<Tile*> Pathfinder::getTraversingTiles(float x1, float y1, float x2, float y2)
+{
+    list<Tile*> tiles;
 
-        //// Add this block to the list
-        //blocks.push_back(current);
-    //}
-    //return blocks;
-//}
+    // Convert coords
+    x1 = (float)TO_GRID(x1);
+    y1 = (float)TO_GRID(y1);
+    x2 = (float)TO_GRID(x2);
+    y2 = (float)TO_GRID(y2);
+
+    // Calculate m and b for the line equation:
+    float const m = (x1 == x2) ? 0.f : ((y2 - y1) / (x2 - x1));
+    float const b = y1 - (m * x1);
+
+    // Calculate line direction
+    int const dx = (x1 < x2) ? 1 : -1;
+    int const dy = (y1 < y2) ? 1 : -1;
+
+    // Gather blocks
+    Tile *current = &grid[(int)x1][(int)y1];
+    Tile *end = &grid[(int)x2][(int)y2];
+
+    tiles.push_back(current);
+
+    unsigned int n = 0;
+
+    // While we do not reach the end position
+    while (current != end && n < 100)
+    {
+        // Get x next's value and check if it changes
+        if (m != 0.f && round(((float)(current->y) - b) / m) == current->x)
+        {
+            if (current->y + dy < 0 || current->y + dy >= TO_GRID(WORLD_HEIGHT))
+            {
+                return tiles;
+            }
+            current = &grid[current->x][current->y + dy];
+        }
+        else
+        {
+            if (current->x + dx < 0 || current->x + dx >= TO_GRID(WORLD_WIDTH))
+            {
+                return tiles;
+            }
+            current = &grid[current->x + dx][current->y];
+        }
+        n ++;
+
+        // Add this block to the list
+        tiles.push_back(current);
+    }
+    return tiles;
+}
 
 //// TODO handle height of Vector3 positions
 //vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2)
@@ -277,11 +355,19 @@ vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float 
 
 bool Pathfinder::isEmpty(float x, float y, float s)
 {
+    if (TO_GRID(x) < 0 || TO_GRID(y) < 0 || TO_GRID(x) > TO_GRID(WORLD_WIDTH) || TO_GRID(y) > TO_GRID(WORLD_HEIGHT))
+    {
+        return false;
+    }
+
     for (int i = TO_GRID(x - s / 2.f); i < TO_GRID(x + s / 2.f); i ++)
     {
         for (int j = TO_GRID(y - s / 2.f); j < TO_GRID(y + s / 2.f); j ++)
         {
-            if (grid[i][j].busy) return false;
+            if (grid[i][j].busy)
+            {
+                return false;
+            }
         }
     }
     return true;
