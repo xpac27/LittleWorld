@@ -6,6 +6,8 @@ Little World
 This program is supposed to be able to compile and run on MacOSX, Linux and PC (I only tested MacOSX for now).
 Project is under development so do not expect impressive features ;)
 
+Checkout the crazy dev [screenshots album](https://picasaweb.google.com/107724568994901745291/LittleWorld).
+
 
 REQUIRED:
 ---------
