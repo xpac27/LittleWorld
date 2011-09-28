@@ -6,9 +6,9 @@ Pathfinder::Pathfinder()
 {
     Tile *tile;
 
-    for (int x = 0; x < TO_GRID(WORLD_WIDTH); x ++)
+    for (int x = 0; x < toGrid(WORLD_WIDTH); x ++)
     {
-        for (int y = 0; y < TO_GRID(WORLD_WIDTH); y ++)
+        for (int y = 0; y < toGrid(WORLD_WIDTH); y ++)
         {
             tile = &grid[x][y];
 
@@ -28,11 +28,11 @@ void Pathfinder::registerEntity(Entity *entity)
     float z = entity->getZ();
     float s = entity->getSize();
 
-    for (int i = TO_GRID(x - s / 2.f); i < TO_GRID(x + s / 2.f); i ++)
+    for (int i = toGrid(x - s / 2.f); i < toGrid(x + s / 2.f); i ++)
     {
-        for (int j = TO_GRID(z - s / 2.f); j < TO_GRID(z + s / 2.f); j ++)
+        for (int j = toGrid(z - s / 2.f); j < toGrid(z + s / 2.f); j ++)
         {
-            if (i < 0 || j < 0 || i > TO_GRID(WORLD_WIDTH) || j > TO_GRID(WORLD_HEIGHT))
+            if (i < 0 || j < 0 || i > toGrid(WORLD_WIDTH) || j > toGrid(WORLD_HEIGHT))
             {
                 continue;
             }
@@ -45,7 +45,7 @@ vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float 
 {
     vector<Vector3*> path;
 
-    if (isEmpty(TO_GRID(toX), TO_GRID(toY), s))
+    if (isEmpty(toGrid(toX, s), toGrid(toY, s), s))
     {
         if (isPathWalkable(fromX, fromY, toX, toY, s))
         {
@@ -62,40 +62,50 @@ vector<Vector3*> Pathfinder::getPath(float fromX, float fromY, float toX, float 
 bool Pathfinder::isPathWalkable(float x1, float y1, float x2, float y2, float s)
 {
     // Get traversing tiles
-    list<Tile*> tiles = getTraversingTiles(x1, y1, x2, y2);
-
-    // Convert size
-    int const size = TO_GRID(s) / 2;
-
-    // Calculate direction
-    int const dx = (x1 < x2) ? 1 : -1;
-    int const dy = (y1 < y2) ? 1 : -1;
-
-    int gx, gy;
+    list<Tile*> tiles = getTraversingTiles(x1, y1, x2, y2, s);
 
     // Check if direct path is clear
-    for (list<Tile*>::iterator t = tiles.begin(); t != tiles.end(); ++ t)
+    if (s > GRID_UNIT)
     {
-        gy = (*t)->y + (dy > 0 ? size - 1 : -size);
-        gx = (*t)->x + (dx > 0 ? size - 1 : -size);
+        // Convert size
+        int const size = (s > GRID_UNIT) ? toGrid(s) : 1;
 
-        for (int i = -size; i < size; i ++)
+        // Calculate direction
+        int const dx = (x1 < x2) ? 1 : -1;
+        int const dy = (y1 < y2) ? 1 : -1;
+
+        int gx, gy;
+
+        for (list<Tile*>::iterator t = tiles.begin(); t != tiles.end(); ++ t)
         {
-            if ((grid[(*t)->x + i][gy].busy) || (grid[gx][gy = (*t)->y + i].busy)) return false;
+            gy = (*t)->y + (dy > 0 ? size - 1 : -size);
+            gx = (*t)->x + (dx > 0 ? size - 1 : -size);
+
+            for (int i = -size; i < size; i ++)
+            {
+                if ((grid[(*t)->x + i][gy].busy) || (grid[gx][gy = (*t)->y + i].busy)) return false;
+            }
+        }
+    }
+    else
+    {
+        for (list<Tile*>::iterator t = tiles.begin(); t != tiles.end(); ++ t)
+        {
+            if ((*t)->busy) return false;
         }
     }
     return true;
 }
 
-list<Tile*> Pathfinder::getTraversingTiles(float x1, float y1, float x2, float y2)
+list<Tile*> Pathfinder::getTraversingTiles(float x1, float y1, float x2, float y2, float s)
 {
     list<Tile*> tiles;
 
     // Convert coords
-    x1 = (float)TO_GRID(x1);
-    y1 = (float)TO_GRID(y1);
-    x2 = (float)TO_GRID(x2);
-    y2 = (float)TO_GRID(y2);
+    x1 = (float)toGrid(x1, s);
+    y1 = (float)toGrid(y1, s);
+    x2 = (float)toGrid(x2, s);
+    y2 = (float)toGrid(y2, s);
 
     // Calculate m and b for the line equation:
     float const m = (x1 == x2) ? 0.f : ((y2 - y1) / (x2 - x1));
@@ -119,7 +129,7 @@ list<Tile*> Pathfinder::getTraversingTiles(float x1, float y1, float x2, float y
         // Get x next's value and check if it changes
         if (m != 0.f && round(((float)(current->y) - b) / m) == current->x)
         {
-            if (current->y + dy < 0 || current->y + dy >= TO_GRID(WORLD_HEIGHT))
+            if (current->y + dy < 0 || current->y + dy >= toGrid(WORLD_HEIGHT))
             {
                 return tiles;
             }
@@ -127,7 +137,7 @@ list<Tile*> Pathfinder::getTraversingTiles(float x1, float y1, float x2, float y
         }
         else
         {
-            if (current->x + dx < 0 || current->x + dx >= TO_GRID(WORLD_WIDTH))
+            if (current->x + dx < 0 || current->x + dx >= toGrid(WORLD_WIDTH))
             {
                 return tiles;
             }
@@ -146,11 +156,11 @@ vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2, float
     vector<Vector3*> path;
 
     // Convert size
-    int const size = TO_GRID(s) / 2;
+    int const size = (s > GRID_UNIT) ? toGrid(s) : 1;
 
     // Define blocks to work with
-    Tile *start = &grid[TO_GRID(x1)][TO_GRID(y1)];
-    Tile *end = &grid[TO_GRID(x2)][TO_GRID(y2)];
+    Tile *start = &grid[toGrid(x1, s)][toGrid(y1, s)];
+    Tile *end = &grid[toGrid(x2, s)][toGrid(y2, s)];
     Tile *current;
     Tile *child;
 
@@ -192,15 +202,15 @@ vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2, float
         current->closed = true;
 
         // Get all current's adjacent walkable blocks
-        for (int x = -size; x < size + 1; x += size)
+        for (int x = -size; x <= size; x += size)
         {
-            for (int y = -size; y < size + 1; y += size)
+            for (int y = -size; y <= size; y += size)
             {
                 // If it's current block then pass
                 if (x == 0 && y == 0
                 // or out of bounds
-                || current->y + y < 0 || current->y + y >= TO_GRID(WORLD_HEIGHT)
-                || current->x + x < 0 || current->x + x >= TO_GRID(WORLD_WIDTH))
+                || current->y + y < 0 || current->y + y >= toGrid(WORLD_HEIGHT)
+                || current->x + x < 0 || current->x + x >= toGrid(WORLD_WIDTH))
                 {
                     continue;
                 }
@@ -272,7 +282,7 @@ vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2, float
     // Resolve the path starting from the end block
     while (current->parent != NULL && current != start)
     {
-        path.push_back(new Vector3(current->x * GRID_UNIT, 0.f, current->y * GRID_UNIT));
+        path.push_back(new Vector3(current->x * GRID_UNIT + s / 2.f, 0.f, current->y * GRID_UNIT + s / 2.f));
         current = current->parent;
         n ++;
     }
@@ -282,23 +292,34 @@ vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2, float
 
 bool Pathfinder::isEmpty(int x, int y, float s)
 {
-    // Convert size
-    int const size = TO_GRID(s) / 2;
-
-    if (x < 0 || y < 0 || x > TO_GRID(WORLD_WIDTH) || y > TO_GRID(WORLD_HEIGHT))
+    if (s > GRID_UNIT)
     {
-        return false;
-    }
+        // Convert size
+        int const size = toGrid(s);
 
-    for (int i = x - size; i < x + size; i ++)
-    {
-        for (int j = y - size; j < y + size; j ++)
+        if (x < 0 || y < 0 || x + size > toGrid(WORLD_WIDTH) || y + size > toGrid(WORLD_HEIGHT))
         {
-            if (grid[i][j].busy)
+            return false;
+        }
+
+        for (int i = x; i < x + size; i ++)
+        {
+            for (int j = y; j < y + size; j ++)
             {
-                return false;
+                if (grid[i][j].busy)
+                {
+                    return false;
+                }
             }
         }
+    }
+    else
+    {
+        if (x < 0 || y < 0 || x > toGrid(WORLD_WIDTH) || y > toGrid(WORLD_HEIGHT))
+        {
+            return false;
+        }
+        else if (grid[x][y].busy) return false;
     }
     return true;
 }

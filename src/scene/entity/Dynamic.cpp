@@ -54,8 +54,6 @@ void Dynamic::setPath(vector<Vector3*> p)
     resetDestination();
     path.clear();
     path = p;
-    //path = world->getPathfinder()->getPath(position.x, position.z, x, z, getSize());
-    //path.push_back(new Vector3(x, 0.f, z));
     canMove = true;
 }
 

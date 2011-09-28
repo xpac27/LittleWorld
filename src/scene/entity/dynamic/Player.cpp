@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Player::Player(World *w, float s) : Dynamic(w, s)
+Player::Player(World *w, float x, float z, float s) : Dynamic(w, s)
 {
     speed = 200.f;
 

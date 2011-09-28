@@ -46,7 +46,7 @@ void World::dispatch(unsigned const int type)
 
 void World::addPlayer(bool focus)
 {
-    dynamicList.push_back(new Player(this, 64.f));
+    dynamicList.push_back(new Player(this, 512.f, 512.f, 64.f));
     meshList.push_back(new Mesh(dynamicList.back(), 64.f, 64.f, 1.f, 1.f, 0.f, 1.f));
 
     if (focus) camera.setFocus(dynamicList.back());
@@ -54,11 +54,13 @@ void World::addPlayer(bool focus)
 
 void World::addEnemy(float x, float z)
 {
+    dynamicList.push_back(new Enemy(this, x, z, 32.f));
+    meshList.push_back(new Mesh(dynamicList.back(), 32.f, 32.f, 1.f, 0.f, 0.f, 1.f));
 }
 
 void World::addWallDecor(float x, float z, float h)
 {
-    staticList.push_back(new Decor( x, z, 128.f, false));
+    staticList.push_back(new Decor(x, z, 128.f, false));
     meshList.push_back(new Mesh(staticList.back(), 128.f, h, 0.4f, 0.4f, 0.4f, 1.f));
     pathfinder.registerEntity(staticList.back());
 }

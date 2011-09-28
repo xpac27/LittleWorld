@@ -11,7 +11,7 @@ class Player : public Dynamic
 {
     public:
 
-        Player(World *w, float s);
+        Player(World *w, float x, float z, float s);
 
         virtual void update(float time);
         virtual void onNotify(unsigned const int type);

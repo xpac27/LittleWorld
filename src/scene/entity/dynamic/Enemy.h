@@ -11,7 +11,7 @@ class Enemy : public Dynamic
 {
     public:
 
-        Enemy(World *p, float s);
+        Enemy(World *w, float x, float z, float s);
 
         virtual void update(float time);
 };

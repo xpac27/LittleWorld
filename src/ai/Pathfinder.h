@@ -19,7 +19,6 @@ class Pathfinder
         Pathfinder();
 
         void registerEntity(Entity *entity);
-        void draw(float cameraX, float cameraY);
 
         std::vector<Vector3*> getPath(float fromX, float fromY, float toX, float toY, float s);
 
@@ -37,8 +36,21 @@ class Pathfinder
         bool isPathWalkable(float x1, float y1, float x2, float y2, float s);
 
         std::vector<Vector3*> aStar(float x1, float y1, float x2, float y2, float s);
-        std::list<Tile*> getTraversingTiles(float x1, float y1, float x2, float y2);
+        std::list<Tile*> getTraversingTiles(float x1, float y1, float x2, float y2, float s);
+
+        int toGrid(float i);
+        int toGrid(float i, float s);
 };
+
+inline int Pathfinder::toGrid(float i)
+{
+    return std::floor(i / GRID_UNIT);
+}
+
+inline int Pathfinder::toGrid(float i, float s)
+{
+    return std::floor((i - std::fmod(i, s)) / GRID_UNIT);
+}
 
 #endif
 
