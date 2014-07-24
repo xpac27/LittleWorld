@@ -77,7 +77,7 @@ void Camera::draw(std::list<Mesh*> *meshes, std::list<Sprite*> *sprites, std::li
         glDepthFunc(GL_LESS);
         glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFFFL);
 
-        #ifdef GL_EXT_stencil_two_side && GL_EXT_stencil_wrap
+        #if defined(GL_EXT_stencil_two_side) && defined(GL_EXT_stencil_wrap)
 
         glEnable(GL_STENCIL_TEST_TWO_SIDE_EXT);
 

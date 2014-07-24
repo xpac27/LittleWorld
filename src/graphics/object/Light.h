@@ -5,6 +5,7 @@
 #include "../../math/Vector3.h"
 #include "../../math/Vector3Util.h"
 
+#include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
 
 class Light : public Object

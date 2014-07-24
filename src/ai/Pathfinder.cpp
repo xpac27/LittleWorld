@@ -207,7 +207,7 @@ vector<Vector3*> Pathfinder::aStar(float x1, float y1, float x2, float y2, float
             for (int y = -size; y <= size; y += size)
             {
                 // If it's current block then pass
-                if (x == 0 && y == 0
+                if ((x == 0 && y == 0)
                 // or out of bounds
                 || current->y + y < 0 || current->y + y >= toGrid(WORLD_HEIGHT)
                 || current->x + x < 0 || current->x + x >= toGrid(WORLD_WIDTH))

@@ -16,7 +16,7 @@ void Game::init()
 
     for (unsigned int i = 0; i < 20; i ++)
     {
-        world.addEnemy(float(Randomizer::Random(0, WORLD_WIDTH)), float(Randomizer::Random(0, WORLD_HEIGHT)));
+        world.addEnemy(float(RAND_FLOAT * WORLD_WIDTH), float(RAND_FLOAT * WORLD_HEIGHT));
     }
 
     world.addWallDecor(1.f * 128.f, 4.f * 128.f, 64.f);
@@ -60,28 +60,28 @@ void Game::update(float time)
 void Game::onEvent(Event *event)
 {
     // MOUSE
-    if (event->Type == Event::MouseButtonPressed)
+    if (event->type == Event::MouseButtonPressed)
     {
-        if (event->MouseButton.Button == Mouse::Left)
+        if (event->mouseButton.button == Mouse::Left)
         {
             world.dispatch(Notifications::ON_MOUSE_LEFT_DOWN);
         }
     }
     // RESIZE
-    else if (event->Type == Event::Resized)
+    else if (event->type == Event::Resized)
     {
         world.dispatch(Notifications::ON_WINDOW_RESIZED);
 
-        if ((float)event->Size.Width / (float)event->Size.Height > SCREEN_WIDTH / SCREEN_HEIGHT)
+        if ((float)event->size.width / (float)event->size.height > SCREEN_WIDTH / SCREEN_HEIGHT)
         {
-            windowScale = SCREEN_HEIGHT / event->Size.Height;
+            windowScale = SCREEN_HEIGHT / event->size.height;
         }
         else
         {
-            windowScale = SCREEN_WIDTH / event->Size.Width;
+            windowScale = SCREEN_WIDTH / event->size.width;
         }
-        windowPaddingLeft = ((float)event->Size.Width - (SCREEN_WIDTH / windowScale)) / -2.f;
-        windowPaddingTop  = ((float)event->Size.Height - (SCREEN_HEIGHT / windowScale)) / -2.f;
+        windowPaddingLeft = ((float)event->size.width - (SCREEN_WIDTH / windowScale)) / -2.f;
+        windowPaddingTop  = ((float)event->size.height - (SCREEN_HEIGHT / windowScale)) / -2.f;
         cout << windowScale << endl;
     }
 }

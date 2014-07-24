@@ -2,6 +2,7 @@
 #define DEF_STRUCTS
 
 #include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
 
 #define X_POS 0
 #define Y_POS 1
@@ -17,6 +18,8 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 #define TO_GRID(i) ((int)((i + GRID_UNIT / 2.f) / GRID_UNIT))
+#define RAND_FLOAT ((float)std::rand() / (float)RAND_MAX)
+#define ODDS(i) (std::rand() % 100 < i)
 
 struct Plane
 {

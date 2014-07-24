@@ -5,7 +5,6 @@
 #include "../resources/Notifications.h"
 #include "../scene/World.h"
 
-#include <SFML/System/Randomizer.hpp>
 #include <iostream>
 
 class Game

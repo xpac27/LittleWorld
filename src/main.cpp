@@ -62,13 +62,12 @@ void onWindowResized(float width, float height)
 int main()
 {
     // Create main window
-    WindowSettings Settings;
-    Settings.AntialiasingLevel = 4;
-    Settings.StencilBits = 8;
+    ContextSettings Settings;
+    Settings.antialiasingLevel = 4;
+    Settings.stencilBits = 8;
     RenderWindow application(VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Game", (Style::Close | Style::Resize), Settings);
-    application.PreserveOpenGLStates(true);
-    application.UseVerticalSync(false);
-    application.SetFramerateLimit(0);
+    application.setVerticalSyncEnabled(false);
+    application.setFramerateLimit(0);
 
     // Setup rendering
     glShadeModel(GL_SMOOTH);
@@ -101,9 +100,6 @@ int main()
     // Setup window
     setupWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    // Gather a pointer to the input system
-    const Input& input = application.GetInput();
-
     // Create a clocks for measuring the time elapsed
     Clock gameClock;
     Clock clock;
@@ -113,30 +109,30 @@ int main()
     game.init();
 
     // Start game loop
-    while (application.IsOpened())
+    while (application.isOpen())
     {
         // Give the game mouse screen related's position
-        game.setMousePosition(input.GetMouseX(), input.GetMouseY());
+        game.setMousePosition(Mouse::getPosition().x, Mouse::getPosition().y);
 
         // Process events
         Event event;
-        while (application.GetEvent(event))
+        while (application.pollEvent(event))
         {
             // Close window : exit
-            if (event.Type == Event::KeyPressed && event.Key.Code == Key::Escape)
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
             {
-                application.Close();
+                application.close();
             }
 
-            switch (event.Type)
+            switch (event.type)
             {
                 case Event::Closed:
-                    application.Close();
+                    application.close();
                     break;
 
                 case Event::Resized:
                     game.onEvent(&event);
-                    onWindowResized(event.Size.Width, event.Size.Height);
+                    onWindowResized(event.size.width, event.size.height);
                     break;
 
                 case Event::MouseButtonPressed:
@@ -153,9 +149,11 @@ int main()
                 case Event::MouseMoved:
                 case Event::MouseEntered:
                 case Event::MouseLeft:
-                case Event::JoyButtonPressed:
-                case Event::JoyButtonReleased:
-                case Event::JoyMoved:
+                case Event::JoystickConnected:
+                case Event::JoystickDisconnected:
+                case Event::JoystickButtonPressed:
+                case Event::JoystickButtonReleased:
+                case Event::JoystickMoved:
                 case Event::Count:
                     break;
             }
@@ -172,23 +170,23 @@ int main()
         glScaled(sqrt(1/2.0), sqrt(1/3.0), sqrt(1/2.0));
 
         //Update
-        game.update(gameClock.GetElapsedTime());
-        gameClock.Reset();
+        game.update(gameClock.getElapsedTime().asSeconds());
+        gameClock.restart();
 
         // Framerate
         frameCount ++;
-        if (clock.GetElapsedTime() >= 1.f)
+        if (clock.getElapsedTime().asSeconds() >= 1.f)
         {
-            std::cout << "Framerate: " << (frameCount * clock.GetElapsedTime()) << " FPS" << std::endl;
+            std::cout << "Framerate: " << (frameCount * clock.getElapsedTime().asSeconds()) << " FPS" << std::endl;
             frameCount = 0;
-            clock.Reset();
+            clock.restart();
         }
 
         //Draw...
         game.draw();
 
         // Finally, display the rendered frame on screen
-        application.Display();
+        application.display();
     }
 
     return EXIT_SUCCESS;

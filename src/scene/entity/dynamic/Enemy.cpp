@@ -13,10 +13,10 @@ Enemy::Enemy(World *w, float x, float z, float s) : Dynamic(w, s)
 
 void Enemy::update(float time)
 {
-    if (!isCanMove() && sf::Randomizer::Random(0, 50) == 0)
+    if (!isCanMove() && ODDS(1))
     {
-        float x = sf::Randomizer::Random(position.x - 600, position.x + 600);
-        float y = sf::Randomizer::Random(position.z - 600, position.z + 600);
+        float x = RAND_FLOAT * 1200 - 600 + position.x;
+        float y = RAND_FLOAT * 1200 - 600 + position.z;
 
         setPath(world->getPath(&position, x, y, getSize()));
     }
