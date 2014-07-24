@@ -112,7 +112,7 @@ int main()
     while (application.isOpen())
     {
         // Give the game mouse screen related's position
-        game.setMousePosition(Mouse::getPosition().x, Mouse::getPosition().y);
+        game.setMousePosition(Mouse::getPosition(application).x, Mouse::getPosition(application).y);
 
         // Process events
         Event event;

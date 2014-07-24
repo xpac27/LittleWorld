@@ -24,8 +24,8 @@ void World::update(float time)
 void World::updateMousePosition(float mouseScreenX, float mouseScreenY)
 {
     // Apply transformation
-    mouseY = (mouseScreenY * 2.f - mouseScreenX) / 2.f;
-    mouseX = mouseScreenX + mouseY;
+    mouseX = mouseScreenY + mouseScreenX / 2.f;
+    mouseY = mouseScreenY - mouseScreenX / 2.f;
 
     // Scale
     mouseY *= 2.f;
